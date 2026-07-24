@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f97316">
+  <title>Rate My Bites Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="brand-bar">
+      <div class="brand-mark" aria-hidden="true">🍴</div>
+      <div>
+        <p class="eyebrow">Presented by Rate My Bites</p>
+        <h1>Game Night</h1>
+      </div>
+      <span class="demo-pill">AI Demo</span>
+    </header>
+
+    <section id="welcome" class="screen hero-screen">
+      <div class="hero-copy">
+        <p class="eyebrow">Friday Night Dinner</p>
+        <h2>Turn tonight’s dinner decision into a game.</h2>
+        <p>One click starts the entire show. Four AI players predict, eliminate, vote, and compete for the Bite Champion title.</p>
+      </div>
+
+      <div class="game-summary" aria-label="Game summary">
+        <div><strong>4</strong><span>AI Players</span></div>
+        <div><strong>6</strong><span>Restaurants</span></div>
+        <div><strong>1</strong><span>Winner</span></div>
+      </div>
+
+      <button id="startGame" class="primary-button" type="button">Start Tonight’s Game</button>
+    </section>
+
+    <section id="game" class="screen game-screen hidden" aria-live="polite">
+      <div class="game-heading">
+        <div>
+          <p id="phaseLabel" class="eyebrow">Pregame</p>
+          <h2 id="phaseTitle">Players are arriving…</h2>
+          <p id="phaseDescription">The broadcast will advance automatically.</p>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+      </div>
+
+      <section>
+        <h3>Tonight’s Players</h3>
+        <div id="playerGrid" class="player-grid"></div>
+      </section>
+
+      <div id="commissionerMessage" class="commissioner-message">The commissioner is preparing the restaurant board.</div>
+
+      <section>
+        <h3>Restaurant Board</h3>
+        <div id="restaurantGrid" class="restaurant-grid"></div>
+      </section>
+
+      <section class="broadcast-section">
+        <h3>Live Broadcast</h3>
+        <div id="broadcastFeed" class="broadcast-feed"></div>
+      </section>
+
+      <section id="results" class="results"></section>
+
+      <div class="actions">
+        <button id="playAgain" class="primary-button hidden" type="button">Play Another Game</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
