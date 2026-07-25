@@ -142,7 +142,7 @@ initialState = function () {
 };
 
 welcome = function () {
-  app.innerHTML = `<div class="hero sprint4-hero"><p class="eyebrow">Bite Buddy League · Sprint 4.1</p><div class="show-logo"><span>🎬</span><div><strong>The Living Dinner</strong><small>Presented by Pup</small></div></div><h1>Every dinner<br>is an episode.</h1><p class="lead">Enter a cinematic mission briefing, meet tonight’s diners, and investigate the story before the first prediction.</p><div class="episode-card"><span>Tonight’s episode</span><strong>${sprint4Episode.title}</strong><small>${sprint4Episode.subtitle}</small></div><button class="primary-button wide" id="start">Create Simulation Game</button>${hallOfFame()}</div>`;
+  app.innerHTML = `<div class="hero sprint4-hero"><p class="eyebrow">Bite Buddy League · Sprint 4.2</p><div class="show-logo"><span>🎬</span><div><strong>The Living Dinner</strong><small>Game Master: Pup</small></div></div><h1>Every dinner<br>is an episode.</h1><p class="lead">Enter a cinematic mission briefing, meet tonight’s diners, and investigate the story before the first prediction.</p><div class="episode-card"><span>Tonight’s episode</span><strong>${sprint4Episode.title}</strong><small>${sprint4Episode.subtitle}</small></div><button class="primary-button wide" id="start">Create Simulation Game</button>${hallOfFame()}</div>`;
   document.querySelector("#start").onclick = () => { state.screen = "planner"; render(); };
 };
 
