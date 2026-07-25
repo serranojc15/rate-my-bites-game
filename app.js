@@ -2,49 +2,55 @@ const buddyRoster = [
   {
     id: "dog",
     name: "Pup",
+    emoji: "🐶",
     image: "assets/buddies/buddy-dog.webp",
     role: "The Loyal Favorite",
-    trait: "Prefers familiar, highly rated places",
+    trait: "Trusts familiar places with strong ratings",
     style: "loyal"
   },
   {
     id: "cat",
     name: "Whiskers",
+    emoji: "🐱",
     image: "assets/buddies/buddy-cat.webp",
     role: "The Food Critic",
-    trait: "Selective and strongly influenced by quality",
+    trait: "Quality matters more than almost anything",
     style: "critic"
   },
   {
     id: "bird",
     name: "Sunny",
+    emoji: "🐦",
     image: "assets/buddies/buddy-bird.webp",
     role: "The Social Pick",
-    trait: "Likes lively, group-friendly restaurants",
+    trait: "Looks for lively places the whole group will enjoy",
     style: "social"
   },
   {
     id: "bunny",
     name: "Nibbles",
+    emoji: "🐰",
     image: "assets/buddies/buddy-bunny.webp",
     role: "The Adventurer",
-    trait: "Always tempted by something new",
+    trait: "Always tempted by somewhere new",
     style: "adventurer"
   },
   {
     id: "turtle",
     name: "Shellby",
+    emoji: "🐢",
     image: "assets/buddies/buddy-turtle.webp",
     role: "The Careful Planner",
-    trait: "Balances distance, price, and group fit",
+    trait: "Balances ratings, distance, price, and group fit",
     style: "planner"
   },
   {
     id: "hamster",
     name: "Peanut",
+    emoji: "🐹",
     image: "assets/buddies/buddy-hamster.webp",
     role: "The Wild Card",
-    trait: "Delightfully unpredictable",
+    trait: "Delightfully unpredictable from round to round",
     style: "wildcard"
   }
 ];
@@ -59,23 +65,28 @@ const restaurants = [
 ];
 
 const ui = {
-  welcome: document.querySelector("#welcome"),
-  game: document.querySelector("#game"),
-  start: document.querySelector("#startGame"),
-  again: document.querySelector("#playAgain"),
-  phaseLabel: document.querySelector("#phaseLabel"),
-  phaseTitle: document.querySelector("#phaseTitle"),
-  phaseDescription: document.querySelector("#phaseDescription"),
+  welcome: document.querySelector("#welcomeScreen"),
+  broadcast: document.querySelector("#broadcastScreen"),
+  start: document.querySelector("#startButton"),
+  pause: document.querySelector("#pauseButton"),
+  pauseLabel: document.querySelector("#pauseLabel"),
+  pauseOverlay: document.querySelector("#pauseOverlay"),
+  stage: document.querySelector("#broadcastStage"),
+  round: document.querySelector("#roundLabel"),
+  remaining: document.querySelector("#remainingLabel"),
   progress: document.querySelector("#progressBar"),
-  players: document.querySelector("#playerGrid"),
-  restaurants: document.querySelector("#restaurantGrid"),
-  message: document.querySelector("#commissionerMessage"),
-  feed: document.querySelector("#broadcastFeed"),
-  results: document.querySelector("#results")
+  commissioner: document.querySelector("#commissionerLine"),
+  finalActions: document.querySelector("#finalActions"),
+  recap: document.querySelector("#recapDialog"),
+  recapContent: document.querySelector("#recapContent"),
+  recapButton: document.querySelector("#recapButton"),
+  closeRecap: document.querySelector("#closeRecapButton"),
+  replay: document.querySelector("#replayButton")
 };
 
-let state;
-let timers = [];
+let runId = 0;
+let paused = false;
+let state = null;
 
 function randomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -85,63 +96,44 @@ function shuffled(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
-function schedule(callback, delay) {
-  timers.push(window.setTimeout(callback, delay));
-}
-
-function clearTimers() {
-  timers.forEach(window.clearTimeout);
-  timers = [];
-}
-
-function setPhase(label, title, description, progress) {
-  ui.phaseLabel.textContent = label;
-  ui.phaseTitle.textContent = title;
-  ui.phaseDescription.textContent = description;
-  ui.progress.style.width = `${progress}%`;
-  ui.results.innerHTML = "";
-}
-
 function restaurantFor(id) {
   return restaurants.find((restaurant) => restaurant.id === id);
 }
 
-function imageFor(player, className = "buddy-thumb") {
-  return `<img class="${className}" src="${player.image}" alt="${player.name}, ${player.role}">`;
+function preferenceScore(player, restaurant) {
+  const jitter = Math.random() * 18;
+  switch (player.style) {
+    case "loyal":
+      return restaurant.rating * 1.2 + (restaurant.novelty < 70 ? 22 : 0) + jitter;
+    case "critic":
+      return restaurant.rating * 1.45 - restaurant.price * 2 + jitter;
+    case "social":
+      return restaurant.social * 1.35 + restaurant.rating * 0.35 + jitter;
+    case "adventurer":
+      return restaurant.novelty * 1.45 + restaurant.social * 0.25 + jitter;
+    case "planner":
+      return restaurant.rating + (25 - restaurant.distance) * 1.4 - restaurant.price * 4 + jitter;
+    default:
+      return Math.random() * 150;
+  }
 }
 
-function renderPlayers() {
-  ui.players.innerHTML = state.players.map((player) => `
-    <article class="player-card">
-      <div class="buddy-stage">${imageFor(player, "buddy-art")}</div>
-      <span class="player-role">${player.role}</span>
-      <strong>${player.name}</strong>
-      <div class="small">${player.trait}</div>
-    </article>
-  `).join("");
+function rankedRestaurants(player, ids, highestFirst = true) {
+  return ids
+    .map((id) => {
+      const restaurant = restaurantFor(id);
+      return { id, score: preferenceScore(player, restaurant) };
+    })
+    .sort((a, b) => highestFirst ? b.score - a.score : a.score - b.score)
+    .map((entry) => entry.id);
 }
 
-function renderRestaurants() {
-  ui.restaurants.innerHTML = restaurants.map((restaurant) => {
-    const eliminated = !state.active.includes(restaurant.id);
-    const winner = state.winner === restaurant.id;
-    return `
-      <article class="restaurant-card ${eliminated ? "eliminated" : ""} ${winner ? "winner" : ""}">
-        <div class="restaurant-visual">${restaurant.emoji}</div>
-        <div class="restaurant-copy">
-          <strong>${restaurant.name}</strong>
-          <div class="small">${restaurant.cuisine} • ${"$".repeat(restaurant.price)} • ${restaurant.distance} min</div>
-        </div>
-      </article>
-    `;
-  }).join("");
+function chooseFavorite(player, ids) {
+  return rankedRestaurants(player, ids, true)[0];
 }
 
-function addBroadcast(playerOrIcon, text) {
-  const icon = typeof playerOrIcon === "string"
-    ? `<span class="feed-emoji">${playerOrIcon}</span>`
-    : imageFor(playerOrIcon, "feed-buddy");
-  ui.feed.insertAdjacentHTML("afterbegin", `<div class="feed-item">${icon}<div>${text}</div></div>`);
+function chooseElimination(player, ids) {
+  return rankedRestaurants(player, ids, false)[0];
 }
 
 function tally(votes) {
@@ -151,166 +143,339 @@ function tally(votes) {
   }, {});
 }
 
-function topSelections(voteTally, count = 1) {
-  return Object.entries(voteTally)
-    .sort(() => Math.random() - 0.5)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, count)
-    .map(([id]) => id);
+function rankedByVotes(voteTally, eligibleIds) {
+  return eligibleIds
+    .map((id) => ({ id, votes: voteTally[id] || 0, tie: Math.random() }))
+    .sort((a, b) => b.votes - a.votes || b.tie - a.tie)
+    .map((entry) => entry.id);
 }
 
-function preferenceScore(player, restaurant) {
-  const jitter = Math.random() * 20;
-  switch (player.style) {
-    case "loyal": return restaurant.rating * 1.2 + (restaurant.novelty < 70 ? 22 : 0) + jitter;
-    case "critic": return restaurant.rating * 1.45 - restaurant.price * 2 + jitter;
-    case "social": return restaurant.social * 1.35 + restaurant.rating * 0.35 + jitter;
-    case "adventurer": return restaurant.novelty * 1.45 + restaurant.social * 0.25 + jitter;
-    case "planner": return restaurant.rating + (25 - restaurant.distance) * 1.4 - restaurant.price * 4 + jitter;
-    default: return Math.random() * 150;
+function isCurrent(token) {
+  return token === runId;
+}
+
+async function wait(duration, token) {
+  let remaining = duration;
+  while (remaining > 0 && isCurrent(token)) {
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    if (!paused) remaining -= 100;
   }
+  return isCurrent(token);
 }
 
-function chooseFavorite(player, ids) {
-  return ids
-    .map((id) => restaurantFor(id))
-    .sort((a, b) => preferenceScore(player, b) - preferenceScore(player, a))[0].id;
+function setStatus(round, progress, message) {
+  ui.round.textContent = round;
+  ui.progress.style.width = `${progress}%`;
+  ui.remaining.textContent = `${state.active.length} restaurant${state.active.length === 1 ? "" : "s"}`;
+  ui.commissioner.textContent = message;
 }
 
-function chooseElimination(player, ids) {
-  return ids
-    .map((id) => restaurantFor(id))
-    .sort((a, b) => preferenceScore(player, a) - preferenceScore(player, b))[0].id;
+function buddyPortrait(player, extraClass = "") {
+  return `
+    <div class="buddy-portrait ${extraClass}" data-buddy-image>
+      <span class="buddy-fallback" aria-hidden="true">${player.emoji}</span>
+      <img class="buddy-image" src="${player.image}" alt="${player.name}, ${player.role}">
+    </div>
+  `;
 }
 
-function resetGame() {
-  clearTimers();
-  state = {
-    players: shuffled(buddyRoster).slice(0, 4),
-    active: restaurants.map((restaurant) => restaurant.id),
-    predictions: {},
+function buddyMini(player) {
+  return `
+    <div class="buddy-mini" data-buddy-image>
+      <span aria-hidden="true">${player.emoji}</span>
+      <img src="${player.image}" alt="">
+    </div>
+  `;
+}
+
+function activateBuddyImages(container = document) {
+  container.querySelectorAll("[data-buddy-image]").forEach((wrapper) => {
+    const image = wrapper.querySelector("img");
+    if (!image) return;
+
+    const showImage = () => wrapper.classList.add("has-image");
+    const keepFallback = () => wrapper.classList.remove("has-image");
+
+    if (image.complete) {
+      image.naturalWidth > 0 ? showImage() : keepFallback();
+    } else {
+      image.addEventListener("load", showImage, { once: true });
+      image.addEventListener("error", keepFallback, { once: true });
+    }
+  });
+}
+
+function showMoment(markup) {
+  ui.stage.innerHTML = markup;
+  activateBuddyImages(ui.stage);
+}
+
+function dots(current, total) {
+  return `<div class="counter-dots" aria-label="${current + 1} of ${total}">${Array.from({ length: total }, (_, index) => `<span class="${index === current ? "active" : ""}"></span>`).join("")}</div>`;
+}
+
+function restaurantLineup(ids) {
+  return `
+    <div class="restaurant-lineup">
+      ${ids.map((id) => {
+        const restaurant = restaurantFor(id);
+        return `
+          <article class="mini-restaurant">
+            <div class="restaurant-emoji" aria-hidden="true">${restaurant.emoji}</div>
+            <div class="restaurant-details">
+              <strong>${restaurant.name}</strong>
+              <small>${restaurant.cuisine} · ${"$".repeat(restaurant.price)} · ${restaurant.distance} min</small>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function voteRows(detail = "Making a private decision…") {
+  return `
+    <div class="vote-list">
+      ${state.players.map((player, index) => `
+        <div class="vote-row" data-voter="${index}">
+          ${buddyMini(player)}
+          <div>
+            <strong>${player.name}</strong>
+            <small>${detail}</small>
+          </div>
+          <span class="vote-state thinking">Thinking…</span>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function lockVote(index, detail = "Private vote submitted") {
+  const row = ui.stage.querySelector(`[data-voter="${index}"]`);
+  if (!row) return;
+  const detailNode = row.querySelector("small");
+  const stateNode = row.querySelector(".vote-state");
+  detailNode.textContent = detail;
+  stateNode.textContent = "✓ Locked";
+  stateNode.classList.remove("thinking");
+  stateNode.classList.add("locked");
+}
+
+function buildInitialState() {
+  const players = shuffled(buddyRoster).slice(0, 4);
+  const active = restaurants.map((restaurant) => restaurant.id);
+  const predictions = players.map((player) => {
+    const favorite = chooseFavorite(player, active);
+    return {
+      favorite,
+      winner: Math.random() < 0.72 ? favorite : randomItem(active),
+      firstOut: chooseElimination(player, active)
+    };
+  });
+
+  return {
+    players,
+    active,
+    predictions,
     firstEliminated: null,
-    winner: null
+    secondEliminated: [],
+    finalists: [],
+    finalVotes: [],
+    finalTally: {},
+    winner: null,
+    standings: [],
+    timeline: []
   };
-  ui.feed.innerHTML = "";
-  ui.results.innerHTML = "";
-  ui.again.classList.add("hidden");
-  renderPlayers();
-  renderRestaurants();
 }
 
-function startGame() {
-  ui.welcome.classList.add("hidden");
-  ui.game.classList.remove("hidden");
-  resetGame();
-  runPregame();
+async function introducePlayers(token) {
+  setStatus("Meet the Bite Buddies", 8, "Tonight’s four AI players are entering the game.");
+
+  for (let index = 0; index < state.players.length; index += 1) {
+    if (!isCurrent(token)) return false;
+    const player = state.players[index];
+    showMoment(`
+      <article class="moment">
+        <p class="moment-kicker">Player ${index + 1} of ${state.players.length}</p>
+        ${buddyPortrait(player)}
+        <h2>${player.name}</h2>
+        <span class="role-pill">${player.role}</span>
+        <p class="moment-copy">${player.trait}</p>
+        ${dots(index, state.players.length)}
+      </article>
+    `);
+    ui.commissioner.textContent = `${player.name} joins tonight’s Rate My Bites Game.`;
+    if (!await wait(1500, token)) return false;
+  }
+  return true;
 }
 
-function runPregame() {
-  setPhase("Meet the Bite Buddies", "Tonight’s players are entering the arena.", "Four Buddies were randomly selected from the official Rate My Bites roster.", 12);
-  ui.message.textContent = "The AI commissioner is opening the prediction window.";
-
-  state.players.forEach((player, index) => {
-    schedule(() => {
-      const favorite = chooseFavorite(player, state.active);
-      state.predictions[index] = {
-        winner: Math.random() < 0.7 ? favorite : randomItem(state.active),
-        favorite,
-        firstOut: chooseElimination(player, state.active)
-      };
-      addBroadcast(player, `<strong>${player.name}</strong>, ${player.role.toLowerCase()}, locked in three private predictions.`);
-    }, 500 + index * 650);
-  });
-
-  schedule(runFirstElimination, 3900);
+async function revealLineup(token) {
+  setStatus("Restaurant Lineup", 18, "Six restaurants enter. Only one will win tonight.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">Tonight’s Restaurant Board</p>
+      <h2>Six choices enter the game.</h2>
+      <p class="moment-copy">The Bite Buddies are studying ratings, distance, price, group fit, and their own personalities.</p>
+      ${restaurantLineup(state.active)}
+    </article>
+  `);
+  return wait(3000, token);
 }
 
-function runFirstElimination() {
-  setPhase("Round One", "The first restaurant is leaving the board.", "Each Bite Buddy votes according to its own dining personality.", 34);
-  ui.message.textContent = "The first elimination votes are being counted…";
+async function lockPredictions(token) {
+  setStatus("Private Predictions", 29, "Every Buddy is predicting the winner and the first restaurant out.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">Prediction Window</p>
+      <h2>Secret picks are being locked.</h2>
+      <p class="moment-copy">Predictions stay hidden until the final scoring reveal.</p>
+      ${voteRows("Predicting the winner and first elimination…")}
+    </article>
+  `);
+
+  for (let index = 0; index < state.players.length; index += 1) {
+    if (!await wait(650, token)) return false;
+    lockVote(index, "Three predictions locked");
+    ui.commissioner.textContent = `${state.players[index].name} has submitted all three predictions.`;
+  }
+
+  return wait(900, token);
+}
+
+async function firstElimination(token) {
+  setStatus("Round 1 of 3", 42, "The first elimination vote is underway.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">First Elimination</p>
+      <h2>Which restaurant leaves first?</h2>
+      <p class="moment-copy">Each Buddy votes according to its own dining personality.</p>
+      ${voteRows()}
+    </article>
+  `);
 
   const votes = state.players.map((player) => chooseElimination(player, state.active));
-  state.firstEliminated = topSelections(tally(votes))[0];
+  for (let index = 0; index < state.players.length; index += 1) {
+    if (!await wait(700, token)) return false;
+    lockVote(index);
+    ui.commissioner.textContent = `${state.players[index].name} has voted.`;
+  }
+
+  const voteTally = tally(votes);
+  state.firstEliminated = rankedByVotes(voteTally, state.active)[0];
   state.active = state.active.filter((id) => id !== state.firstEliminated);
+  const eliminated = restaurantFor(state.firstEliminated);
+  state.timeline.push({ icon: "❌", title: "First eliminated", detail: eliminated.name });
 
-  state.players.forEach((player, index) => {
-    schedule(() => addBroadcast(player, `<strong>${player.name}</strong> submitted an elimination vote.`), 350 + index * 450);
-  });
-
-  schedule(() => {
-    const eliminated = restaurantFor(state.firstEliminated);
-    renderRestaurants();
-    ui.message.textContent = `${eliminated.name} has been eliminated.`;
-    addBroadcast("❌", `<strong>${eliminated.name}</strong> is the first restaurant out.`);
-  }, 2400);
-
-  schedule(runSecondElimination, 4700);
+  if (!await wait(600, token)) return false;
+  setStatus("Round 1 Result", 49, `${eliminated.name} is the first restaurant out.`);
+  showMoment(`
+    <article class="moment elimination-card">
+      <p class="moment-kicker">Eliminated</p>
+      <div class="big-emoji" aria-hidden="true">${eliminated.emoji}</div>
+      <h2>${eliminated.name}</h2>
+      <p class="moment-copy">${eliminated.cuisine} leaves the board with ${voteTally[eliminated.id] || 0} elimination vote${(voteTally[eliminated.id] || 0) === 1 ? "" : "s"}.</p>
+      <span class="result-pill">5 restaurants remain</span>
+    </article>
+  `);
+  return wait(2400, token);
 }
 
-function runSecondElimination() {
-  setPhase("Round Two", "Five restaurants become three finalists.", "The Bite Buddies narrow the field as the pressure rises.", 58);
-  ui.message.textContent = "Round Two votes are locked.";
+async function secondElimination(token) {
+  setStatus("Round 2 of 3", 61, "Five restaurants are being narrowed to three finalists.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">Double Elimination</p>
+      <h2>Two more choices must go.</h2>
+      <p class="moment-copy">The pressure rises as every Buddy submits another private vote.</p>
+      ${voteRows()}
+    </article>
+  `);
 
   const votes = state.players.map((player) => chooseElimination(player, state.active));
-  const removed = topSelections(tally(votes), 2);
-  state.active = state.active.filter((id) => !removed.includes(id));
+  for (let index = 0; index < state.players.length; index += 1) {
+    if (!await wait(700, token)) return false;
+    lockVote(index);
+    ui.commissioner.textContent = `${state.players[index].name} has locked a Round 2 vote.`;
+  }
 
-  schedule(() => {
-    renderRestaurants();
-    addBroadcast("🔥", `Tonight’s finalists are <strong>${state.active.map((id) => restaurantFor(id).name).join(", ")}</strong>.`);
-    ui.message.textContent = "The championship field is set.";
-  }, 1900);
+  const voteTally = tally(votes);
+  state.secondEliminated = rankedByVotes(voteTally, state.active).slice(0, 2);
+  state.active = state.active.filter((id) => !state.secondEliminated.includes(id));
+  state.finalists = [...state.active];
+  const removed = state.secondEliminated.map(restaurantFor);
+  state.timeline.push({ icon: "✂️", title: "Double elimination", detail: removed.map((restaurant) => restaurant.name).join(" and ") });
 
-  schedule(runChampionshipVote, 4500);
+  if (!await wait(600, token)) return false;
+  setStatus("Finalists Revealed", 69, "The championship field is set.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">Final Three</p>
+      <h2>The finalists are set.</h2>
+      <p class="moment-copy">Only these three restaurants can win tonight’s game.</p>
+      <div class="finalist-row">
+        ${state.finalists.map((id) => {
+          const restaurant = restaurantFor(id);
+          return `<div class="finalist-card"><span aria-hidden="true">${restaurant.emoji}</span><strong>${restaurant.name}</strong></div>`;
+        }).join("")}
+      </div>
+    </article>
+  `);
+  return wait(2600, token);
 }
 
-function runChampionshipVote() {
-  setPhase("Championship Vote", "The finalists face the last decision.", "Every Buddy chooses where the group should eat tonight.", 78);
-  ui.message.textContent = "Championship votes are arriving one by one…";
+async function championshipVote(token) {
+  setStatus("Round 3 of 3", 79, "The final restaurant vote is arriving one Buddy at a time.");
+  showMoment(`
+    <article class="moment">
+      <p class="moment-kicker">Championship Vote</p>
+      <h2>Where will the group eat?</h2>
+      <p class="moment-copy">The final decision is private until all four votes are locked.</p>
+      ${voteRows("Choosing among the final three…")}
+    </article>
+  `);
 
-  const votes = state.players.map((player, index) => {
-    const favorite = state.predictions[index].favorite;
-    return state.active.includes(favorite) && Math.random() < 0.68
-      ? favorite
+  state.finalVotes = state.players.map((player, index) => {
+    const predictedFavorite = state.predictions[index].favorite;
+    return state.active.includes(predictedFavorite) && Math.random() < .68
+      ? predictedFavorite
       : chooseFavorite(player, state.active);
   });
 
-  state.players.forEach((player, index) => {
-    schedule(() => addBroadcast(player, `<strong>${player.name}</strong> submitted a final vote.`), 450 + index * 550);
-  });
+  for (let index = 0; index < state.players.length; index += 1) {
+    if (!await wait(800, token)) return false;
+    lockVote(index, "Championship vote locked");
+    ui.commissioner.textContent = `${state.players[index].name} has made a final decision.`;
+  }
 
-  schedule(() => {
-    state.winner = topSelections(tally(votes))[0];
-    renderRestaurants();
-    ui.message.textContent = "All votes are locked. The winner is ready.";
-  }, 3100);
-
-  schedule(revealWinner, 4700);
-}
-
-function revealWinner() {
+  state.finalTally = tally(state.finalVotes);
+  state.winner = rankedByVotes(state.finalTally, state.active)[0];
   const winner = restaurantFor(state.winner);
-  setPhase("Winner Reveal", "Tonight’s restaurant has been selected.", "The final result is official.", 92);
-  ui.message.textContent = `${winner.name} wins the Rate My Bites Game!`;
-  ui.results.innerHTML = `
-    <div class="winner-banner">
-      <div class="trophy">🏆</div>
-      <div class="eyebrow winner-eyebrow">Tonight’s First Pick</div>
-      <h2>${winner.name}</h2>
-      <p>${winner.cuisine} • ${"$".repeat(winner.price)} • ${winner.distance} min</p>
-    </div>
-  `;
-  addBroadcast("🏆", `<strong>${winner.name}</strong> is tonight’s dinner destination.`);
-  schedule(revealScores, 3700);
+  state.timeline.push({ icon: "🏆", title: "Restaurant winner", detail: winner.name });
+
+  return wait(900, token);
 }
 
-function revealScores() {
-  setPhase("Final Standings", "The Bite Champion is crowned.", "Buddies earn points for accurate predictions.", 100);
+async function revealWinner(token) {
+  const winner = restaurantFor(state.winner);
+  setStatus("Winner Reveal", 91, `${winner.name} wins tonight’s restaurant vote.`);
+  showMoment(`
+    <article class="moment winner-card">
+      <p class="moment-kicker">Tonight’s Winner</p>
+      <div class="big-emoji" aria-hidden="true">${winner.emoji}</div>
+      <h2>${winner.name}</h2>
+      <p class="moment-copy">${winner.cuisine} · ${"$".repeat(winner.price)} · ${winner.distance} minutes away</p>
+      <span class="role-pill">${state.finalTally[winner.id] || 0} final vote${(state.finalTally[winner.id] || 0) === 1 ? "" : "s"}</span>
+    </article>
+  `);
+  return wait(3200, token);
+}
 
-  const standings = state.players.map((player, index) => {
+function calculateStandings() {
+  return state.players.map((player, index) => {
+    const prediction = state.predictions[index];
     let score = 2;
     const reasons = ["Played +2"];
-    const prediction = state.predictions[index];
 
     if (prediction.winner === state.winner) {
       score += 10;
@@ -325,25 +490,131 @@ function revealScores() {
       reasons.push("First out +5");
     }
 
-    return { ...player, score, reasons };
-  }).sort((a, b) => b.score - a.score);
-
-  ui.message.textContent = `${standings[0].name} is tonight’s Bite Champion!`;
-  ui.results.innerHTML = standings.map((player, index) => `
-    <div class="score-row ${index === 0 ? "champion" : ""}">
-      <div class="rank">${index === 0 ? "🏆" : index + 1}</div>
-      ${imageFor(player, "score-buddy")}
-      <div>
-        <strong>${player.name} — ${player.role}</strong>
-        <div class="small">${player.reasons.join(" • ")}</div>
-      </div>
-      <div class="points">${player.score} pts</div>
-    </div>
-  `).join("");
-
-  addBroadcast(standings[0], `<strong>${standings[0].name}</strong> wins the Bite Champion title with ${standings[0].score} points.`);
-  ui.again.classList.remove("hidden");
+    return { ...player, score, reasons, prediction };
+  }).sort((a, b) => b.score - a.score || Math.random() - .5);
 }
 
-ui.start.addEventListener("click", startGame);
-ui.again.addEventListener("click", startGame);
+function buildRecap() {
+  const winner = restaurantFor(state.winner);
+  ui.recapContent.innerHTML = `
+    <section class="recap-section">
+      <div class="recap-winner">
+        <strong>${winner.emoji} ${winner.name}</strong>
+        <span>${winner.cuisine} · ${state.finalTally[winner.id] || 0} final votes</span>
+      </div>
+    </section>
+
+    <section class="recap-section">
+      <h3>Final Standings</h3>
+      ${state.standings.map((player, index) => `
+        <div class="score-row ${index === 0 ? "champion" : ""}">
+          <div class="rank">${index === 0 ? "🏆" : index + 1}</div>
+          ${buddyMini(player)}
+          <div>
+            <div class="score-name">${player.name} · ${player.role}</div>
+            <div class="score-reasons">${player.reasons.join(" · ")}</div>
+          </div>
+          <div class="score-points">${player.score} pts</div>
+        </div>
+      `).join("")}
+    </section>
+
+    <section class="recap-section">
+      <h3>Game Timeline</h3>
+      ${state.timeline.map((item) => `
+        <div class="timeline-row">
+          <span aria-hidden="true">${item.icon}</span>
+          <div><strong>${item.title}</strong><small>${item.detail}</small></div>
+        </div>
+      `).join("")}
+    </section>
+  `;
+  activateBuddyImages(ui.recapContent);
+}
+
+function revealChampion() {
+  state.standings = calculateStandings();
+  const champion = state.standings[0];
+  state.timeline.push({ icon: "⭐", title: "Bite Champion", detail: `${champion.name} with ${champion.score} points` });
+
+  setStatus("Final Standings", 100, `${champion.name} is tonight’s Bite Champion.`);
+  showMoment(`
+    <article class="moment champion-card">
+      <p class="moment-kicker">Bite Champion</p>
+      ${buddyPortrait(champion, "champion-avatar")}
+      <h2>${champion.name}</h2>
+      <span class="role-pill">${champion.role}</span>
+      <div class="points-total">${champion.score} points</div>
+      <p class="moment-copy">${champion.reasons.join(" · ")}</p>
+    </article>
+  `);
+
+  buildRecap();
+  ui.finalActions.classList.remove("hidden");
+  ui.pause.classList.add("hidden");
+}
+
+async function runGame() {
+  const token = ++runId;
+  paused = false;
+  state = buildInitialState();
+
+  ui.welcome.classList.add("hidden");
+  ui.broadcast.classList.remove("hidden");
+  ui.pause.classList.remove("hidden");
+  ui.finalActions.classList.add("hidden");
+  ui.pauseOverlay.classList.add("hidden");
+  ui.pause.setAttribute("aria-pressed", "false");
+  ui.pauseLabel.textContent = "Pause";
+
+  const steps = [
+    introducePlayers,
+    revealLineup,
+    lockPredictions,
+    firstElimination,
+    secondElimination,
+    championshipVote,
+    revealWinner
+  ];
+
+  for (const step of steps) {
+    const completed = await step(token);
+    if (!completed || !isCurrent(token)) return;
+  }
+
+  revealChampion();
+}
+
+function togglePause(forceValue) {
+  if (ui.pause.classList.contains("hidden")) return;
+  paused = typeof forceValue === "boolean" ? forceValue : !paused;
+  ui.pause.setAttribute("aria-pressed", String(paused));
+  ui.pauseLabel.textContent = paused ? "Resume" : "Pause";
+  ui.pauseOverlay.classList.toggle("hidden", !paused);
+}
+
+function openRecap() {
+  if (typeof ui.recap.showModal === "function") {
+    ui.recap.showModal();
+  } else {
+    ui.recap.setAttribute("open", "");
+  }
+}
+
+function closeRecap() {
+  if (typeof ui.recap.close === "function" && ui.recap.open) {
+    ui.recap.close();
+  } else {
+    ui.recap.removeAttribute("open");
+  }
+}
+
+ui.start.addEventListener("click", runGame);
+ui.replay.addEventListener("click", runGame);
+ui.pause.addEventListener("click", () => togglePause());
+ui.pauseOverlay.addEventListener("click", () => togglePause(false));
+ui.recapButton.addEventListener("click", openRecap);
+ui.closeRecap.addEventListener("click", closeRecap);
+ui.recap.addEventListener("click", (event) => {
+  if (event.target === ui.recap) closeRecap();
+});
