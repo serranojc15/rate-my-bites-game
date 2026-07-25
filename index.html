@@ -2,71 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f97316">
-  <title>Rate My Bites Game</title>
+  <meta name="description" content="A one-tap, AI-powered Rate My Bites Game Night demo.">
+  <title>Rate My Bites Game Night</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="app-shell">
-    <header class="brand-bar">
-      <div class="brand-mark" aria-hidden="true">🍴</div>
-      <div>
-        <p class="eyebrow">Presented by Rate My Bites</p>
-        <h1>Game Night</h1>
+    <header class="top-bar">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">🍴</div>
+        <div>
+          <span>Rate My Bites</span>
+          <strong>Game Night</strong>
+        </div>
       </div>
-      <span class="demo-pill">AI Demo</span>
+
+      <button id="pauseButton" class="icon-button hidden" type="button" aria-pressed="false">
+        <span class="pause-icon" aria-hidden="true">Ⅱ</span>
+        <span id="pauseLabel">Pause</span>
+      </button>
     </header>
 
-    <section id="welcome" class="screen hero-screen">
-      <div class="hero-copy">
-        <p class="eyebrow">Friday Night Dinner</p>
-        <h2>Turn tonight’s dinner decision into a game.</h2>
-        <p>One click starts the entire show. Four AI players predict, eliminate, vote, and compete for the Bite Champion title.</p>
+    <section id="welcomeScreen" class="screen welcome-screen">
+      <div class="welcome-art" aria-hidden="true">
+        <span>🍔</span><span>🌮</span><span>🍝</span>
       </div>
+      <p class="eyebrow">Friday Night Dinner</p>
+      <h1>Turn choosing dinner into tonight’s game.</h1>
+      <p class="welcome-copy">Tap once, then watch the Bite Buddies predict, vote, eliminate restaurants, and crown a champion.</p>
 
-      <div class="game-summary" aria-label="Game summary">
-        <div><strong>4</strong><span>AI Players</span></div>
+      <div class="summary-row" aria-label="Tonight's game includes four Bite Buddies, six restaurants, and one champion">
+        <div><strong>4</strong><span>Bite Buddies</span></div>
         <div><strong>6</strong><span>Restaurants</span></div>
-        <div><strong>1</strong><span>Winner</span></div>
+        <div><strong>1</strong><span>Champion</span></div>
       </div>
 
-      <button id="startGame" class="primary-button" type="button">Start Tonight’s Game</button>
+      <button id="startButton" class="primary-button" type="button">Start Tonight’s Game</button>
+      <p class="helper-text">No more buttons required. The game plays automatically.</p>
     </section>
 
-    <section id="game" class="screen game-screen hidden" aria-live="polite">
-      <div class="game-heading">
+    <section id="broadcastScreen" class="screen broadcast-screen hidden" aria-live="polite">
+      <div class="broadcast-status">
         <div>
-          <p id="phaseLabel" class="eyebrow">Pregame</p>
-          <h2 id="phaseTitle">Players are arriving…</h2>
-          <p id="phaseDescription">The broadcast will advance automatically.</p>
+          <span id="roundLabel" class="eyebrow">Pregame</span>
+          <span id="remainingLabel" class="remaining-label">6 restaurants</span>
         </div>
         <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
       </div>
 
-      <section>
-        <h3>Tonight’s Players</h3>
-        <div id="playerGrid" class="player-grid"></div>
-      </section>
+      <section id="broadcastStage" class="broadcast-stage"></section>
 
-      <div id="commissionerMessage" class="commissioner-message">The commissioner is preparing the restaurant board.</div>
+      <footer class="stage-footer">
+        <div class="live-dot" aria-hidden="true"></div>
+        <p id="commissionerLine">The AI commissioner is preparing tonight’s game.</p>
+      </footer>
 
-      <section>
-        <h3>Restaurant Board</h3>
-        <div id="restaurantGrid" class="restaurant-grid"></div>
-      </section>
-
-      <section class="broadcast-section">
-        <h3>Live Broadcast</h3>
-        <div id="broadcastFeed" class="broadcast-feed"></div>
-      </section>
-
-      <section id="results" class="results"></section>
-
-      <div class="actions">
-        <button id="playAgain" class="primary-button hidden" type="button">Play Another Game</button>
+      <div id="finalActions" class="final-actions hidden">
+        <button id="recapButton" class="secondary-button" type="button">View Game Recap</button>
+        <button id="replayButton" class="primary-button" type="button">Play Again</button>
       </div>
     </section>
+
+    <div id="pauseOverlay" class="pause-overlay hidden" role="status">
+      <div>
+        <span aria-hidden="true">⏸</span>
+        <strong>Game paused</strong>
+        <p>Tap Resume when you’re ready.</p>
+      </div>
+    </div>
+
+    <dialog id="recapDialog" class="recap-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">Game Complete</p>
+          <h2>Tonight’s Recap</h2>
+        </div>
+        <button id="closeRecapButton" class="close-button" type="button" aria-label="Close game recap">×</button>
+      </div>
+      <div id="recapContent" class="recap-content"></div>
+    </dialog>
   </main>
 
   <script src="app.js"></script>
