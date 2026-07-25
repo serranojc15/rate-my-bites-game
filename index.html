@@ -66,6 +66,12 @@
   <script src="finalReveal.js"></script>
   <script src="missionReport.js"></script>
   <script>
+    // Keep the Final Reveal's visible build badge on the application version while
+    // preserving “The Final Reveal” as the name of that presentation stage.
+    finalRevealVersionMarkup = function () {
+      return `<div class="final-reveal-version" aria-label="Bite Buddy League ${MISSION_REPORT_VERSION}, ${FINAL_REVEAL_NAME}"><strong>${MISSION_REPORT_VERSION}</strong><span>${FINAL_REVEAL_NAME}</span></div>`;
+    };
+
     // The base app creates its first state object before additive sprint layers load.
     // Add the reveal/report fields to that live session; future resets receive them from initialState().
     state = {
