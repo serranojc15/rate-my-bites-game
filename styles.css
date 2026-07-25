@@ -47,7 +47,7 @@ button { font: inherit; }
   font-size: 1.5rem;
 }
 
-.demo-pill, .eyebrow {
+.demo-pill, .eyebrow, .player-role {
   text-transform: uppercase;
   letter-spacing: .12em;
   font-size: .74rem;
@@ -149,12 +149,34 @@ h3 { margin-top: 30px; }
 }
 
 .player-card {
-  padding: 16px;
+  padding: 14px 14px 16px;
   text-align: center;
   background: #fffaf6;
+  overflow: hidden;
 }
-.player-avatar { font-size: 2rem; }
-.player-card strong { display: block; margin-top: 6px; }
+
+.buddy-stage {
+  min-height: 148px;
+  display: grid;
+  place-items: end center;
+  margin: -6px -6px 8px;
+  border-radius: 15px;
+  background: radial-gradient(circle at 50% 75%, rgba(249,115,22,.22), transparent 55%);
+}
+
+.buddy-art {
+  width: min(100%, 154px);
+  height: 154px;
+  object-fit: contain;
+  display: block;
+}
+
+.player-role {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: var(--orange-dark);
+}
+.player-card strong { display: block; font-size: 1.08rem; }
 .small { color: var(--muted); font-size: .82rem; }
 
 .commissioner-message {
@@ -184,7 +206,26 @@ h3 { margin-top: 30px; }
 .restaurant-copy strong { display: block; }
 
 .broadcast-feed { display: grid; gap: 10px; }
-.feed-item { padding: 13px; background: #fffaf6; animation: rise .3s ease; }
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 13px;
+  background: #fffaf6;
+  animation: rise .3s ease;
+}
+.feed-buddy, .score-buddy {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.feed-emoji {
+  width: 46px;
+  text-align: center;
+  font-size: 1.5rem;
+  flex: 0 0 auto;
+}
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
 
 .results { margin-top: 24px; }
@@ -195,18 +236,21 @@ h3 { margin-top: 30px; }
   color: white;
   background: linear-gradient(135deg, var(--orange), var(--orange-dark));
 }
+.trophy { font-size: 4rem; }
+.winner-eyebrow { color: white; }
 .winner-banner h2 { margin: 8px 0; font-size: clamp(2.2rem, 6vw, 4rem); }
 .winner-banner p { color: rgba(255,255,255,.9); }
 .score-row {
   display: grid;
-  grid-template-columns: 44px 1fr auto;
-  gap: 12px;
+  grid-template-columns: 38px 52px 1fr auto;
+  gap: 10px;
   align-items: center;
   margin-top: 10px;
-  padding: 14px;
+  padding: 12px;
 }
 .score-row.champion { background: #fffbeb; border-color: #f59e0b; }
-.points { color: var(--orange-dark); font-weight: 900; }
+.rank { text-align: center; font-weight: 900; }
+.points { color: var(--orange-dark); font-weight: 900; white-space: nowrap; }
 .actions { text-align: center; margin-top: 24px; }
 .hidden { display: none !important; }
 
@@ -221,4 +265,8 @@ h3 { margin-top: 30px; }
   .restaurant-grid { grid-template-columns: 1fr; }
   .game-summary { grid-template-columns: 1fr; }
   .primary-button { width: 100%; }
+  .buddy-stage { min-height: 125px; }
+  .buddy-art { width: 125px; height: 125px; }
+  .score-row { grid-template-columns: 32px 44px 1fr; }
+  .score-row .points { grid-column: 3; }
 }
