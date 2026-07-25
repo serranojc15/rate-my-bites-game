@@ -21,6 +21,37 @@
 
     <section id="app" class="game-card" aria-live="polite"></section>
   </main>
+  <script>
+    // Never leave a broken image in the game. External photos remain the first
+    // choice, but a branded local SVG is generated instantly if one cannot load.
+    document.addEventListener("error", function (event) {
+      const image = event.target;
+      if (!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied) return;
+
+      image.dataset.fallbackApplied = "true";
+      image.removeAttribute("srcset");
+
+      const label = (image.alt || "Rate My Bites").slice(0, 42);
+      const safeLabel = label.replace(/[&<>"']/g, function (character) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character];
+      });
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+        <defs>
+          <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff7ed"/>
+            <stop offset="1" stop-color="#fed7aa"/>
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="720" fill="url(#background)"/>
+        <circle cx="600" cy="292" r="118" fill="#f97316" opacity=".14"/>
+        <circle cx="600" cy="292" r="82" fill="#ffffff"/>
+        <text x="600" y="324" text-anchor="middle" font-size="86">🍽️</text>
+        <text x="600" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#2c2421">${safeLabel}</text>
+        <text x="600" y="526" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#756861">Rate My Bites</text>
+      </svg>`;
+      image.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }, true);
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
