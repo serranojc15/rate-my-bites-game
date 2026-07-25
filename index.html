@@ -63,5 +63,16 @@
   <script src="sprint42Finish.js"></script>
   <script src="directorCut.js"></script>
   <script src="finalReveal.js"></script>
+  <script>
+    // The base app creates its first state object before additive sprint layers load.
+    // Add the reveal fields to that live session; future resets receive them from initialState().
+    state = {
+      ...state,
+      revealStep: Number.isFinite(state.revealStep) ? state.revealStep : 0,
+      revealScore: Number.isFinite(state.revealScore) ? state.revealScore : 0,
+      revealComplete: Boolean(state.revealComplete)
+    };
+    render();
+  </script>
 </body>
 </html>
