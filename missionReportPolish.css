@@ -1,0 +1,28 @@
+/* Sprint v0.4.3.0 — conversation transcript review */
+
+.mission-conversation-modal{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:18px}
+.mission-conversation-backdrop{position:absolute;inset:0;background:rgba(31,23,20,.72);backdrop-filter:blur(5px)}
+.mission-conversation-dialog{position:relative;z-index:1;width:min(760px,100%);max-height:min(860px,92svh);overflow:auto;border:1px solid rgba(255,255,255,.75);border-radius:26px;background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.32)}
+.mission-conversation-dialog>header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:20px 22px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.96);backdrop-filter:blur(10px)}
+.mission-conversation-dialog h2{margin:3px 0 0;font-size:clamp(1.6rem,5vw,2.4rem)}
+.mission-conversation-close{width:42px;height:42px;flex:0 0 auto;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font-size:1.7rem;line-height:1}
+.mission-conversation-dialog ol{display:grid;gap:0;margin:0;padding:18px 22px;list-style:none;counter-reset:mission-transcript}
+.mission-conversation-dialog li{position:relative;padding:0 0 22px 42px;counter-increment:mission-transcript}
+.mission-conversation-dialog li:before{content:counter(mission-transcript);position:absolute;left:0;top:1px;width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:#2c2421;color:#fdba74;font-size:.68rem;font-weight:950}
+.mission-conversation-dialog li:after{content:"";position:absolute;left:13px;top:32px;bottom:5px;width:2px;background:#fed7aa}
+.mission-conversation-dialog li:last-child:after{display:none}
+.mission-conversation-dialog li>span{display:block;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.08em;font-size:.62rem;font-weight:950}
+.mission-conversation-dialog li>strong{display:block;margin-top:5px;font-size:1rem}
+.mission-conversation-dialog blockquote{margin:7px 0 0;padding:12px 14px;border-left:4px solid var(--orange);border-radius:0 13px 13px 0;background:#fff8f2;color:var(--ink);line-height:1.55}
+.mission-conversation-dialog li>p{margin:7px 0 0;color:var(--muted);font-size:.78rem;font-style:italic}
+
+@media(max-width:560px){
+  .mission-conversation-modal{padding:7px}
+  .mission-conversation-dialog{max-height:96svh;border-radius:20px}
+  .mission-conversation-dialog>header{padding:16px}
+  .mission-conversation-dialog ol{padding:16px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .mission-conversation-dialog{scroll-behavior:auto}
+}
