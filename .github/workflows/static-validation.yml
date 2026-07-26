@@ -35,15 +35,26 @@ jobs:
       - name: Run Sprint 4.3.1 tests
         run: node tests/sprint431.test.cjs
 
-      - name: Verify Sprint 4.3.1 integration
+      - name: Run Sprint 4.3.2 tests
+        run: node tests/sprint432.test.cjs
+
+      - name: Verify Sprint 4.3.2 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.3.1' index.html
+          grep -q 'v0.4.3.2' release.js
+          grep -q 'Release Consistency & Variant Polish' release.js
+          grep -q 'release.js' index.html
+          grep -q 'sprint432.css' index.html
+          grep -q 'sprint432.js' index.html
+          grep -q 'Preparing tonight’s case' index.html
           grep -q 'missionReport.css' index.html
           grep -q 'missionReport.js' index.html
           grep -q 'missionReportAnalysis.js' index.html
           grep -q 'sprint431.css' index.html
           grep -q 'sprint431.js' index.html
-          grep -q 'Fresh Cases' sprint431.js
           grep -q 'Pup Voice Studio' sprint431.js
+          grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
+          grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
+          ! grep -q 'MISSION_REPORT_VERSION' index.html
+          ! grep -Eq 'v0\.4\.3\.[01]' release.js sprint432.js index.html
