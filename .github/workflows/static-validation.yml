@@ -38,23 +38,27 @@ jobs:
       - name: Run Sprint 4.3.2 tests
         run: node tests/sprint432.test.cjs
 
-      - name: Verify Sprint 4.3.2 integration
+      - name: Run Detective Progression tests
+        run: node tests/progression.test.cjs
+
+      - name: Verify Detective Progression integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.3.2' release.js
-          grep -q 'Release Consistency & Variant Polish' release.js
-          grep -q 'release.js' index.html
-          grep -q 'sprint432.css' index.html
-          grep -q 'sprint432.js' index.html
-          grep -q 'Preparing tonight’s case' index.html
-          grep -q 'missionReport.css' index.html
-          grep -q 'missionReport.js' index.html
-          grep -q 'missionReportAnalysis.js' index.html
-          grep -q 'sprint431.css' index.html
-          grep -q 'sprint431.js' index.html
+          grep -q 'v0.4.4.0' release.js
+          grep -q 'Detective Progression' release.js
+          grep -q 'bite-buddy-progression-v1' progression.js
+          grep -q 'Rookie Biter' progression.js
+          grep -q 'Master Biter' progression.js
+          grep -q 'same-variant replay is practice' progression.js
+          grep -q 'detective-profile-panel' progressionUI.js
+          grep -q 'XP earned this case' progressionUI.js
+          grep -q 'progression.css' index.html
+          grep -q 'progression.js' index.html
+          grep -q 'progressionUI.js' index.html
           grep -q 'Pup Voice Studio' sprint431.js
           grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
           grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
+          grep -q 'const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 }' app.js
+          ! grep -Eq 'v0\.4\.[0-3]\.' release.js index.html
           ! grep -q 'MISSION_REPORT_VERSION' index.html
-          ! grep -Eq 'v0\.4\.3\.[01]' release.js sprint432.js index.html
