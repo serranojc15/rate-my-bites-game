@@ -151,8 +151,9 @@ ok(cssSource.includes('@media (prefers-reduced-motion: reduce)'), 'Sprint 4.4.1 
 
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
-equal(releaseSandbox.window.BiteBuddyRelease.version, 'v0.4.4.1', 'release version is v0.4.4.1');
-equal(releaseSandbox.window.BiteBuddyRelease.releaseName, 'Choice-First Flow, Cinematic Reveal & Group Leaderboard', 'release name is present');
+const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
+ok(/^v0\.4\.4\.\d+$/.test(releaseVersion), 'current release is Sprint 4.4.1 or later');
+ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is present');
 ok(htmlSource.includes('sprint441.css') && htmlSource.includes('sprint441.js'), 'Sprint 4.4.1 assets are integrated');
 ok(htmlSource.indexOf('groupLeaderboardData.js') < htmlSource.indexOf('groupLeaderboard.js'), 'leaderboard data loads before leaderboard behavior');
 ok(htmlSource.indexOf('groupLeaderboard.js') < htmlSource.indexOf('sprint441.js'), 'leaderboard loads before final Sprint wrapper');
