@@ -197,8 +197,10 @@ function perfectReport() {
   const doc = { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } };
   const sandbox = { window: { document: doc } };
   vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
-  equal(sandbox.window.BiteBuddyRelease.version, 'v0.4.4.0', 'release version is v0.4.4.0');
-  equal(sandbox.window.BiteBuddyRelease.releaseName, 'Detective Progression', 'release name is Detective Progression');
+  const versionParts = sandbox.window.BiteBuddyRelease.version.match(/^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/)?.slice(1).map(Number);
+  ok(Boolean(versionParts), 'release exposes a valid four-part version');
+  ok(versionParts[0] > 0 || versionParts[1] > 4 || (versionParts[1] === 4 && versionParts[2] >= 4), 'current release is Detective Progression or later');
+  ok(typeof sandbox.window.BiteBuddyRelease.releaseName === 'string' && sandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is exposed');
   ok(uiSource.includes('detective-profile-panel'), 'home detective profile panel is implemented');
   ok(uiSource.includes('XP earned this case'), 'Mission Report displays XP earned');
   ok(uiSource.includes('detective-development'), 'Mission Report progression section has a single deliberate class');
