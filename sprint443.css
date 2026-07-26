@@ -1,0 +1,456 @@
+/* Bite Buddy League v0.4.4.3 — Order Prediction Clarity & Momentum */
+
+.order-global-progress {
+  margin-bottom: 1rem;
+}
+
+.order-prediction-context {
+  margin-bottom: 1rem;
+}
+
+.order-prediction-context h1 {
+  margin: 0.25rem 0 0.55rem;
+  font-size: clamp(2rem, 5.2vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.order-prediction-context > p:last-child {
+  max-width: 48rem;
+  margin: 0;
+  color: var(--muted, #756861);
+  line-height: 1.5;
+}
+
+.order-clue-panel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  margin: 0 0 1.15rem;
+  padding: 0.9rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1.2rem;
+  background: #fffaf7;
+  color: #2c2421;
+  text-align: left;
+}
+
+.order-clue-panel > img {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.order-clue-copy {
+  min-width: 0;
+}
+
+.order-clue-copy strong,
+.order-clue-copy p,
+.order-clue-copy em {
+  display: block;
+}
+
+.order-clue-copy strong {
+  margin-top: 0.35rem;
+  font-size: 1.05rem;
+}
+
+.order-clue-copy p {
+  margin: 0.3rem 0 0;
+  color: var(--muted, #756861);
+  line-height: 1.45;
+}
+
+.order-clue-copy em {
+  margin-top: 0.45rem;
+  color: #9a3412;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.order-menu-section .section-heading {
+  margin-top: 0.2rem;
+}
+
+.order-option {
+  position: relative;
+}
+
+.order-option[aria-pressed="true"] {
+  outline: 3px solid rgba(249, 115, 22, 0.35);
+  outline-offset: 2px;
+}
+
+.order-option > span {
+  min-width: 0;
+}
+
+.order-option > span strong {
+  overflow-wrap: anywhere;
+}
+
+.order-selection-label {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.order-option.selected .order-selection-label {
+  background: #ffedd5;
+  box-shadow: inset 0 0 0 1px #f97316;
+}
+
+.order-decision-dock {
+  position: sticky;
+  z-index: 22;
+  bottom: max(0.7rem, env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.85fr) minmax(18rem, 1.25fr) minmax(13rem, 0.75fr);
+  gap: 0.8rem 1rem;
+  align-items: end;
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(249, 115, 22, 0.27);
+  border-radius: 1.25rem;
+  background: rgba(255, 252, 249, 0.97);
+  box-shadow: 0 16px 38px rgba(70, 42, 25, 0.16);
+  backdrop-filter: blur(14px);
+}
+
+.order-dock-summary {
+  min-width: 0;
+}
+
+.order-dock-summary span {
+  display: block;
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.order-dock-summary strong,
+.order-dock-summary small {
+  display: block;
+}
+
+.order-dock-summary strong {
+  margin: 0.18rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-dock-summary small {
+  color: var(--muted, #756861);
+}
+
+.order-dock-confidence {
+  min-width: 0;
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.order-dock-confidence > div:first-child {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.order-dock-confidence > div:first-child strong {
+  font-size: 0.88rem;
+}
+
+.order-dock-confidence > div:first-child small {
+  color: var(--muted, #756861);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.order-dock-confidence .confidence-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(2.65rem, 1fr));
+  gap: 0.42rem;
+  width: 100%;
+}
+
+.order-dock-confidence .confidence-button {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 1px solid #d9ccc4;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #2c2421;
+  font-weight: 900;
+}
+
+.order-dock-confidence .confidence-button[aria-pressed="true"],
+.order-dock-confidence .confidence-button.selected {
+  border-color: #f97316;
+  background: #ffedd5;
+  color: #9a3412;
+  box-shadow: inset 0 0 0 2px #f97316;
+}
+
+.order-dock-confidence .confidence-button:focus-visible,
+.order-option:focus-visible,
+.order-clue-panel:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.42);
+  outline-offset: 2px;
+}
+
+.order-decision-dock > #lockOrderPrediction {
+  width: 100%;
+  min-width: 0;
+}
+
+.order-lock-guidance {
+  grid-column: 1 / -1;
+  min-height: 1.15rem;
+  margin: 0;
+  color: var(--muted, #756861);
+  font-size: 0.82rem;
+}
+
+.order-decision-dock[data-order-status="empty"] .order-dock-confidence {
+  opacity: 0.78;
+}
+
+.order-decision-dock[data-order-status="confidence-required"] .order-dock-confidence {
+  padding: 0.45rem;
+  border-radius: 0.95rem;
+  background: #fff7ed;
+}
+
+.order-decision-dock[data-order-status="ready"] {
+  border-color: rgba(21, 128, 61, 0.35);
+}
+
+.order-lock-confirmation {
+  min-height: min(72vh, 42rem);
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  padding: clamp(1rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.order-confirmation-progress {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  align-items: center;
+  color: var(--muted, #756861);
+  font-size: 0.82rem;
+}
+
+.order-confirmation-progress span {
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-weight: 900;
+}
+
+.order-lock-confirmation h1 {
+  max-width: 48rem;
+  margin: 0 auto;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.order-confirmation-choice {
+  width: min(100%, 34rem);
+  margin: 0 auto;
+  padding: 1rem 1.1rem;
+  border: 1px solid #fed7aa;
+  border-radius: 1.15rem;
+  background: linear-gradient(135deg, #fffaf5, #fff7ed);
+}
+
+.order-confirmation-choice span,
+.order-confirmation-choice strong,
+.order-confirmation-choice small {
+  display: block;
+}
+
+.order-confirmation-choice span {
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.order-confirmation-choice strong {
+  margin: 0.25rem 0;
+  font-size: 1.35rem;
+  overflow-wrap: anywhere;
+}
+
+.order-confirmation-choice small {
+  color: var(--muted, #756861);
+}
+
+.order-confirmation-pup {
+  width: min(100%, 38rem);
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0.75rem 0.9rem;
+  border-radius: 1rem;
+  background: #fffaf7;
+  text-align: left;
+}
+
+.order-confirmation-pup img {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+}
+
+.order-confirmation-pup p {
+  margin: 0;
+  color: var(--muted, #756861);
+}
+
+.order-category-transition {
+  width: min(100%, 38rem);
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 1.15rem;
+  background: #2c2421;
+  color: #fff;
+}
+
+.order-category-transition h2,
+.order-category-transition p {
+  margin: 0;
+}
+
+.order-category-transition h2 {
+  margin-top: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.order-category-transition > p:last-child {
+  margin-top: 0.35rem;
+  color: #fed7aa;
+}
+
+.order-next-button {
+  width: min(100%, 38rem);
+  margin: 0 auto;
+}
+
+@media (max-width: 760px) {
+  .order-decision-dock {
+    grid-template-columns: minmax(0, 0.8fr) minmax(15rem, 1.2fr);
+    align-items: start;
+  }
+
+  .order-decision-dock > #lockOrderPrediction,
+  .order-decision-dock .order-lock-guidance {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .order-prediction-context h1 {
+    font-size: 2.2rem;
+  }
+
+  .order-clue-panel {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .order-clue-panel > img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .order-decision-dock {
+    grid-template-columns: 1fr;
+    gap: 0.72rem;
+    padding: 0.78rem;
+  }
+
+  .order-decision-dock > #lockOrderPrediction,
+  .order-decision-dock .order-lock-guidance {
+    grid-column: auto;
+  }
+
+  .order-dock-confidence .confidence-buttons {
+    grid-template-columns: repeat(5, minmax(2.4rem, 1fr));
+    gap: 0.32rem;
+  }
+
+  .order-dock-confidence .confidence-button {
+    min-height: 2.7rem;
+  }
+
+  .order-lock-confirmation {
+    min-height: 64vh;
+    padding: 1rem 0.25rem;
+  }
+
+  .order-confirmation-progress {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .order-decision-dock {
+    padding: 0.68rem;
+  }
+
+  .order-dock-confidence .confidence-buttons {
+    grid-template-columns: repeat(5, minmax(2.2rem, 1fr));
+    gap: 0.25rem;
+  }
+
+  .order-dock-confidence > div:first-child small {
+    font-size: 0.68rem;
+  }
+
+  .order-clue-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .order-clue-panel > img {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-decision-dock,
+  .order-dock-confidence .confidence-button,
+  .order-option,
+  .order-lock-confirmation {
+    transition: none !important;
+    animation: none !important;
+  }
+}
