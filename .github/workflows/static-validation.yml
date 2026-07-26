@@ -32,11 +32,18 @@ jobs:
       - name: Run Mission Report tests
         run: node tests/missionReport.test.cjs
 
-      - name: Verify Sprint 4.3 integration
+      - name: Run Sprint 4.3.1 tests
+        run: node tests/sprint431.test.cjs
+
+      - name: Verify Sprint 4.3.1 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.3.0' index.html
+          grep -q 'v0.4.3.1' index.html
           grep -q 'missionReport.css' index.html
           grep -q 'missionReport.js' index.html
           grep -q 'missionReportAnalysis.js' index.html
+          grep -q 'sprint431.css' index.html
+          grep -q 'sprint431.js' index.html
+          grep -q 'Fresh Cases' sprint431.js
+          grep -q 'Pup Voice Studio' sprint431.js
