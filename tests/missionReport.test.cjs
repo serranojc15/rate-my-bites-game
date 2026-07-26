@@ -200,14 +200,21 @@ assert.equal(report.personResults.length, 3);
 assert.equal(report.categoryResults.find(item => item.id === "meal").earned, 30);
 assert.equal(report.categoryResults.find(item => item.id === "drink").earned, 40);
 assert.equal(report.categoryResults.find(item => item.id === "dessert").earned, 20);
-assert.deepEqual(
-  report.categoryResults.find(item => item.id === "overall"),
-  { id: "overall", label: "Overall", correct: 6, total: 10, earned: 210, possible: 300 }
-);
+
+// Values created in a vm context have different realm prototypes, so compare
+// the normalized fields rather than using strict deep equality across realms.
+const overall = report.categoryResults.find(item => item.id === "overall");
+assert.equal(overall.id, "overall");
+assert.equal(overall.label, "Overall");
+assert.equal(overall.correct, 6);
+assert.equal(overall.total, 10);
+assert.equal(overall.earned, 210);
+assert.equal(overall.possible, 300);
+
 assert.equal(report.missedContext.personName, "John");
 assert.equal(report.missedContext.context.id, "permanent");
 assert.equal(report.storyMemory.length, 1);
 assert.match(report.pupDebrief, /Casa Luna/);
 assert.equal(sandbox.window.BiteBuddyMissionReport.version, "v0.4.3.0");
 
-console.log("Mission Report tests passed: 23 assertions");
+console.log("Mission Report tests passed: 28 assertions");
