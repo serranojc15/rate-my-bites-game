@@ -44,6 +44,9 @@ jobs:
       - name: Run Sprint 4.4.1 tests
         run: node tests/sprint441.test.cjs
 
+      - name: Run Sprint 4.4.1 polish tests
+        run: node tests/sprint441Polish.test.cjs
+
       - name: Verify Sprint 4.4.1 integration
         shell: bash
         run: |
@@ -55,13 +58,17 @@ jobs:
           grep -q 'Lock Restaurant Prediction' sprint441.js
           grep -q 'Continue to Order Predictions' sprint441.js
           grep -q 'restaurantRevealLockedChoice' sprint441.js
+          grep -q 'working.insertAdjacentElement("afterend", dock)' sprint441Polish.js
+          grep -q 'preventScroll: true' sprint441Polish.js
           grep -q 'Prototype preview:' groupLeaderboard.js
           grep -q 'View Leaderboard' groupLeaderboard.js
           grep -q 'sim-jordan' groupLeaderboardData.js
           grep -q 'groupLeaderboardData.js' index.html
           grep -q 'groupLeaderboard.js' index.html
           grep -q 'sprint441.css' index.html
+          grep -q 'sprint441Polish.css' index.html
           grep -q 'sprint441.js' index.html
+          grep -q 'sprint441Polish.js' index.html
           grep -q 'progression.css' index.html
           grep -q 'progression.js' index.html
           grep -q 'progressionUI.js' index.html
