@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f97316">
   <meta name="description" content="Bite Buddy League investigation game powered by Rate My Bites.">
-  <title>Rate My Bites — Bite Buddy League v0.4.3.0</title>
+  <title>Rate My Bites — Bite Buddy League v0.4.3.1</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="sprint3.css">
   <link rel="stylesheet" href="sprint4.css">
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="finalReveal.css">
   <link rel="stylesheet" href="missionReport.css">
   <link rel="stylesheet" href="missionReportPolish.css">
+  <link rel="stylesheet" href="sprint431.css">
 </head>
 <body>
   <main class="app-shell">
@@ -29,33 +30,16 @@
     <section id="app" class="game-card" aria-live="polite"></section>
   </main>
   <script>
-    // Never leave a broken image in the game. External photos remain the first
-    // choice, but a branded local SVG is generated instantly if one cannot load.
     document.addEventListener("error", function (event) {
       const image = event.target;
       if (!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied) return;
-
       image.dataset.fallbackApplied = "true";
       image.removeAttribute("srcset");
-
       const label = (image.alt || "Rate My Bites").slice(0, 42);
       const safeLabel = label.replace(/[&<>"']/g, function (character) {
         return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character];
       });
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
-        <defs>
-          <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#fff7ed"/>
-            <stop offset="1" stop-color="#fed7aa"/>
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="720" fill="url(#background)"/>
-        <circle cx="600" cy="292" r="118" fill="#f97316" opacity=".14"/>
-        <circle cx="600" cy="292" r="82" fill="#ffffff"/>
-        <text x="600" y="324" text-anchor="middle" font-size="86">🍽️</text>
-        <text x="600" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#2c2421">${safeLabel}</text>
-        <text x="600" y="526" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#756861">Rate My Bites</text>
-      </svg>`;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720"><defs><linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#fed7aa"/></linearGradient></defs><rect width="1200" height="720" fill="url(#background)"/><circle cx="600" cy="292" r="118" fill="#f97316" opacity=".14"/><circle cx="600" cy="292" r="82" fill="#ffffff"/><text x="600" y="324" text-anchor="middle" font-size="86">🍽️</text><text x="600" y="470" text-anchor="middle" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#2c2421">${safeLabel}</text><text x="600" y="526" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#756861">Rate My Bites</text></svg>`;
       image.src = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     }, true);
   </script>
@@ -69,14 +53,9 @@
   <script src="missionReportAnalysis.js"></script>
   <script src="missionReportPolish.js"></script>
   <script>
-    // Keep the Final Reveal's visible build badge on the application version while
-    // preserving “The Final Reveal” as the name of that presentation stage.
     finalRevealVersionMarkup = function () {
       return `<div class="final-reveal-version" aria-label="Bite Buddy League ${MISSION_REPORT_VERSION}, ${FINAL_REVEAL_NAME}"><strong>${MISSION_REPORT_VERSION}</strong><span>${FINAL_REVEAL_NAME}</span></div>`;
     };
-
-    // The base app creates its first state object before additive sprint layers load.
-    // Add the reveal/report fields to that live session; future resets receive them from initialState().
     state = {
       ...state,
       revealStep: Number.isFinite(state.revealStep) ? state.revealStep : 0,
@@ -84,7 +63,7 @@
       revealComplete: Boolean(state.revealComplete),
       missionReportViewed: Boolean(state.missionReportViewed)
     };
-    render();
   </script>
+  <script src="sprint431.js"></script>
 </body>
 </html>
