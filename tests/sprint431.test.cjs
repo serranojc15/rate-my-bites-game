@@ -9,7 +9,7 @@ let assertions = 0;
 function ok(value, message) { assert.ok(value, message); assertions += 1; }
 function includes(value, message) { ok(sprint.includes(value), message); }
 
-includes('const VERSION = "v0.4.3.1"', 'release version is defined');
+includes('const VERSION = "v0.4.3.1"', 'historical Sprint 4.3.1 module version is defined');
 includes('id: "A", title: "The Great Sushi Debate"', 'original variant is preserved');
 includes('id: "B", title: "The Harbor Table"', 'fresh variant B exists');
 includes('id: "C", title: "The Garden Celebration"', 'fresh variant C exists');
@@ -42,8 +42,8 @@ includes('Play Fresh Variant', 'fresh-variant action is visible');
 ok(/const points = \{ restaurant: 120, meal: 30, drink: 20, dessert: 10 \}/.test(app), 'authoritative score values remain unchanged');
 ok(120 + (30 + 20 + 10) * 3 === 300, 'total possible score remains 300');
 ok((sprint.match(/id: "[ABC]", title:/g) || []).length === 3, 'exactly three initial variants are declared');
-ok(html.includes('sprint431.css') && html.includes('sprint431.js'), 'Sprint 4.3.1 assets are integrated');
-ok(html.includes('v0.4.3.1'), 'visible document version is current');
+ok(html.includes('sprint431.css') && html.includes('sprint431.js'), 'Sprint 4.3.1 assets remain integrated');
+ok(html.indexOf('sprint431.js') < html.indexOf('sprint431Polish.js'), 'Sprint 4.3.1 compatibility polish loads after its feature module');
 ok(!/Daniel\|Alex\|Samantha\|Google UK English Male/.test(sprint), 'Voice Studio does not depend on OS-specific voice names');
 
 console.log(`Sprint 4.3.1 tests passed: ${assertions} assertions`);
