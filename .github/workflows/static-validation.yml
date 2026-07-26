@@ -47,14 +47,27 @@ jobs:
       - name: Run Sprint 4.4.1 polish tests
         run: node tests/sprint441Polish.test.cjs
 
-      - name: Verify Sprint 4.4.1 integration
+      - name: Run Sprint 4.4.2 tests
+        run: node tests/sprint442.test.cjs
+
+      - name: Verify Sprint 4.4.2 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.4.1' release.js
-          grep -q 'Choice-First Flow, Cinematic Reveal & Group Leaderboard' release.js
-          grep -q 'Where will the group eat?' sprint441.js
-          grep -q 'Need More Information?' sprint441.js
+          grep -q 'v0.4.4.2' release.js
+          grep -q 'Restaurant Decision Polish' release.js
+          grep -q 'currentConfidence("group", "restaurant")' sprint442.js
+          grep -q 'dock.insertBefore(confidenceBox, lockButton)' sprint442.js
+          grep -q 'standalone?.remove()' sprint442.js
+          grep -q 'Restaurant prediction confidence' sprint442.js
+          grep -q 'Confidence: ${normalizedConfidence} of 5' sprint442.js
+          grep -q 'Choose a restaurant to begin.' sprint442.js
+          grep -q 'Now choose how confident you are.' sprint442.js
+          grep -q 'Your prediction is ready to lock.' sprint442.js
+          grep -q 'restaurant-decision-dock' sprint442.css
+          grep -q 'grid-template-columns: repeat(5' sprint442.css
+          grep -q 'sprint442.css' index.html
+          grep -q 'sprint442.js' index.html
           grep -q 'Lock Restaurant Prediction' sprint441.js
           grep -q 'Continue to Order Predictions' sprint441.js
           grep -q 'restaurantRevealLockedChoice' sprint441.js
@@ -62,14 +75,8 @@ jobs:
           grep -q 'preventScroll: true' sprint441Polish.js
           grep -q 'Prototype preview:' groupLeaderboard.js
           grep -q 'View Leaderboard' groupLeaderboard.js
-          grep -q 'sim-jordan' groupLeaderboardData.js
           grep -q 'groupLeaderboardData.js' index.html
           grep -q 'groupLeaderboard.js' index.html
-          grep -q 'sprint441.css' index.html
-          grep -q 'sprint441Polish.css' index.html
-          grep -q 'sprint441.js' index.html
-          grep -q 'sprint441Polish.js' index.html
-          grep -q 'progression.css' index.html
           grep -q 'progression.js' index.html
           grep -q 'progressionUI.js' index.html
           grep -q 'bite-buddy-progression-v1' progression.js
@@ -78,5 +85,7 @@ jobs:
           grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
           grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
           grep -q 'const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 }' app.js
+          ! grep -Eq 'restaurantConfidenceV2|dockConfidence|selectedRestaurantConfidence' sprint442.js
+          ! grep -q 'v0.4.4.1' release.js index.html
           ! grep -Eq 'v0\.4\.[0-3]\.' release.js index.html
           ! grep -q 'MISSION_REPORT_VERSION' index.html
