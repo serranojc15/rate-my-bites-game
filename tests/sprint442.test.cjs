@@ -37,7 +37,7 @@ const reasons = [
 ];
 
 // Focused state behavior.
-equal(api.version, 'v0.4.4.2', 'Sprint interface falls back to v0.4.4.2');
+equal(api.version, 'v0.4.4.2', 'Sprint interface falls back to its introduction version');
 equal(api.confidenceScale.join(','), '1,2,3,4,5', 'confidence scale remains one through five');
 const empty = api.getRestaurantDecisionState(restaurants, null, 0, null, reasons);
 equal(empty.status, 'empty', 'no restaurant produces empty state');
@@ -132,12 +132,15 @@ ok(/const points = \{ restaurant: 120, meal: 30, drink: 20, dessert: 10 \}/.test
 equal(120 + (30 + 20 + 10) * 3, 300, 'total possible case score remains 300');
 ok(appSource.includes('confidenceControl(person.id, stage)'), 'diner confidence controls remain available during order rounds');
 
-// Release and loading integration.
+// Release and loading integration remains valid for 4.4.2 or any later release.
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
-equal(releaseSandbox.window.BiteBuddyRelease.version, 'v0.4.4.2', 'release version is v0.4.4.2');
-equal(releaseSandbox.window.BiteBuddyRelease.releaseName, 'Restaurant Decision Polish', 'release name is Restaurant Decision Polish');
-ok(html.includes('<title>Rate My Bites — Bite Buddy League v0.4.4.2</title>'), 'browser fallback title is current');
+const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
+const versionParts = releaseVersion.match(/^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/)?.slice(1).map(Number);
+ok(Boolean(versionParts), 'current release exposes a valid four-part version');
+ok(versionParts[0] > 0 || versionParts[1] > 4 || (versionParts[1] === 4 && (versionParts[2] > 4 || (versionParts[2] === 4 && versionParts[3] >= 2))), 'current release is Restaurant Decision Polish or later');
+ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is exposed');
+ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${releaseVersion}</title>`), 'browser fallback title matches current release');
 ok(html.indexOf('sprint442.css') > html.indexOf('sprint441Polish.css'), 'Sprint 4.4.2 CSS loads after Sprint 4.4.1 polish');
 ok(html.indexOf('sprint442.js') > html.indexOf('sprint441Polish.js'), 'Sprint 4.4.2 JavaScript loads after Sprint 4.4.1 polish');
 ok(workflowSource.includes('node tests/sprint442.test.cjs'), 'Static validation runs Sprint 4.4.2 tests');
