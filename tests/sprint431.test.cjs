@@ -34,7 +34,7 @@ includes('voices.find(v => /^en/i.test(v.lang || ""))', 'missing voice falls bac
 includes('typeof SpeechSynthesisUtterance === "undefined"', 'unsupported speech environments are handled');
 includes('Math.min(max, Math.max(min', 'restored numeric settings are clamped');
 includes('Preview Pup’s Voice', 'voice preview control exists');
-includes('event.key === "Escape"', 'Escape closes Voice Studio');
+ok(/\b(?:event|e)\.key\s*===\s*["']Escape["']/.test(sprint), 'Escape closes Voice Studio');
 includes('voiceOpener?.focus?.()', 'focus is restored to the opener');
 includes('Replay This Case', 'same-case replay action is visible');
 includes('Play Fresh Variant', 'fresh-variant action is visible');
