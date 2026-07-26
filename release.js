@@ -4,8 +4,8 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.3.2";
-  const RELEASE_NAME = "Release Consistency & Variant Polish";
+  const VERSION = "v0.4.4.0";
+  const RELEASE_NAME = "Detective Progression";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
   function each(selector, callback) {
