@@ -284,9 +284,18 @@
 
     if (attempt.attemptType === "fresh-variant") {
       const firstScore = firstAttemptScore(progression, history);
-      const transferXp = firstScore === null ? xpRules.transfer.lower : attempt.score > firstScore ? xpRules.transfer.improved : attempt.score === firstScore ? xpRules.transfer.equal : xpRules.transfer.lower;
-      add(attempt.score > firstScore ? "Fresh-Variant Improvement" : attempt.score === firstScore ? "Fresh-Variant Consistency" : "Fresh-Variant Completion", transferXp);
-      if (progression.completedFreshVariants === 0) add("First Fresh Variant Milestone", xpRules.transfer.firstFreshMilestone);
+      let transferXp = xpRules.transfer.lower;
+      let transferLabel = "Fresh-Variant Completion";
+      if (firstScore !== null && attempt.score > firstScore) {
+        transferXp = xpRules.transfer.improved;
+        transferLabel = "Fresh-Variant Improvement";
+      } else if (firstScore !== null && attempt.score === firstScore) {
+        transferXp = xpRules.transfer.equal;
+        transferLabel = "Fresh-Variant Consistency";
+      }
+      add(transferLabel, transferXp);
+      const hasPriorFreshAward = progression.awards.some(award => award.attemptType === "fresh-variant");
+      if (!hasPriorFreshAward) add("First Fresh Variant Milestone", xpRules.transfer.firstFreshMilestone);
     }
 
     if (attempt.attemptType !== "same-variant-replay" && attempt.score >= xpRules.nearPerfectMinimum) add("Near-Perfect Investigation", xpRules.nearPerfect);
@@ -379,10 +388,11 @@
     const normalizedAttempt = history.attempts.find(item => item.attemptId === attempt.attemptId) || { ...attempt, attemptId: stableAttemptId(attempt, history.attempts.length) };
     let progression = loadProgression();
     const existing = progression.awards.find(award => award.attemptId === normalizedAttempt.attemptId);
-    if (existing) return { awarded: false, reason: "duplicate", progression, award: existing };
+    if (existing || progression.awardedAttempts.includes(normalizedAttempt.attemptId)) {
+      return { awarded: false, reason: "duplicate", progression, award: existing || null };
+    }
 
     const previousRank = getRank(progression.totalXp, progression.rankId);
-    const previousUnlocks = calculateUnlocks(progression);
     const xp = calculateAttemptXp(normalizedAttempt, report, progression, history);
     const award = {
       attemptId: normalizedAttempt.attemptId,
@@ -409,11 +419,6 @@
     }
 
     progression.unlocks = calculateUnlocks(progression);
-    ["intermediate", "advanced"].forEach(id => {
-      if (!previousUnlocks[id] && progression.unlocks[id] && !progression.announcedUnlocks.includes(id)) {
-        // The UI consumes and acknowledges this unlock once.
-      }
-    });
     progression = saveProgression(progression);
     return { awarded: true, reason: "awarded", progression, award };
   }
