@@ -1,0 +1,17 @@
+/* Sprint v0.4.4.1 — final choice-first interaction polish. */
+
+.restaurant-lock-dock.restaurant-lock-dock-visible {
+  top: max(0.55rem, env(safe-area-inset-top));
+  bottom: auto;
+  margin: 0.85rem 0 1.25rem;
+}
+
+.restaurant-lock-dock.restaurant-lock-dock-visible + .evidence-invitation {
+  margin-top: 0;
+}
+
+@media (max-width: 420px) {
+  .restaurant-lock-dock.restaurant-lock-dock-visible {
+    top: max(0.35rem, env(safe-area-inset-top));
+  }
+}
