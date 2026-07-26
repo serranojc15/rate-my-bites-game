@@ -1,0 +1,88 @@
+/* Sprint v0.4.3.2 — release identity, loading, and Voice Studio polish */
+.director-build-badge {
+  visibility: hidden;
+}
+
+body.release-ready .director-build-badge {
+  visibility: visible;
+}
+
+.release-loading {
+  min-height: 58vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: #756861;
+}
+
+.release-loading strong {
+  display: block;
+  margin-top: .75rem;
+  color: #2c2421;
+  font-size: 1.15rem;
+}
+
+.release-loading span {
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  background: #fff7ed;
+  font-size: 1.7rem;
+}
+
+.voice-current-summary {
+  display: grid;
+  gap: .45rem;
+  margin: 1rem 0 1.25rem;
+  padding: .9rem 1rem;
+  border: 1px solid rgba(249, 115, 22, .24);
+  border-radius: 1rem;
+  background: #fffaf5;
+  color: #756861;
+  font-size: .9rem;
+}
+
+.voice-current-summary strong {
+  color: #2c2421;
+}
+
+.pup-voice-card output {
+  display: inline-block;
+  min-width: 3.5rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 360px) {
+  .pup-voice-card {
+    width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
+    margin: .5rem;
+    padding: 1.1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .pup-voice-card label {
+    gap: .45rem;
+  }
+
+  .pup-voice-card select,
+  .pup-voice-card input[type="range"] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .voice-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .release-loading span {
+    animation: none;
+  }
+}
