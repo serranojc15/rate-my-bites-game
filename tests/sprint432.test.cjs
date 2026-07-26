@@ -59,31 +59,31 @@ const sandbox = { window: { document } };
 vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
 const release = sandbox.window.BiteBuddyRelease;
 
-// Authoritative release identity — behavioral checks.
-equal(release.version, 'v0.4.3.2', 'authoritative release version is current');
-equal(release.releaseName, 'Release Consistency & Variant Polish', 'release name is exposed');
-equal(release.displayLabel, 'Bite Buddy League · v0.4.3.2', 'display label is exposed');
+// Authoritative release identity — behavior remains valid for later releases.
+ok(/^v0\.4\.\d+\.\d+$/.test(release.version), 'authoritative release exposes a valid current version');
+ok(typeof release.releaseName === 'string' && release.releaseName.length > 0, 'release name is exposed');
+equal(release.displayLabel, `Bite Buddy League · ${release.version}`, 'display label follows current release');
 equal(release.apply(), true, 'release identity applies successfully');
-equal(document.title, 'Rate My Bites — Bite Buddy League v0.4.3.2', 'browser title uses current release');
-ok(badge.innerHTML.includes('v0.4.3.2'), 'floating badge uses current release');
+equal(document.title, `Rate My Bites — Bite Buddy League ${release.version}`, 'browser title uses current release');
+ok(badge.innerHTML.includes(release.version), 'floating badge uses current release');
 equal(badge.attributes['aria-hidden'], 'true', 'decorative floating badge is hidden from screen readers');
-equal(finalVersion.textContent, 'v0.4.3.2', 'Final Reveal version is current');
-equal(directorVersion.textContent, 'v0.4.3.2', 'Director presentation version is current');
-equal(missionVersion.textContent, 'v0.4.3.2', 'Mission Report version is current');
-equal(heroVersion.textContent, 'Bite Buddy League · v0.4.3.2', 'welcome release label is current');
-equal(historyVersion.textContent, 'Bite Buddy League · v0.4.3.2', 'League History release label is current');
-equal(livingVersion.textContent, 'v0.4.3.2 · Living Conversations', 'Living Conversations release label is current');
+equal(finalVersion.textContent, release.version, 'Final Reveal version is current');
+equal(directorVersion.textContent, release.version, 'Director presentation version is current');
+equal(missionVersion.textContent, release.version, 'Mission Report version is current');
+equal(heroVersion.textContent, release.displayLabel, 'welcome release label is current');
+equal(historyVersion.textContent, release.displayLabel, 'League History release label is current');
+equal(livingVersion.textContent, `${release.version} · Living Conversations`, 'Living Conversations release label is current');
 ok(bodyClasses.has('release-ready'), 'release-ready state is installed');
 equal(release.apply(), true, 'repeated release installation is idempotent');
-equal(badge.innerHTML, '<span>Bite Buddy League</span><strong>v0.4.3.2</strong>', 'idempotent install does not duplicate badge content');
+equal(badge.innerHTML, `<span>Bite Buddy League</span><strong>${release.version}</strong>`, 'idempotent install does not duplicate badge content');
 
 // Script order and loading presentation.
-ok(html.includes('<title>Rate My Bites — Bite Buddy League v0.4.3.2</title>'), 'document fallback title is current');
+ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${release.version}</title>`), 'document fallback title is current');
 ok(html.indexOf('release.js') < html.indexOf('app.js'), 'release identity loads before feature modules');
-ok(html.indexOf('sprint432.js') > html.indexOf('sprint431Polish.js'), 'Sprint 4.3.2 protection loads last');
-ok(html.includes('sprint432.css') && html.includes('sprint432.js'), 'Sprint 4.3.2 assets are integrated');
+ok(html.indexOf('sprint432.js') > html.indexOf('sprint431Polish.js'), 'Sprint 4.3.2 protection loads after Sprint 4.3.1');
+ok(html.includes('sprint432.css') && html.includes('sprint432.js'), 'Sprint 4.3.2 assets remain integrated');
 ok(html.includes('Preparing tonight’s case'), 'minimal branded loading state is present');
-ok(!html.includes('MISSION_REPORT_VERSION'), 'index no longer binds active release UI to Mission Report metadata');
+ok(!html.includes('MISSION_REPORT_VERSION'), 'index does not bind active release UI to Mission Report metadata');
 contains(css, 'visibility: hidden', 'stale floating badge is hidden before current identity is ready');
 contains(css, 'body.release-ready .director-build-badge', 'floating badge appears only after release installation');
 contains(css, 'max-height: calc(100dvh - 1rem)', 'Voice Studio has narrow mobile viewport protection');
