@@ -50,24 +50,45 @@ jobs:
       - name: Run Sprint 4.4.2 tests
         run: node tests/sprint442.test.cjs
 
-      - name: Verify Sprint 4.4.2 integration
+      - name: Run Sprint 4.4.3 tests
+        run: node tests/sprint443.test.cjs
+
+      - name: Verify Sprint 4.4.3 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.4.2' release.js
-          grep -q 'Restaurant Decision Polish' release.js
+          grep -q 'v0.4.4.3' release.js
+          grep -q 'Order Prediction Clarity & Momentum' release.js
+          grep -q 'predictionNumber(stageIndex, dinerIndex' sprint443.js
+          grep -q 'totalPredictions(stageCount' sprint443.js
+          grep -q 'state.stageIndex' sprint443.js
+          grep -q 'state.dinerIndex' sprint443.js
+          grep -q 'availableOptions(stage)' sprint443.js
+          grep -q 'actualRestaurant()' sprint443.js
+          grep -q 'context.person.clues?.\[context.stage\]' sprint443.js
+          grep -q 'data-order-value' sprint443.js
+          grep -q '✓ Current prediction' sprint443.js
+          grep -q 'class="order-decision-dock"' sprint443.js
+          grep -q 'confidenceControl(context.person.id, context.stage)' sprint443.js
+          grep -q 'data-order-confidence-control' sprint443.js
+          grep -q 'Confidence: ${normalizedConfidence} of 5' sprint443.js
+          grep -q 'Choose an item to begin.' sprint443.js
+          grep -q 'Now choose how confident you are.' sprint443.js
+          grep -q 'Your prediction is ready to lock.' sprint443.js
+          grep -q 'Lock Final Prediction and Begin the Reveal' sprint443.js
+          grep -q 'The deduction is sealed. The answer stays hidden until the Final Reveal.' sprint443.js
+          grep -q 'baseAdvancePlay443();' sprint443.js
+          grep -q 'return lockOrderPrediction(true)' sprint443.js
+          grep -q 'root.PupVoice?.speak?.(line)' sprint443.js
+          grep -q 'order-decision-dock' sprint443.css
+          grep -q 'grid-template-columns: repeat(5' sprint443.css
+          grep -q 'env(safe-area-inset-bottom)' sprint443.css
+          grep -q 'sprint443.css' index.html
+          grep -q 'sprint443.js' index.html
           grep -q 'currentConfidence("group", "restaurant")' sprint442.js
           grep -q 'dock.insertBefore(confidenceBox, lockButton)' sprint442.js
           grep -q 'standalone?.remove()' sprint442.js
           grep -q 'Restaurant prediction confidence' sprint442.js
-          grep -q 'Confidence: ${normalizedConfidence} of 5' sprint442.js
-          grep -q 'Choose a restaurant to begin.' sprint442.js
-          grep -q 'Now choose how confident you are.' sprint442.js
-          grep -q 'Your prediction is ready to lock.' sprint442.js
-          grep -q 'restaurant-decision-dock' sprint442.css
-          grep -q 'grid-template-columns: repeat(5' sprint442.css
-          grep -q 'sprint442.css' index.html
-          grep -q 'sprint442.js' index.html
           grep -q 'Lock Restaurant Prediction' sprint441.js
           grep -q 'Continue to Order Predictions' sprint441.js
           grep -q 'restaurantRevealLockedChoice' sprint441.js
@@ -85,7 +106,10 @@ jobs:
           grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
           grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
           grep -q 'const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 }' app.js
-          ! grep -Eq 'restaurantConfidenceV2|dockConfidence|selectedRestaurantConfidence' sprint442.js
-          ! grep -q 'v0.4.4.1' release.js index.html
+          ! grep -Eq 'orderPickV2|orderSelectionV2|selectedOrderItem|orderConfidenceV2|dinerDockConfidence|selectedOrderConfidence' sprint443.js
+          ! grep -q 'calculateScore();' sprint443.js
+          ! grep -q 'awardLatestAttempt' sprint443.js
+          ! grep -q 'recordAttempt(' sprint443.js
+          ! grep -q 'v0.4.4.2' release.js index.html
           ! grep -Eq 'v0\.4\.[0-3]\.' release.js index.html
           ! grep -q 'MISSION_REPORT_VERSION' index.html
