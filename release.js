@@ -4,7 +4,7 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.4.7.2";
+  const VERSION = "v0.4.4.8";
   const RELEASE_NAME = "Sprint 2 Game Master Cleanup";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
