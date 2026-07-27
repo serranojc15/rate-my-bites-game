@@ -141,7 +141,7 @@
       );
 
       if (appIsScrollable) {
-        const top = Math.max(0, finite(stageRoot.offsetTop, 0) - 8);
+        const top = Math.max(0, finite(stageRoot.offsetTop, 0) - finite(appRoot.offsetTop, 0) - 8);
         if (typeof appRoot.scrollTo === "function") appRoot.scrollTo({ top, behavior: motion });
         else appRoot.scrollTop = top;
       } else if (typeof root.scrollTo === "function") {
