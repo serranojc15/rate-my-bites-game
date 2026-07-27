@@ -1,0 +1,52 @@
+/* Sprint 2 — The Game Master */
+.cinematic-stage .briefing-progress { display: none !important; }
+
+.cinematic-rec i {
+  background: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, .65);
+  animation: game-master-rec-pulse 1.4s ease-in-out infinite;
+}
+
+.cinematic-recording-line {
+  height: 1px;
+  background: rgba(255, 255, 255, .12);
+}
+
+.cinematic-recording-line span {
+  background: rgba(249, 115, 22, .62);
+}
+
+.game-master-card {
+  border-color: rgba(249, 115, 22, .28);
+  box-shadow: 0 14px 36px rgba(44, 36, 33, .08);
+}
+
+.game-master-card img {
+  transform: scale(1.03);
+}
+
+.game-master-question {
+  margin-top: 1.1rem;
+}
+
+.game-master-reveal-cue {
+  margin: 0 0 .55rem;
+  color: #c2410c;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@keyframes game-master-rec-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .28; transform: scale(.82); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-rec i {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
