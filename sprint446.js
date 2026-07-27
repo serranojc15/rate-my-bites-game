@@ -15,6 +15,20 @@
     return Math.min(maximum, Math.max(minimum, finite(value, minimum)));
   }
 
+  function activeState() {
+    try {
+      if (typeof state !== "undefined") return state;
+    } catch {}
+    return root.state;
+  }
+
+  function activeDiners() {
+    try {
+      if (typeof diners !== "undefined") return diners;
+    } catch {}
+    return root.diners || [];
+  }
+
   function prefersReducedMotion() {
     try {
       return Boolean(root.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
@@ -58,7 +72,7 @@
     return Boolean(nextKey && previousKey !== nextKey);
   }
 
-  function currentStageKey(stateObject = root.state) {
+  function currentStageKey(stateObject = activeState()) {
     if (!stateObject) return "";
     const variant = stateObject.currentVariantId || "variant";
     const attempt = stateObject.attemptNumber || stateObject.attemptType || "attempt";
@@ -66,8 +80,8 @@
     if (stateObject.screen !== "results") return "";
     const phase = stateObject.finalRevealPhase || "opening";
     if (phase === "diner") {
-      const index = clamp(stateObject.finalRevealPersonIndex, 0, Math.max(0, (root.diners?.length || 1) - 1));
-      const diner = root.diners?.[index];
+      const index = clamp(stateObject.finalRevealPersonIndex, 0, Math.max(0, (activeDiners().length || 1) - 1));
+      const diner = activeDiners()[index];
       return `results:${variant}:${attempt}:diner:${diner?.id || index}`;
     }
     return `results:${variant}:${attempt}:${phase}`;
@@ -93,7 +107,7 @@
   } = {}) {
     const document = root.document;
     const resolvedKey = stageKey || currentStageKey();
-    const stateObject = root.state;
+    const stateObject = activeState();
     if (!document?.querySelector || !resolvedKey) return false;
 
     const previousKey = stateObject?.sprint446FocusedStageKey || "";
@@ -146,7 +160,7 @@
     return true;
   }
 
-  function speakDinerResult({ result, stateObject = root.state, voice = root.PupVoice } = {}) {
+  function speakDinerResult({ result, stateObject = activeState(), voice = root.PupVoice } = {}) {
     if (!result?.person || !stateObject || stateObject.finalRevealPhase !== "diner") return false;
     if (stateObject.finalRevealShowAll || stateObject.finalRevealPhase === "review") return false;
     if (!voice || voice.settings?.enabled === false || typeof voice.speak !== "function") return false;
@@ -212,7 +226,8 @@
       const baseResults446 = root.results;
       const wrappedResults = function () {
         const voice = root.PupVoice;
-        const suppressLegacy = root.state?.finalRevealPhase === "diner" && voice;
+        const stateObject = activeState();
+        const suppressLegacy = stateObject?.finalRevealPhase === "diner" && voice;
         if (suppressLegacy) root.PupVoice = createLegacyNarrationProxy(voice);
         try {
           baseResults446();
@@ -221,9 +236,10 @@
         }
 
         focusNewRevealStage();
-        if (root.state?.finalRevealPhase === "diner" && !root.state?.finalRevealShowAll) {
+        const currentState = activeState();
+        if (currentState?.finalRevealPhase === "diner" && !currentState?.finalRevealShowAll) {
           const report = root.buildMissionReportData?.();
-          const index = clamp(root.state.finalRevealPersonIndex, 0, Math.max(0, (report?.personResults?.length || 1) - 1));
+          const index = clamp(currentState.finalRevealPersonIndex, 0, Math.max(0, (report?.personResults?.length || 1) - 1));
           speakDinerResult({ result: report?.personResults?.[index] });
         }
         release?.apply?.();
@@ -271,14 +287,12 @@
     };
   }
 
-  if (root.state) {
-    root.state = {
-      ...root.state,
-      sprint446FocusedStageKey: root.state.sprint446FocusedStageKey || "",
-      finalRevealNaturalNarratedKeys: Array.isArray(root.state.finalRevealNaturalNarratedKeys)
-        ? root.state.finalRevealNaturalNarratedKeys
-        : []
-    };
+  const currentState = activeState();
+  if (currentState) {
+    currentState.sprint446FocusedStageKey = currentState.sprint446FocusedStageKey || "";
+    currentState.finalRevealNaturalNarratedKeys = Array.isArray(currentState.finalRevealNaturalNarratedKeys)
+      ? currentState.finalRevealNaturalNarratedKeys
+      : [];
   }
 
   installRevealNavigationPolish();
