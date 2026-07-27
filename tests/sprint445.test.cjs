@@ -81,7 +81,7 @@ equal(api.version, 'v0.4.4.5', 'Sprint API uses the current release');
 equal(api.attemptTypeLabel('first-attempt'), 'First Attempt', 'first attempt label is player friendly');
 equal(api.attemptTypeLabel('fresh-variant'), 'Fresh Variant', 'fresh attempt label is player friendly');
 equal(api.attemptTypeLabel('same-variant-replay'), 'Practice Replay', 'replay label is player friendly');
-const award = { xp: 169, breakdown: [
+const award = { xp: 179, breakdown: [
   { label: 'Fresh Variant Completed', xp: 55 },
   { label: 'Correct Restaurant', xp: 30 },
   { label: '2 Correct Entrées', xp: 20 },
@@ -89,15 +89,16 @@ const award = { xp: 169, breakdown: [
   { label: '1 Correct Dessert', xp: 5 },
   { label: 'Confidence Calibration', xp: 10 },
   { label: 'Fresh-Variant Improvement', xp: 25 },
-  { label: 'First Fresh Variant Milestone', xp: 10 }
+  { label: 'First Fresh Variant Milestone', xp: 20 }
 ] };
 const grouped = api.groupedXpBreakdown(award);
-equal(grouped.total, 169, 'grouped XP retains authoritative total');
-equal(grouped.rows.reduce((sum, row) => sum + row.xp, 0), 169, 'grouped XP rows sum to authoritative total');
+equal(grouped.total, 179, 'grouped XP retains authoritative total');
+equal(grouped.rows.reduce((sum, row) => sum + row.xp, 0), 179, 'grouped XP rows sum to authoritative total');
 equal(grouped.rows.find(row => row.key === 'meal').xp, 20, 'entrée XP is grouped correctly');
 equal(grouped.rows.find(row => row.key === 'drink').xp, 14, 'drink XP is grouped correctly');
 equal(grouped.rows.find(row => row.key === 'dessert').xp, 5, 'dessert XP is grouped correctly');
 equal(grouped.rows.find(row => row.key === 'confidence').xp, 10, 'confidence XP is grouped correctly');
+equal(grouped.rows.find(row => row.key === 'fresh-milestone').xp, 20, 'first fresh milestone retains the 20 XP rule');
 ok(!api.groupedXpBreakdown({ xp: 10, breakdown: [{ label: 'Replay Practice Completed', xp: 10 }] }).rows.some(row => row.key === 'restaurant'), 'replay does not invent restaurant XP');
 
 // Before/after reconstruction and honest comparison.
@@ -153,6 +154,11 @@ const noFresh = { ...progression, completedFreshVariants: 0 };
 equal(api.nextMissionRecommendation(noFresh, 'first-attempt', getUnlockState(noFresh), getSkillSummary(noFresh)).id, 'fresh', 'player without fresh case is recommended a fresh variant');
 const weakCalibration = { ...progression, completedFreshVariants: 2, totalXp: 800, bestFreshVariantScore: 220, skills: { ...progression.skills, confidenceCalibration: { attempted: 5, correct: 1 } } };
 equal(api.nextMissionRecommendation(weakCalibration, 'fresh-variant', getUnlockState(weakCalibration), getSkillSummary(weakCalibration)).id, 'calibration', 'weak calibration produces calibration guidance');
+const practiceReady = { ...progression, completedFreshVariants: 3, totalXp: 900, bestFreshVariantScore: 240, skills: { ...progression.skills, confidenceCalibration: { attempted: 10, correct: 8 } } };
+const practiceRecommendation = api.nextMissionRecommendation(practiceReady, 'fresh-variant', getUnlockState(practiceReady), getSkillSummary(practiceReady));
+equal(practiceRecommendation.id, 'replay', 'established transfer and calibration can trigger focused practice');
+equal(practiceRecommendation.action, 'Replay This Case', 'practice recommendation reuses the replay action');
+ok(practiceRecommendation.reason.includes('practice XP is limited'), 'practice recommendation does not present replay as renewable mastery');
 ok(!api.nextMissionRecommendation(progression, 'fresh-variant', getUnlockState(progression), getSkillSummary(progression)).reason.includes('Episode 002'), 'recommendation never claims Episode 002 is playable');
 
 // Leaderboard uses existing API instead of sorting locally.
