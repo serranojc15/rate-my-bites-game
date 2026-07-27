@@ -56,40 +56,56 @@ jobs:
       - name: Run Sprint 4.4.4 tests
         run: node tests/sprint444.test.cjs
 
-      - name: Verify Sprint 4.4.4 integration
+      - name: Run Sprint 4.4.5 tests
+        run: node tests/sprint445.test.cjs
+
+      - name: Verify Sprint 4.4.5 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.4.4' release.js
-          grep -q 'Final Reveal Continuity & Score Drama' release.js
+          grep -q 'v0.4.4.5' release.js
+          grep -q 'Mission Report Payoff & Replay Momentum' release.js
+          grep -q 'baseRenderMissionReport445' sprint445.js
+          grep -q 'buildMissionReportData()' sprint445.js
+          grep -q 'progressionApi.getProgression()' sprint445.js
+          grep -q 'currentAward(progression, attempt)' sprint445.js
+          grep -q 'groupedXpBreakdown' sprint445.js
+          grep -q 'progressionBeforeAttempt' sprint445.js
+          grep -q 'previousInvestigationComparison' sprint445.js
+          grep -q 'detectiveDevelopment' sprint445.js
+          grep -q 'nextMissionRecommendation' sprint445.js
+          grep -q 'BiteBuddyGroupLeaderboard' sprint445.js
+          grep -q 'captureExistingActions()' sprint445.js
+          grep -q 'captureCelebrations()' sprint445.js
+          grep -q 'MISSION COMPLETE' sprint445.js
+          grep -q 'Case Score' sprint445.js
+          grep -q 'XP Earned' sprint445.js
+          grep -q 'Current Rank' sprint445.js
+          grep -q 'XP Breakdown' sprint445.js
+          grep -q 'Since Your Last Investigation' sprint445.js
+          grep -q 'Detective Development' sprint445.js
+          grep -q 'Pup’s Next Mission' sprint445.js
+          grep -q 'Group Update' sprint445.js
+          grep -q 'Prototype preview:' sprint445.js
+          grep -q 'Practice mode · Limited XP' sprint445.js
+          grep -q 'Same-case replays provide limited practice XP' sprint445.js
+          grep -q 'practice credit for this variant was already awarded' sprint445.js
+          grep -q 'state.finalRevealPhase = "review"' sprint445.js
+          grep -q 'role="progressbar"' sprint445.js
+          grep -q 'missionPayoffNarrated' sprint445.js
+          grep -q 'mission-payoff-primary-metrics' sprint445.css
+          grep -q 'mission-payoff-xp-list' sprint445.css
+          grep -q 'mission-payoff-comparison' sprint445.css
+          grep -q 'mission-payoff-development' sprint445.css
+          grep -q 'mission-payoff-actions' sprint445.css
+          grep -q 'env(safe-area-inset-bottom)' sprint445.css
+          grep -q '@media (prefers-reduced-motion: reduce)' sprint445.css
+          grep -q 'sprint445.css' index.html
+          grep -q 'sprint445.js' index.html
           grep -q 'buildMissionReportData()' sprint444.js
-          grep -q 'finalRevealPhase: "opening"' sprint444.js
-          grep -q 'finalRevealPersonIndex' sprint444.js
-          grep -q 'finalRevealShowAll' sprint444.js
-          grep -q 'finalRevealSkipAnimations' sprint444.js
-          grep -q 'finalRevealActionInProgress' sprint444.js
-          grep -q 'finalRevealNarratedKeys' sprint444.js
-          grep -q 'Restaurant score already secured.' sprint444.js
           grep -q 'No restaurant vote will be replayed.' sprint444.js
-          grep -q 'report.restaurantResult.prediction' sprint444.js
-          grep -q 'report.restaurantResult.actual' sprint444.js
           grep -q 'result.answers.map(answerCardMarkup)' sprint444.js
-          grep -q 'calibrationLabel(answer.confidence, answer.correct)' sprint444.js
-          grep -q 'result.pointsEarned} / ${result.pointsPossible}' sprint444.js
-          grep -q 'revealedScoreThrough(report, state.finalRevealPersonIndex)' sprint444.js
-          grep -q 'id="revealAllAnswers"' sprint444.js
-          grep -q 'id="skipRevealAnimations"' sprint444.js
-          grep -q 'report.categoryResults.map' sprint444.js
-          grep -q 'id="viewMissionReport"' sprint444.js
           grep -q 'id="reviewEveryAnswer"' sprint444.js
-          grep -q 'invokeMissionAction("#missionFreshVariant")' sprint444.js
-          grep -q 'invokeMissionAction("#missionReplayEpisode")' sprint444.js
-          grep -q 'final-answer-card' sprint444.css
-          grep -q 'final-category-breakdown' sprint444.css
-          grep -q 'final-score-monument' sprint444.css
-          grep -q '@media (prefers-reduced-motion: reduce)' sprint444.css
-          grep -q 'sprint444.css' index.html
-          grep -q 'sprint444.js' index.html
           grep -q 'currentConfidence("group", "restaurant")' sprint442.js
           grep -q 'dock.insertBefore(confidenceBox, lockButton)' sprint442.js
           grep -q 'standalone?.remove()' sprint442.js
@@ -114,10 +130,8 @@ jobs:
           grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
           grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
           grep -q 'const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 }' app.js
-          ! grep -q 'Where did the table go?' sprint444.js
-          ! grep -q 'calculateScore();' sprint444.js
-          ! grep -q 'awardLatestAttempt' sprint444.js
-          ! grep -q 'recordAttempt(' sprint444.js
-          ! grep -q 'v0.4.4.3' release.js index.html
+          ! grep -q 'awardAttempt(' sprint445.js
+          ! grep -q 'recordAttempt(' sprint445.js
+          ! grep -q 'v0.4.4.4' release.js index.html
           ! grep -Eq 'v0\.4\.[0-3]\.' release.js index.html
           ! grep -q 'MISSION_REPORT_VERSION' index.html
