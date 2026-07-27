@@ -13,6 +13,10 @@ testSource = testSource
   .replace(
     "ok(Number(activeVersion.split('.').at(-1)) >= 4, 'active release is not older than Sprint 4.4.4');",
     "ok(require('./version-helpers.cjs').parseVersion(activeVersion) !== null, 'active release uses the four-part version format');"
+  )
+  .replace(
+    "workflowSource.includes('node tests/sprint444.test.cjs')",
+    "workflowSource.includes('node tests/sprint444ReleaseNeutral.test.cjs')"
   );
 
 const compiled = new Module(testPath, module);
