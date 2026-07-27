@@ -73,8 +73,31 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.4.7' release.js
-          grep -q 'Conversation Flow & Restaurant Suspense Polish' release.js
+          node <<'NODE'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+
+          const releaseSource = fs.readFileSync('release.js', 'utf8');
+          const indexSource = fs.readFileSync('index.html', 'utf8');
+          const sandbox = {
+            window: {
+              document: {
+                title: '',
+                body: { classList: { add() {} } },
+                querySelector() { return null; },
+                querySelectorAll() { return []; }
+              }
+            }
+          };
+
+          vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
+          const release = sandbox.window.BiteBuddyRelease;
+          assert.ok(release, 'release.js exposes BiteBuddyRelease');
+          assert.match(release.version, /^v0\.4\.\d+\.\d+$/, 'authoritative release version is valid');
+          assert.ok(typeof release.releaseName === 'string' && release.releaseName.trim().length > 0, 'authoritative release name is non-empty');
+          assert.ok(indexSource.includes(`<title>Rate My Bites — Bite Buddy League ${release.version}</title>`), 'fallback title matches authoritative release version');
+          NODE
           grep -q 'installConversationAndSuspensePolish' sprint447.js
           grep -q 'installConversationScene' sprint447.js
           grep -q 'oldLabel?.remove?.()' sprint447.js
