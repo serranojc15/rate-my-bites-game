@@ -216,14 +216,12 @@ livingConversation = function () {
       </div>
     </div>
     <div class="briefing-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div>
-    <div class="director-shot-label"><span>● REC</span><strong>${escapeHtml(event.shot || conversationLabel(event.kind))}</strong></div>
     <div class="living-frame">
       <div class="camera-label">${conversationLabel(event.kind)}</div>
       <div class="living-visual">${conversationVisual(event)}</div>
       <div class="living-dialogue">
         <p class="living-speaker">${event.kind === "producer" ? "🎬" : event.kind === "interruption" ? "📱" : event.kind === "confessional" ? "🎥" : event.kind === "reaction" ? "👀" : "💬"} ${escapeHtml(event.speaker)}</p>
         <blockquote>${escapeHtml(event.text)}</blockquote>
-        ${event.beat ? `<p class="director-beat">${escapeHtml(event.beat)}</p>` : ""}
         ${confidencePulseMarkup(event)}
       </div>
     </div>
