@@ -47,11 +47,12 @@ equal(conversationApi.conversationAdvanceLabel(story.events[1], true), 'Lock the
 
 let advances = 0;
 const timers = [];
+const advanceState = { ...conversationState };
 const advanceWindow = {
-  state: { ...conversationState },
+  state: advanceState,
   livingDinnerStory: story,
   diners: [{ id: 'emma' }, { id: 'marcus' }],
-  advanceConversation() { advances += 1; this.state.conversationIndex += 1; },
+  advanceConversation() { advances += 1; advanceState.conversationIndex += 1; },
   setTimeout(callback) { timers.push(callback); return timers.length; }
 };
 const advanceLoaded = loadApi(advanceWindow);
