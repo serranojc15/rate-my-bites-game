@@ -17,6 +17,10 @@ testSource = testSource
   .replace(
     "workflowSource.includes('node tests/sprint444.test.cjs')",
     "workflowSource.includes('node tests/sprint444ReleaseNeutral.test.cjs')"
+  )
+  .replace(
+    "workflowSource.includes('node tests/sprint443.test.cjs')",
+    "workflowSource.includes('node tests/sprint443ReleaseNeutral.test.cjs')"
   );
 
 const compiled = new Module(testPath, module);
