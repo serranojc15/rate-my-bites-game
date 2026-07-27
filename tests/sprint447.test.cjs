@@ -15,13 +15,18 @@ const appSource = fs.readFileSync('app.js', 'utf8');
 const variantsSource = fs.readFileSync('sprint431.js', 'utf8');
 const workflowSource = fs.readFileSync('.github/workflows/static-validation.yml', 'utf8');
 
+const authoritativeVersion = releaseSource.match(/const VERSION = "([^"]+)"/)?.[1];
+const authoritativeReleaseName = releaseSource.match(/const RELEASE_NAME = "([^"]+)"/)?.[1];
+assert.ok(authoritativeVersion, 'authoritative release version can be read');
+assert.ok(authoritativeReleaseName, 'authoritative release name can be read');
+
 let assertions = 0;
 function ok(value, message) { assert.ok(value, message); assertions += 1; }
 function equal(actual, expected, message) { assert.equal(actual, expected, message); assertions += 1; }
 
 function loadApi(extra = {}) {
   const window = {
-    BiteBuddyRelease: { version: 'v0.4.4.7', apply() {} },
+    BiteBuddyRelease: { version: authoritativeVersion, apply() {} },
     ...extra
   };
   vm.runInNewContext(source, { window, console, Date, Object, Array, Math, Number, String, Boolean, RegExp }, { filename: 'sprint447.js' });
@@ -29,7 +34,7 @@ function loadApi(extra = {}) {
 }
 
 const { api } = loadApi();
-equal(api.version, 'v0.4.4.7', 'Sprint API uses the active release');
+equal(api.version, authoritativeVersion, 'Sprint API uses the active release');
 equal(api.restaurantStages.join(','), 'locked,counting,incoming,revealed', 'staged restaurant reveal remains intact');
 
 const story = { events: [
@@ -160,9 +165,9 @@ equal(120 + (30 + 20 + 10) * 3, 300, 'total score remains 300');
 
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
-equal(releaseSandbox.window.BiteBuddyRelease.version, 'v0.4.4.7', 'release version is current');
-equal(releaseSandbox.window.BiteBuddyRelease.releaseName, 'Conversation Flow & Restaurant Suspense Polish', 'release name is current');
-ok(html.includes('<title>Rate My Bites — Bite Buddy League v0.4.4.7</title>'), 'browser fallback title is current');
+equal(releaseSandbox.window.BiteBuddyRelease.version, authoritativeVersion, 'release version is current');
+equal(releaseSandbox.window.BiteBuddyRelease.releaseName, authoritativeReleaseName, 'release name is current');
+ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${authoritativeVersion}</title>`), 'browser fallback title is current');
 ok(html.indexOf('sprint447.css') > html.indexOf('sprint446.css'), 'Sprint 4.4.7 CSS loads after Sprint 4.4.6');
 ok(html.indexOf('sprint447.js') > html.indexOf('sprint446.js'), 'Sprint 4.4.7 JavaScript loads after Sprint 4.4.6');
 ok(workflowSource.includes('node tests/sprint447.test.cjs'), 'Static validation runs Sprint 4.4.7 tests');
