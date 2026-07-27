@@ -1,0 +1,250 @@
+/* Sprint 1 — The Cinematic Experience */
+.cinematic-stage {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+  min-height: min(820px, calc(100svh - 7rem));
+  padding: clamp(1rem, 2.5vw, 2rem);
+  background: #0f0d0c;
+  color: #fffaf5;
+}
+
+.cinematic-stage:focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(249, 115, 22, .9);
+}
+
+.cinematic-stage .living-frame {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.cinematic-stage .living-visual {
+  position: relative;
+  min-height: clamp(390px, 62svh, 680px);
+  border-radius: clamp(1.1rem, 2.2vw, 1.8rem);
+  overflow: hidden;
+  background: #1c1816;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, .38);
+}
+
+.cinematic-stage .living-visual img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  transform: scale(1.015);
+  animation: cinematic-breathe 9s ease-out both;
+}
+
+.cinematic-stage .living-name {
+  position: absolute;
+  left: clamp(1rem, 4vw, 2.5rem);
+  right: clamp(1rem, 4vw, 2.5rem);
+  bottom: clamp(1rem, 4vw, 2.4rem);
+  z-index: 2;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .9);
+}
+
+.cinematic-stage .living-name span,
+.cinematic-stage .living-name strong {
+  display: block;
+}
+
+.cinematic-stage .living-name span {
+  margin-bottom: .2rem;
+  font-size: clamp(.72rem, 1.3vw, .9rem);
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  opacity: .82;
+}
+
+.cinematic-stage .living-name strong {
+  font-size: clamp(1.55rem, 4vw, 2.8rem);
+  line-height: 1;
+}
+
+.cinematic-stage .living-dialogue {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 clamp(.3rem, 2vw, 1rem) clamp(2.25rem, 6vw, 4.5rem);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.cinematic-stage .living-dialogue blockquote {
+  margin: 0;
+  font-size: clamp(1.45rem, 3.2vw, 2.65rem);
+  line-height: 1.25;
+  font-weight: 650;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+.cinematic-hud {
+  position: relative;
+  z-index: 5;
+  max-width: 980px;
+  margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+}
+
+.cinematic-rec-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .55rem;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .17em;
+}
+
+.cinematic-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.cinematic-rec i {
+  width: .58rem;
+  height: .58rem;
+  border-radius: 999px;
+  background: #f97316;
+  box-shadow: 0 0 14px rgba(249, 115, 22, .78);
+}
+
+.cinematic-mode {
+  opacity: .55;
+}
+
+.cinematic-recording-line {
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .14);
+}
+
+.cinematic-recording-line span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #f97316;
+  transition: width 520ms ease;
+}
+
+.cinematic-dots {
+  display: flex;
+  justify-content: center;
+  gap: .42rem;
+  margin-top: .8rem;
+  opacity: 0;
+  animation: cinematic-dots-in 650ms ease 2.4s forwards;
+}
+
+.cinematic-dots i {
+  width: .34rem;
+  height: .34rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .16);
+}
+
+.cinematic-dots i.complete {
+  background: rgba(255, 255, 255, .34);
+}
+
+.cinematic-dots i.active {
+  background: rgba(249, 115, 22, .95);
+  transform: scale(1.25);
+}
+
+.cinematic-first-cue {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: clamp(.85rem, 2vw, 1.35rem);
+  transform: translateX(-50%);
+  padding: .55rem .9rem;
+  border-radius: 999px;
+  background: rgba(12, 10, 9, .68);
+  backdrop-filter: blur(10px);
+  font-size: .74rem;
+  font-weight: 750;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: cinematic-cue-in 500ms ease 800ms both;
+}
+
+.cinematic-entered .living-frame,
+.cinematic-entered .cinematic-hud {
+  animation: cinematic-scene-in 420ms ease both;
+}
+
+.cinematic-leaving {
+  pointer-events: none;
+}
+
+.cinematic-leaving .living-frame,
+.cinematic-leaving .cinematic-hud,
+.cinematic-leaving .cinematic-first-cue {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+@keyframes cinematic-scene-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cinematic-breathe {
+  from { transform: scale(1.015); }
+  to { transform: scale(1.045); }
+}
+
+@keyframes cinematic-dots-in {
+  from { opacity: 0; }
+  to { opacity: .55; }
+}
+
+@keyframes cinematic-cue-in {
+  from { opacity: 0; transform: translate(-50%, 5px); }
+  to { opacity: .82; transform: translate(-50%, 0); }
+}
+
+@media (max-width: 700px) {
+  .cinematic-stage {
+    min-height: calc(100svh - 5.5rem);
+    padding: .85rem;
+  }
+
+  .cinematic-stage .living-visual {
+    min-height: clamp(410px, 61svh, 590px);
+  }
+
+  .cinematic-stage .living-dialogue blockquote {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-stage *,
+  .cinematic-stage *::before,
+  .cinematic-stage *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cinematic-dots {
+    opacity: .55;
+  }
+
+  .cinematic-stage .living-visual img {
+    transform: none;
+  }
+}
