@@ -4,8 +4,8 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.4.7";
-  const RELEASE_NAME = "Conversation Flow & Restaurant Suspense Polish";
+  const VERSION = "v0.4.4.7.2";
+  const RELEASE_NAME = "Sprint 2 Game Master Cleanup";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
   function each(selector, callback) {
