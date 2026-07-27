@@ -1,0 +1,623 @@
+/* Bite Buddy League v0.4.4.4 — Final Reveal Continuity & Score Drama */
+
+.final-reveal-444 {
+  display: grid;
+  gap: 1rem;
+}
+
+.final-reveal-444-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.final-reveal-444 .final-score-live {
+  min-width: 8.5rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #fed7aa;
+  border-radius: 1rem;
+  background: #fff7ed;
+  text-align: right;
+}
+
+.final-reveal-444 .final-score-live span,
+.final-reveal-444 .final-score-live strong,
+.final-reveal-444 .final-score-live small {
+  display: block;
+}
+
+.final-reveal-444 .final-score-live span {
+  color: #9a3412;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.final-reveal-444 .final-score-live strong {
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.final-reveal-444 .final-score-live small {
+  color: var(--muted, #756861);
+}
+
+.final-reveal-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.final-continuity-opening,
+.final-diner-reveal,
+.final-case-verdict,
+.final-review-mode {
+  display: grid;
+  gap: 1rem;
+}
+
+.final-continuity-opening {
+  min-height: min(70vh, 42rem);
+  align-content: center;
+  text-align: center;
+}
+
+.final-continuity-opening h1,
+.final-diner-reveal h1,
+.final-case-verdict > h1,
+.final-review-mode > h1 {
+  margin: 0;
+  letter-spacing: -0.045em;
+}
+
+.final-continuity-opening h1 {
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 0.98;
+}
+
+.restaurant-continuity-card {
+  width: min(100%, 50rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0 auto;
+  padding: 1rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1.2rem;
+  background: #fffaf7;
+  text-align: left;
+}
+
+.restaurant-continuity-card > div {
+  min-width: 0;
+}
+
+.restaurant-continuity-card span,
+.restaurant-continuity-card strong {
+  display: block;
+}
+
+.restaurant-continuity-card span {
+  color: var(--muted, #756861);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.restaurant-continuity-card strong {
+  margin-top: 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+.restaurant-continuity-card.is-correct {
+  border-color: rgba(21, 128, 61, 0.35);
+}
+
+.restaurant-continuity-card.is-incorrect {
+  border-color: rgba(185, 28, 28, 0.35);
+}
+
+.final-continuity-copy {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--muted, #756861);
+  line-height: 1.5;
+}
+
+.final-pup-speech {
+  width: min(100%, 46rem);
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: center;
+  margin: 0 auto;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: #fffaf7;
+  text-align: left;
+}
+
+.final-pup-speech img {
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+}
+
+.final-pup-speech span,
+.final-pup-speech p {
+  display: block;
+}
+
+.final-pup-speech span {
+  color: #9a3412;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.final-pup-speech p {
+  margin: 0.2rem 0 0;
+  color: var(--muted, #756861);
+  line-height: 1.45;
+}
+
+.final-reveal-444 .reveal-primary {
+  width: min(100%, 30rem);
+  margin: 0 auto;
+}
+
+.final-diner-heading {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1.2rem;
+  background: #fffaf7;
+}
+
+.final-diner-heading img {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.final-diner-heading span {
+  color: #9a3412;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-diner-heading h1 {
+  margin-top: 0.2rem;
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  line-height: 1;
+}
+
+.final-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.final-answer-card {
+  min-width: 0;
+  padding: 0.9rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.final-answer-card.is-correct {
+  border-color: rgba(21, 128, 61, 0.35);
+}
+
+.final-answer-card.is-incorrect {
+  border-color: rgba(185, 28, 28, 0.35);
+}
+
+.final-answer-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.final-answer-card header span {
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-answer-card header strong {
+  text-align: right;
+}
+
+.final-answer-card dl,
+.final-takeaway dl {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.final-answer-card dl > div,
+.final-takeaway dl > div {
+  display: grid;
+  grid-template-columns: minmax(6.8rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 0.55rem;
+}
+
+.final-answer-card dt,
+.final-takeaway dt {
+  color: var(--muted, #756861);
+  font-size: 0.75rem;
+}
+
+.final-answer-card dd,
+.final-takeaway dd {
+  margin: 0;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.answer-calibration {
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid #eee3dc;
+  color: var(--muted, #756861);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.final-diner-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: #2c2421;
+  color: #fff;
+}
+
+.final-diner-subtotal span {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-diner-subtotal strong {
+  font-size: 1.45rem;
+}
+
+.final-diner-explanation {
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: #fff7ed;
+}
+
+.final-diner-explanation h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.final-diner-explanation p {
+  margin: 0.35rem 0 0;
+  color: var(--muted, #756861);
+  line-height: 1.5;
+}
+
+.final-case-verdict {
+  text-align: center;
+}
+
+.final-case-verdict > h1 {
+  font-size: clamp(2.5rem, 7vw, 5.3rem);
+  line-height: 0.95;
+}
+
+.final-case-verdict .final-score-monument {
+  display: grid;
+  justify-items: center;
+  margin: 0.2rem auto;
+}
+
+.final-case-verdict .final-score-monument strong {
+  font-size: clamp(4.5rem, 13vw, 9rem);
+  line-height: 0.82;
+  letter-spacing: -0.07em;
+}
+
+.final-case-verdict .final-score-monument span {
+  margin-top: 0.5rem;
+  color: var(--muted, #756861);
+  font-weight: 800;
+}
+
+.final-category-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.final-category-breakdown article {
+  padding: 0.8rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1rem;
+  background: #fffaf7;
+}
+
+.final-category-breakdown span,
+.final-category-breakdown strong {
+  display: block;
+}
+
+.final-category-breakdown span {
+  color: var(--muted, #756861);
+  font-size: 0.75rem;
+}
+
+.final-category-breakdown strong {
+  margin-top: 0.2rem;
+  font-size: 1.15rem;
+}
+
+.final-takeaway-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  text-align: left;
+}
+
+.final-takeaway {
+  padding: 1rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1.15rem;
+  background: #fff;
+}
+
+.final-takeaway > span {
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.final-takeaway h3 {
+  margin: 0.3rem 0 0;
+  font-size: 1.25rem;
+}
+
+.final-takeaway > p {
+  margin: 0.7rem 0 0;
+  color: var(--muted, #756861);
+  line-height: 1.45;
+}
+
+.final-actions-444 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.final-actions-444 > * {
+  width: 100%;
+}
+
+.final-all-answers {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eadfd7;
+  text-align: left;
+}
+
+.final-review-restaurant {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: 1px solid #eadfd7;
+  border-radius: 1rem;
+  background: #fffaf7;
+}
+
+.final-review-restaurant span,
+.final-review-restaurant strong {
+  display: block;
+}
+
+.final-review-restaurant span {
+  color: var(--muted, #756861);
+  font-size: 0.72rem;
+}
+
+.final-review-restaurant strong {
+  margin-top: 0.2rem;
+  overflow-wrap: anywhere;
+}
+
+.final-review-person {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.final-review-person > header {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.final-review-person > header img {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+.final-review-person > header span,
+.final-review-person > header h3 {
+  display: block;
+  margin: 0;
+}
+
+.final-review-person > header span {
+  color: var(--muted, #756861);
+  font-size: 0.72rem;
+}
+
+.final-local-board {
+  text-align: left;
+}
+
+.final-local-board summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.final-reveal-444 button:focus-visible,
+.final-reveal-444 [role="button"]:focus-visible,
+.final-local-board summary:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.42);
+  outline-offset: 3px;
+}
+
+.final-reveal-444:not(.skip-animations) .final-answer-card,
+.final-reveal-444:not(.skip-animations) .final-category-breakdown article,
+.final-reveal-444:not(.skip-animations) .final-takeaway {
+  animation: finalReveal444Enter 360ms ease both;
+}
+
+@keyframes finalReveal444Enter {
+  from { opacity: 0; transform: translateY(0.55rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .final-answer-grid,
+  .final-category-breakdown {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .restaurant-continuity-card,
+  .final-review-restaurant {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .final-reveal-444-top {
+    align-items: flex-start;
+  }
+
+  .final-reveal-controls,
+  .final-actions-444 {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .final-reveal-controls > *,
+  .final-actions-444 > * {
+    width: 100%;
+  }
+
+  .final-continuity-opening {
+    min-height: auto;
+    text-align: left;
+  }
+
+  .final-continuity-opening h1,
+  .final-case-verdict > h1 {
+    font-size: 2.5rem;
+  }
+
+  .final-answer-grid,
+  .final-category-breakdown,
+  .final-takeaway-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-diner-heading {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .final-diner-heading img {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .final-diner-heading h1 {
+    font-size: 2.1rem;
+  }
+
+  .final-pup-speech {
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+  }
+
+  .final-pup-speech img {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
+  .final-answer-card dl > div,
+  .final-takeaway dl > div {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .final-reveal-444 .final-score-live {
+    min-width: 7.2rem;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .final-reveal-444 .final-score-live strong {
+    font-size: 1.4rem;
+  }
+
+  .final-continuity-opening h1,
+  .final-case-verdict > h1 {
+    font-size: 2.2rem;
+  }
+
+  .final-diner-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .final-diner-heading img {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .final-review-person > header {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .final-review-person > header > strong {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .final-reveal-444 *,
+  .final-reveal-444 *::before,
+  .final-reveal-444 *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
