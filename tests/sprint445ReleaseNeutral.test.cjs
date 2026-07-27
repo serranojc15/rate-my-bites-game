@@ -21,7 +21,15 @@ const testPath = path.resolve('tests/sprint445.test.cjs');
 let testSource = fs.readFileSync(testPath, 'utf8');
 testSource = testSource
   .replaceAll('v0.4.4.5', current.version)
-  .replaceAll('Mission Report Payoff & Replay Momentum', current.releaseName);
+  .replaceAll('Mission Report Payoff & Replay Momentum', current.releaseName)
+  .replace(
+    "workflowSource.includes('node tests/sprint445.test.cjs')",
+    "workflowSource.includes('node tests/sprint445ReleaseNeutral.test.cjs')"
+  )
+  .replace(
+    "workflowSource.includes('node tests/sprint444.test.cjs')",
+    "workflowSource.includes('node tests/sprint444ReleaseNeutral.test.cjs')"
+  );
 
 const compiled = new Module(testPath, module);
 compiled.filename = testPath;
