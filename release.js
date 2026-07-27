@@ -4,8 +4,8 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.4.4";
-  const RELEASE_NAME = "Final Reveal Continuity & Score Drama";
+  const VERSION = "v0.4.4.5";
+  const RELEASE_NAME = "Mission Report Payoff & Replay Momentum";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
   function each(selector, callback) {
