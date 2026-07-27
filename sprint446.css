@@ -1,0 +1,21 @@
+/* Bite Buddy League v0.4.4.6 — Reveal Navigation & Narration Polish. */
+[data-reveal-stage-root],
+[data-reveal-stage-heading],
+#missionPayoffTitle {
+  scroll-margin-top: max(12px, env(safe-area-inset-top));
+}
+
+[data-reveal-stage-heading]:focus,
+#missionPayoffTitle:focus {
+  outline: 3px solid rgba(249, 115, 22, 0.42);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-stage-root],
+  [data-reveal-stage-heading],
+  #missionPayoffTitle {
+    scroll-behavior: auto !important;
+  }
+}
