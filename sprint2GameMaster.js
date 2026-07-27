@@ -19,26 +19,66 @@
   }
 
   function removeScreenplayDirections() {
+    const conversation = root.document?.querySelector?.(".living-stage");
+    if (!conversation) return;
+
+    conversation.querySelectorAll(
+      ".director-caption, .scene-direction, .conversation-atmosphere, .director-beat, .scene-beat"
+    ).forEach(node => node.remove());
+
     const phrases = [
       "The table settles in.",
       "The music falls away.",
       "The room goes quiet.",
-      "The camera moves closer."
+      "The camera moves closer.",
+      "A beat. Olivia laughs."
     ];
-    root.document?.querySelectorAll?.(".director-caption, .scene-direction, .conversation-atmosphere, em").forEach(node => {
+    conversation.querySelectorAll("em, small, p, span").forEach(node => {
       if (phrases.includes(node.textContent?.trim())) node.remove();
     });
+  }
+
+  function removeObsoleteConversationHud() {
+    const conversation = root.document?.querySelector?.(".living-stage");
+    if (!conversation) return;
+
+    // Sprint 4.4.7 created a second production header. Sprint 1's
+    // .cinematic-hud is now the single authoritative conversation HUD.
+    conversation.querySelectorAll([
+      ".conversation-scene-heading",
+      ".conversation-scene-heading-copy",
+      ".conversation-face-safe-label",
+      ".conversation-scene-title",
+      ".conversation-scene-actions",
+      ".camera-label",
+      ".briefing-progress"
+    ].join(", ")).forEach(node => node.remove());
+
+    // Remove any older camera-direction element that survives under a
+    // different presentation class, without touching dialogue or names.
+    const cameraTerms = /^(?:[●•]\s*)?(?:REC|CLOSE-UP|CLOSE UP|WIDE SHOT|SLOW PUSH-IN|SLOW PUSH IN|MEDIUM SHOT|LIVE MOMENT|DINNER CONVERSATION|PUP COMMENTARY|OFF-CAMERA QUESTION|CONFESSIONAL|NEW EVIDENCE)$/i;
+    conversation.querySelectorAll("header, [class*='camera'], [class*='scene-heading'], [class*='face-safe']").forEach(node => {
+      if (node.closest(".cinematic-hud")) return;
+      const text = node.textContent?.trim() || "";
+      if (cameraTerms.test(text) || /(?:CLOSE-UP|WIDE SHOT|SLOW PUSH-IN)/i.test(text)) node.remove();
+    });
+  }
+
+  function cleanConversationPresentation() {
+    removeObsoleteConversationHud();
+    removeScreenplayDirections();
+    root.document?.querySelector?.(".cinematic-mode")?.remove();
   }
 
   function polishGameMasterFlow() {
     const current = activeState();
     if (!current || !root.document) return false;
 
-    removeScreenplayDirections();
-
     if (current.screen === "conversation") {
-      root.document.querySelector(".briefing-progress")?.remove();
-      root.document.querySelector(".cinematic-mode")?.remove();
+      cleanConversationPresentation();
+      // Older presentation wrappers can finish work later in the same frame.
+      // Repeat the structural cleanup once after layout rather than masking it.
+      root.requestAnimationFrame?.(cleanConversationPresentation);
     }
 
     if (current.screen === "conversationFinale") {
@@ -83,6 +123,11 @@
     return true;
   }
 
-  root.BiteBuddySprint2GameMaster = Object.freeze({ install, polishGameMasterFlow });
+  root.BiteBuddySprint2GameMaster = Object.freeze({
+    install,
+    polishGameMasterFlow,
+    removeObsoleteConversationHud,
+    removeScreenplayDirections
+  });
   if (typeof root.document !== "undefined") install();
 })(window);
