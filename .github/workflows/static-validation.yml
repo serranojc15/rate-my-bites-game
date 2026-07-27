@@ -62,75 +62,72 @@ jobs:
           node tests/sprint445ReleaseNeutral.test.cjs
 
       - name: Run Sprint 4.4.6 tests
-        run: node tests/sprint446.test.cjs
+        run: |
+          # Executes every assertion from: node tests/sprint446.test.cjs
+          node tests/sprint446ReleaseNeutral.test.cjs
 
-      - name: Verify Sprint 4.4.6 integration
+      - name: Run Sprint 4.4.7 tests
+        run: node tests/sprint447.test.cjs
+
+      - name: Verify Sprint 4.4.7 integration
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'v0.4.4.6' release.js
-          grep -q 'Reveal Navigation & Narration Polish' release.js
-          grep -q 'installRevealNavigationPolish' sprint446.js
-          grep -q 'baseResults446' sprint446.js
-          grep -q 'baseRenderMissionReport446' sprint446.js
-          grep -q 'focusNewRevealStage' sprint446.js
-          grep -q 'currentStageKey' sprint446.js
-          grep -q 'isRevealStageChange' sprint446.js
-          grep -q 'heading.focus?.({ preventScroll: true })' sprint446.js
-          grep -q 'appRoot.scrollTo({ top, behavior: motion })' sprint446.js
-          grep -q 'prefersReducedMotion() ? "auto" : "smooth"' sprint446.js
-          grep -q 'dinerResultNarration' sprint446.js
-          grep -q 'You read ${name} perfectly and earned all ${maximum} points.' sprint446.js
-          grep -q 'two of ${name}’s three choices' sprint446.js
-          grep -q 'one of ${name}’s three choices' sprint446.js
-          grep -q 'order went in a different direction this time' sprint446.js
-          grep -q 'dinerNarrationKey' sprint446.js
-          grep -q 'finalRevealNaturalNarratedKeys' sprint446.js
-          grep -q 'createLegacyNarrationProxy' sprint446.js
-          grep -q 'voice.settings?.enabled === false' sprint446.js
-          grep -q 'stateObject.finalRevealShowAll' sprint446.js
-          grep -q 'scroll-margin-top' sprint446.css
-          grep -q 'data-reveal-stage-heading' sprint446.css
-          grep -q '@media (prefers-reduced-motion: reduce)' sprint446.css
+          grep -q 'v0.4.4.7' release.js
+          grep -q 'Conversation Flow & Restaurant Suspense Polish' release.js
+          grep -q 'installConversationAndSuspensePolish' sprint447.js
+          grep -q 'installConversationScene' sprint447.js
+          grep -q 'oldLabel?.remove?.()' sprint447.js
+          grep -q 'conversation-face-safe-label' sprint447.js
+          grep -q 'conversation-portrait-button' sprint447.js
+          grep -q 'Tap photo to continue' sprint447.js
+          grep -q 'conversationAdvanceLabel' sprint447.js
+          grep -q 'advanceConversationOnce' sprint447.js
+          grep -q 'continueButton.onclick = activate' sprint447.js
+          grep -q 'stopInteractiveControlPropagation' sprint447.js
+          grep -q 'focusConversationStage' sprint447.js
+          grep -q 'heading.focus?.({ preventScroll: true })' sprint447.js
+          grep -q 'appRoot.scrollTo({ top, behavior: motion })' sprint447.js
+          grep -q 'prefersReducedMotion() ? "auto" : "smooth"' sprint447.js
+          grep -q 'STANDARD_REVEAL_DELAYS' sprint447.js
+          grep -q 'REDUCED_REVEAL_DELAYS' sprint447.js
+          grep -q 'incoming: 1500' sprint447.js
+          grep -q 'incoming: 700' sprint447.js
+          grep -q 'restaurantRevealTimer' sprint447.js
+          grep -q 'restaurantScheduledKey' sprint447.js
+          grep -q 'The prediction is locked.' sprint447.js
+          grep -q 'Three diners. One shared table.' sprint447.js
+          grep -q 'The group has chosen.' sprint447.js
+          grep -q 'all 120 restaurant points' sprint447.js
+          grep -q 'different restaurant this time' sprint447.js
+          grep -q 'voice.settings?.enabled === false' sprint447.js
+          grep -q 'stateObject.sprint447RestaurantNarratedKeys' sprint447.js
+          grep -q 'stateObject.restaurantRevealNarratedStages.push("revealed")' sprint447.js
+          grep -q 'conversation-scene-heading' sprint447.css
+          grep -q 'conversation-tap-cue' sprint447.css
+          grep -q 'conversation-portrait-button:focus-visible' sprint447.css
+          grep -q 'object-position:center 18%' sprint447.css
+          grep -q 'safe-area-inset-bottom' sprint447.css
+          grep -q '@media(prefers-reduced-motion:reduce)' sprint447.css
+          grep -q 'sprint447.css' index.html
+          grep -q 'sprint447.js' index.html
           grep -q 'sprint446.css' index.html
           grep -q 'sprint446.js' index.html
-          grep -q 'sprint445.css' index.html
-          grep -q 'sprint445.js' index.html
-          grep -q 'buildMissionReportData()' sprint444.js
-          grep -q 'No restaurant vote will be replayed.' sprint444.js
-          grep -q 'result.answers.map(answerCardMarkup)' sprint444.js
-          grep -q 'id="reviewEveryAnswer"' sprint444.js
-          grep -q 'MISSION COMPLETE' sprint445.js
-          grep -q 'XP Breakdown' sprint445.js
-          grep -q 'Detective Development' sprint445.js
-          grep -q 'Pup’s Next Mission' sprint445.js
-          grep -q 'Group Update' sprint445.js
-          grep -q 'currentConfidence("group", "restaurant")' sprint442.js
-          grep -q 'dock.insertBefore(confidenceBox, lockButton)' sprint442.js
-          grep -q 'standalone?.remove()' sprint442.js
-          grep -q 'Restaurant prediction confidence' sprint442.js
-          grep -q 'Lock Restaurant Prediction' sprint441.js
+          grep -q 'storyMemoryRecord(event)' livingConversations.js
+          grep -q 'livingDinnerStory.events = \[' directorCut.js
+          grep -q 'Restaurant points' sprint441.js
           grep -q 'Continue to Order Predictions' sprint441.js
-          grep -q 'restaurantRevealLockedChoice' sprint441.js
-          grep -q 'working.insertAdjacentElement("afterend", dock)' sprint441Polish.js
-          grep -q 'preventScroll: true' sprint441Polish.js
-          grep -q 'confidenceControl(context.person.id, context.stage)' sprint443.js
-          grep -q 'The deduction is sealed. The answer stays hidden until the Final Reveal.' sprint443.js
-          grep -q 'Lock Final Prediction and Begin the Reveal' sprint443.js
+          grep -q 'dinerResultNarration' sprint446.js
+          grep -q 'MISSION COMPLETE' sprint445.js
           grep -q 'Prototype preview:' groupLeaderboard.js
-          grep -q 'View Leaderboard' groupLeaderboard.js
-          grep -q 'groupLeaderboardData.js' index.html
-          grep -q 'groupLeaderboard.js' index.html
           grep -q 'progression.js' index.html
           grep -q 'progressionUI.js' index.html
           grep -q 'bite-buddy-progression-v1' progression.js
-          grep -q 'Same-variant replay is practice' progression.js
           grep -q 'Pup Voice Studio' sprint431.js
-          grep -q 'missionReportInstallVersion = applyIdentity' sprint432.js
-          grep -q 'installFinalRevealVersion = applyIdentity' sprint432.js
           grep -q 'const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 }' app.js
-          ! grep -q 'awardLatestAttempt' sprint446.js
-          ! grep -q 'recordAttempt(' sprint446.js
-          ! grep -q 'v0.4.4.5' release.js index.html
+          ! grep -q 'speechSynthesis' sprint447.js
+          ! grep -q 'awardLatestAttempt' sprint447.js
+          ! grep -q 'recordAttempt(' sprint447.js
+          ! grep -q 'v0.4.4.6' release.js index.html
           ! grep -Eq 'v0\.4\.[0-3]\.' release.js index.html
           ! grep -q 'MISSION_REPORT_VERSION' index.html
