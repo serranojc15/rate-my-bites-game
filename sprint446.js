@@ -191,7 +191,10 @@
         dinerId: result.person.id,
         phase: stateObject.finalRevealPhase
       });
+      const activeIndex = clamp(stateObject.finalRevealPersonIndex, 0, Math.max(0, activeDiners().length - 1));
+      const activeDiner = activeDiners()[activeIndex];
       if (currentKey !== key || stateObject.finalRevealPhase !== "diner") return false;
+      if (activeDiner && activeDiner.id !== result.person.id) return false;
       if (stateObject.finalRevealShowAll || voice.settings?.enabled === false) return false;
       if (stateObject.finalRevealNaturalNarratedKeys?.includes?.(key)) return false;
       voice.cancel?.();
