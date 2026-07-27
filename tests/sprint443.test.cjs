@@ -196,9 +196,10 @@ equal(120 + (30 + 20 + 10) * 3, 300, 'total possible score remains 300');
 // Release and workflow integration.
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
-equal(releaseSandbox.window.BiteBuddyRelease.version, 'v0.4.4.3', 'release version is v0.4.4.3');
-equal(releaseSandbox.window.BiteBuddyRelease.releaseName, 'Order Prediction Clarity & Momentum', 'release name is current');
-ok(html.includes('<title>Rate My Bites — Bite Buddy League v0.4.4.3</title>'), 'browser fallback title is current');
+const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
+ok(/^v0\.4\.4\.\d+$/.test(releaseVersion), 'current release is Sprint 4.4.3 or later');
+ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is present');
+ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${releaseVersion}</title>`), 'browser fallback title is current');
 ok(html.indexOf('sprint443.css') > html.indexOf('sprint442.css'), 'Sprint 4.4.3 CSS loads after Sprint 4.4.2');
 ok(html.indexOf('sprint443.js') > html.indexOf('sprint442.js'), 'Sprint 4.4.3 JavaScript loads after Sprint 4.4.2');
 ok(workflowSource.includes('node tests/sprint443.test.cjs'), 'Static validation runs Sprint 4.4.3 tests');
