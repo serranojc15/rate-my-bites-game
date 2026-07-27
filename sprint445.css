@@ -1,0 +1,399 @@
+/* Bite Buddy League v0.4.4.5 — Mission Report Payoff & Replay Momentum */
+.mission-payoff-report {
+  display: grid;
+  gap: 1.35rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(1rem, 2.5vw, 2rem);
+  color: var(--ink, #2c2421);
+}
+
+.mission-payoff-hero,
+.mission-payoff-section,
+.mission-payoff-next,
+.mission-payoff-celebration,
+.mission-payoff-actions {
+  border: 1px solid rgba(44, 36, 33, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 50px rgba(92, 55, 31, 0.08);
+}
+
+.mission-payoff-hero {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.15rem, 3vw, 2.25rem);
+  background:
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.12), transparent 42%),
+    rgba(255, 255, 255, 0.98);
+}
+
+.mission-payoff-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.mission-payoff-context,
+.mission-payoff-heading p,
+.mission-payoff-next span,
+.mission-payoff-primary-metrics span,
+.mission-payoff-section article > span,
+.mission-payoff-attempt-grid span,
+.mission-payoff-group-summary span,
+.mission-payoff-celebration > span {
+  margin: 0;
+  color: #756861;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mission-payoff-primary-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.mission-payoff-primary-metrics article {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fff8f1;
+}
+
+.mission-payoff-primary-metrics article.xp {
+  background: #fff1e6;
+  outline: 2px solid rgba(249, 115, 22, 0.14);
+}
+
+.mission-payoff-primary-metrics strong {
+  overflow-wrap: anywhere;
+  font-size: clamp(1.45rem, 4vw, 2.4rem);
+  line-height: 1;
+}
+
+.mission-payoff-primary-metrics small {
+  color: #756861;
+  line-height: 1.35;
+}
+
+.mission-payoff-rank-progress {
+  display: grid;
+  gap: 0.45rem;
+  padding-top: 0.25rem;
+}
+
+.mission-payoff-rank-progress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.mission-payoff-progress {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1e7df;
+}
+
+.mission-payoff-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #fb923c, #ea580c);
+}
+
+.mission-payoff-celebrations {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.mission-payoff-celebration {
+  padding: 1.1rem 1.25rem;
+  border-color: rgba(249, 115, 22, 0.3);
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
+.mission-payoff-celebration h2,
+.mission-payoff-heading h2,
+.mission-payoff-next h2 {
+  margin: 0.2rem 0 0;
+}
+
+.mission-payoff-next {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  background: #2c2421;
+  color: #fffaf5;
+}
+
+.mission-payoff-next > div {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.mission-payoff-next img {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.mission-payoff-next p,
+.mission-payoff-next small {
+  margin: 0.35rem 0 0;
+  color: #f3e9e1;
+}
+
+.mission-payoff-section {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.mission-payoff-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+}
+
+.mission-payoff-xp-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.mission-payoff-xp-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid rgba(44, 36, 33, 0.09);
+}
+
+.mission-payoff-xp-list dt,
+.mission-payoff-xp-list dd {
+  margin: 0;
+}
+
+.mission-payoff-xp-list dd {
+  flex: 0 0 auto;
+  font-weight: 800;
+}
+
+.mission-payoff-xp-list .total {
+  padding-top: 1rem;
+  border-bottom: 0;
+  color: #c2410c;
+  font-size: 1.05rem;
+}
+
+.mission-payoff-note,
+.mission-payoff-disclosure,
+.mission-payoff-empty {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: #fff7ed;
+  line-height: 1.5;
+}
+
+.mission-payoff-comparison,
+.mission-payoff-development,
+.mission-payoff-attempt-grid,
+.mission-payoff-group-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.mission-payoff-comparison article,
+.mission-payoff-development article,
+.mission-payoff-attempt-grid > div,
+.mission-payoff-group-summary > div {
+  min-width: 0;
+  padding: 0.95rem;
+  border-radius: 16px;
+  background: #fcf8f4;
+}
+
+.mission-payoff-comparison strong,
+.mission-payoff-development strong,
+.mission-payoff-attempt-grid strong,
+.mission-payoff-group-summary strong {
+  display: block;
+  margin-top: 0.35rem;
+  overflow-wrap: anywhere;
+  font-size: 1.05rem;
+}
+
+.mission-payoff-comparison p,
+.mission-payoff-development p {
+  margin: 0.4rem 0 0;
+  color: #756861;
+  line-height: 1.45;
+}
+
+.mission-payoff-all-skills,
+.mission-payoff-case-summary {
+  border-top: 1px solid rgba(44, 36, 33, 0.1);
+  padding-top: 0.8rem;
+}
+
+.mission-payoff-all-skills summary,
+.mission-payoff-case-summary summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.mission-payoff-all-skills > div,
+.mission-payoff-case-summary > div {
+  display: grid;
+  gap: 0;
+  margin-top: 0.65rem;
+}
+
+.mission-payoff-all-skills p,
+.mission-payoff-case-summary p {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(44, 36, 33, 0.08);
+}
+
+.mission-payoff-all-skills small {
+  grid-column: 1 / -1;
+  color: #756861;
+}
+
+.mission-payoff-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 1rem;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.mission-payoff-actions > div,
+.mission-payoff-actions > button {
+  min-width: 0;
+}
+
+.mission-payoff-actions button {
+  width: 100%;
+}
+
+#missionReplaySlot {
+  display: grid;
+  gap: 0.3rem;
+}
+
+#missionReplaySlot small {
+  color: #756861;
+  text-align: center;
+}
+
+.mission-payoff-report button:focus-visible,
+.mission-payoff-report summary:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .mission-payoff-primary-metrics,
+  .mission-payoff-comparison,
+  .mission-payoff-development,
+  .mission-payoff-attempt-grid,
+  .mission-payoff-group-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-payoff-next {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-payoff-next .primary-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .mission-payoff-report {
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+
+  .mission-payoff-hero,
+  .mission-payoff-section,
+  .mission-payoff-next,
+  .mission-payoff-actions {
+    border-radius: 18px;
+  }
+
+  .mission-payoff-primary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mission-payoff-primary-metrics .rank {
+    grid-column: 1 / -1;
+  }
+
+  .mission-payoff-rank-progress > div:first-child,
+  .mission-payoff-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .mission-payoff-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .mission-payoff-primary-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-payoff-primary-metrics .rank {
+    grid-column: auto;
+  }
+
+  .mission-payoff-next > div {
+    grid-template-columns: 52px 1fr;
+  }
+
+  .mission-payoff-next img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .mission-payoff-xp-list > div {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-payoff-report *,
+  .mission-payoff-report *::before,
+  .mission-payoff-report *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
