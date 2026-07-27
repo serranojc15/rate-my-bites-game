@@ -4,8 +4,8 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.4.9";
-  const RELEASE_NAME = "Restaurant Prediction Flow Polish";
+  const VERSION = "v0.4.5.0";
+  const RELEASE_NAME = "Order Reveal Encouragement Polish";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
   function each(selector, callback) {
