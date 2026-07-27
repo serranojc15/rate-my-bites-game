@@ -21,7 +21,15 @@ const testPath = path.resolve('tests/sprint446.test.cjs');
 let testSource = fs.readFileSync(testPath, 'utf8');
 testSource = testSource
   .replaceAll('v0.4.4.6', current.version)
-  .replaceAll('Reveal Navigation & Narration Polish', current.releaseName);
+  .replaceAll('Reveal Navigation & Narration Polish', current.releaseName)
+  .replace(
+    "workflowSource.includes('node tests/sprint446.test.cjs')",
+    "workflowSource.includes('node tests/sprint446ReleaseNeutral.test.cjs')"
+  )
+  .replace(
+    "workflowSource.includes('node tests/sprint445.test.cjs')",
+    "workflowSource.includes('node tests/sprint445ReleaseNeutral.test.cjs')"
+  );
 
 const compiled = new Module(testPath, module);
 compiled.filename = testPath;
