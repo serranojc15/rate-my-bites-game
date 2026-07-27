@@ -1,0 +1,44 @@
+.pup-answer-reaction {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.18);
+}
+
+.pup-answer-reaction img {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pup-answer-reaction span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #9a3412;
+}
+
+.pup-answer-reaction p {
+  margin: 0;
+  line-height: 1.45;
+  color: #2c2421;
+}
+
+.final-diner-reveal .final-pup-speech {
+  margin-top: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pup-answer-reaction {
+    animation: none !important;
+    transition: none !important;
+  }
+}
