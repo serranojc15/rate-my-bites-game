@@ -1,0 +1,98 @@
+/* Bite Buddy League v0.4.4.7 — Conversation Flow & Restaurant Suspense Polish */
+.conversation-scene-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:16px 22px;
+  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  border-top:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.conversation-scene-heading-copy{min-width:0;display:grid;gap:5px}
+.conversation-face-safe-label{
+  margin:0;
+  color:#fdba74;
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.conversation-scene-title{
+  margin:0;
+  color:#fff;
+  font-size:clamp(1rem,2.8vw,1.35rem);
+  line-height:1.15;
+}
+.conversation-scene-actions{flex:0 0 auto}
+.conversation-visible-continue{
+  min-height:44px;
+  padding:0 16px;
+  border-radius:14px;
+  white-space:nowrap;
+}
+.conversation-portrait-button{cursor:pointer;isolation:isolate}
+.conversation-portrait-button:focus-visible{
+  outline:4px solid #fdba74;
+  outline-offset:-4px;
+}
+.conversation-portrait-button .living-person-photo,
+.conversation-portrait-button .living-restaurant-photo{
+  object-position:center 24%;
+  transition:transform .2s ease,filter .2s ease;
+}
+.conversation-portrait-button:hover .living-person-photo,
+.conversation-portrait-button:hover .living-restaurant-photo{
+  transform:scale(1.012);
+  filter:saturate(.95) contrast(1.05);
+}
+.conversation-tap-cue{
+  position:absolute;
+  right:16px;
+  bottom:16px;
+  z-index:5;
+  max-width:calc(100% - 32px);
+  padding:9px 12px;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;
+  background:rgba(22,16,13,.84);
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  color:#fff;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.03em;
+  pointer-events:none;
+}
+.conversation-memory-footer{padding-top:14px;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+.living-stage .camera-label{position:static}
+.living-stage [data-conversation-stage-heading]{scroll-margin-top:18px}
+.living-stage [data-conversation-stage-heading]:focus{outline:3px solid rgba(253,186,116,.75);outline-offset:5px;border-radius:7px}
+.sprint447-suspense{min-height:min(560px,70svh);display:grid;align-content:center}
+.sprint447-suspense h1{max-width:760px;margin-inline:auto;text-wrap:balance}
+
+@media(max-width:760px){
+  .conversation-scene-heading{align-items:stretch;padding:14px 16px;gap:12px}
+  .conversation-scene-actions{display:flex;align-items:center}
+  .conversation-visible-continue{min-height:42px;padding:0 13px;font-size:.82rem}
+  .conversation-portrait-button .living-person-photo,
+  .conversation-portrait-button .living-restaurant-photo{object-position:center 20%}
+  .conversation-tap-cue{right:12px;bottom:12px;font-size:.68rem}
+}
+
+@media(max-width:430px){
+  .conversation-scene-heading{display:grid;grid-template-columns:1fr}
+  .conversation-scene-actions,.conversation-visible-continue{width:100%}
+  .conversation-visible-continue{min-height:48px}
+  .conversation-scene-title{font-size:1.05rem}
+  .living-visual,.living-person-photo,.living-restaurant-photo{height:330px;min-height:330px}
+  .conversation-portrait-button .living-person-photo,
+  .conversation-portrait-button .living-restaurant-photo{object-position:center 18%}
+  .conversation-tap-cue{left:12px;right:12px;text-align:center}
+  .sprint447-suspense{min-height:58svh;padding-inline:18px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .conversation-portrait-button .living-person-photo,
+  .conversation-portrait-button .living-restaurant-photo{transition:none!important;transform:none!important}
+  .sprint447-suspense,.sprint447-suspense *{animation:none!important;transition:none!important}
+}
