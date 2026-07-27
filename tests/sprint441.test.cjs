@@ -152,7 +152,14 @@ ok(cssSource.includes('@media (prefers-reduced-motion: reduce)'), 'Sprint 4.4.1 
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
-ok(/^v0\.4\.4\.\d+$/.test(releaseVersion), 'current release is Sprint 4.4.1 or later');
+const releaseMatch = /^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(releaseVersion);
+const releaseParts = releaseMatch ? releaseMatch.slice(1).map(Number) : null;
+const minimumRelease = [0, 4, 4, 1];
+const isAtLeastMinimum = Boolean(releaseParts) && releaseParts.some((part, index) => {
+  if (part !== minimumRelease[index]) return part > minimumRelease[index];
+  return false;
+}) || Boolean(releaseParts) && releaseParts.every((part, index) => part === minimumRelease[index]);
+ok(isAtLeastMinimum, 'current release is Sprint 4.4.1 or later');
 ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is present');
 ok(htmlSource.includes('sprint441.css') && htmlSource.includes('sprint441.js'), 'Sprint 4.4.1 assets are integrated');
 ok(htmlSource.indexOf('groupLeaderboardData.js') < htmlSource.indexOf('groupLeaderboard.js'), 'leaderboard data loads before leaderboard behavior');
