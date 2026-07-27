@@ -51,10 +51,10 @@ jobs:
         run: node tests/sprint442.test.cjs
 
       - name: Run Sprint 4.4.3 tests
-        run: node tests/sprint443.test.cjs
+        run: node tests/sprint443ReleaseNeutral.test.cjs
 
       - name: Run Sprint 4.4.4 tests
-        run: node tests/sprint444.test.cjs
+        run: node tests/sprint444ReleaseNeutral.test.cjs
 
       - name: Run Sprint 4.4.5 tests
         run: |
