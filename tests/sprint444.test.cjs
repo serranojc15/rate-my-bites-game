@@ -203,12 +203,14 @@ ok(variantsSource.includes('id: "C", title: "The Garden Celebration"'), 'Variant
 ok(/const points = \{ restaurant: 120, meal: 30, drink: 20, dessert: 10 \}/.test(appSource), 'authoritative scoring constants remain unchanged');
 equal(120 + (30 + 20 + 10) * 3, 300, 'total possible score remains 300');
 
-// Release and workflow integration.
+// Release and workflow integration remains release-neutral after v0.4.4.4.
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
-equal(releaseSandbox.window.BiteBuddyRelease.version, 'v0.4.4.4', 'release version is v0.4.4.4');
-equal(releaseSandbox.window.BiteBuddyRelease.releaseName, 'Final Reveal Continuity & Score Drama', 'release name is current');
-ok(html.includes('<title>Rate My Bites — Bite Buddy League v0.4.4.4</title>'), 'browser fallback title is current');
+const activeVersion = releaseSandbox.window.BiteBuddyRelease.version;
+ok(/^v0\.4\.4\.\d+$/.test(activeVersion), 'active release remains in the v0.4.4 line');
+ok(Number(activeVersion.split('.').at(-1)) >= 4, 'active release is not older than Sprint 4.4.4');
+ok(Boolean(releaseSandbox.window.BiteBuddyRelease.releaseName), 'active release name is present');
+ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${activeVersion}</title>`), 'browser fallback title matches the authoritative release');
 ok(html.indexOf('sprint444.css') > html.indexOf('sprint443.css'), 'Sprint 4.4.4 CSS loads after Sprint 4.4.3');
 ok(html.indexOf('sprint444.js') > html.indexOf('sprint443.js'), 'Sprint 4.4.4 JavaScript loads after Sprint 4.4.3');
 ok(workflowSource.includes('node tests/sprint444.test.cjs'), 'Static validation runs Sprint 4.4.4 tests');
