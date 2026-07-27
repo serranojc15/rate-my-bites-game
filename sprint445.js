@@ -238,6 +238,12 @@
       return { id: "calibration", title: "Strengthen confidence calibration", reason: "On the next fresh case, match confidence to how strong and consistent the evidence really is.", target: "confidence-calibration", action: "Play Fresh Variant" };
     }
 
+    const hasTransferEvidence = finite(progression?.completedFreshVariants, 0) >= 3;
+    const hasReliableCalibration = confidence && ["reliable", "strong", "expert"].includes(confidence.level.id);
+    if (attemptType !== "same-variant-replay" && hasTransferEvidence && hasReliableCalibration) {
+      return { id: "replay", title: "Replay this case for focused practice", reason: "You already have meaningful fresh-case evidence. One practice replay can help organize the clue sequence more efficiently, but practice XP is limited.", target: "practice-efficiency", action: "Replay This Case" };
+    }
+
     if (finite(progression?.completedFreshVariants, 0) < 3 || attemptType === "same-variant-replay") {
       return { id: "fresh", title: "Play another fresh variant", reason: "More fresh groups provide stronger evidence that your reads transfer.", target: "fresh-transfer", action: "Play Fresh Variant" };
     }
@@ -462,7 +468,7 @@
 
     release?.apply?.();
     const heading = document.querySelector("#missionPayoffTitle");
-    requestAnimationFrame?.(() => heading?.focus?.({ preventScroll: true }));
+    root.requestAnimationFrame?.(() => heading?.focus?.({ preventScroll: true }));
     if (!state.missionPayoffNarrated && root.PupVoice?.settings?.enabled !== false) {
       state.missionPayoffNarrated = true;
       root.PupVoice?.speak?.("The case is complete. Now let's see what the investigation taught you.");
