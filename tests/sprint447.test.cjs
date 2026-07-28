@@ -152,7 +152,10 @@ ok(css.includes('object-position:center 18%'), 'mobile portrait crop protects fa
 ok(css.includes('env(safe-area-inset-bottom)'), 'mobile footer respects the safe area');
 ok(css.includes('@media(prefers-reduced-motion:reduce)'), 'reduced-motion presentation is preserved');
 ok(livingSource.includes('storyMemoryRecord(event)'), 'Story Memory recording remains');
-ok(directorSource.includes('livingDinnerStory.events = ['), 'Living Conversations content remains');
+ok(
+  directorSource.includes('livingDinnerStory.events = cloneEpisodeValue(initialEpisodeDefinition.story.scenes)'),
+  'Director presentation reads canonical episode scenes'
+);
 ok(sprint441Source.includes('Restaurant points'), 'restaurant result still displays restaurant points');
 ok(sprint441Source.includes('Continue to Order Predictions'), 'order-flow handoff remains');
 ok(sprint446Source.includes('dinerResultNarration'), 'natural Final Reveal diner narration remains');

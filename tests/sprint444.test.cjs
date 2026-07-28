@@ -207,14 +207,14 @@ equal(120 + (30 + 20 + 10) * 3, 300, 'total possible score remains 300');
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 const activeVersion = releaseSandbox.window.BiteBuddyRelease.version;
-ok(/^v0\.4\.4\.\d+$/.test(activeVersion), 'active release remains in the v0.4.4 line');
-ok(Number(activeVersion.split('.').at(-1)) >= 4, 'active release is not older than Sprint 4.4.4');
+ok(require('./version-helpers.cjs').isVersionAtLeast(activeVersion, 'v0.4.4.4'), 'active release is Sprint 4.4.4 or later');
+ok(require('./version-helpers.cjs').parseVersion(activeVersion) !== null, 'active release uses the four-part version format');
 ok(Boolean(releaseSandbox.window.BiteBuddyRelease.releaseName), 'active release name is present');
 ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${activeVersion}</title>`), 'browser fallback title matches the authoritative release');
 ok(html.indexOf('sprint444.css') > html.indexOf('sprint443.css'), 'Sprint 4.4.4 CSS loads after Sprint 4.4.3');
 ok(html.indexOf('sprint444.js') > html.indexOf('sprint443.js'), 'Sprint 4.4.4 JavaScript loads after Sprint 4.4.3');
-ok(workflowSource.includes('node tests/sprint444.test.cjs'), 'Static validation runs Sprint 4.4.4 tests');
-ok(workflowSource.includes('node tests/sprint443.test.cjs'), 'Sprint 4.4.3 tests remain enabled');
+ok(workflowSource.includes('node tests/sprint444ReleaseNeutral.test.cjs'), 'Static validation runs Sprint 4.4.4 tests');
+ok(workflowSource.includes('node tests/sprint443ReleaseNeutral.test.cjs'), 'Sprint 4.4.3 tests remain enabled');
 ok(workflowSource.includes('node tests/sprint442.test.cjs'), 'Sprint 4.4.2 tests remain enabled');
 ok(workflowSource.includes('node tests/progression.test.cjs'), 'Detective Progression tests remain enabled');
 

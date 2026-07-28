@@ -4,8 +4,8 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.6.0";
-  const RELEASE_NAME = "Multi-Episode Foundation";
+  const VERSION = "v0.4.6.1";
+  const RELEASE_NAME = "Series Polish & World Bible";
   const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
 
   function each(selector, callback) {

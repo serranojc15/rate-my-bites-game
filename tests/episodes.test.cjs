@@ -21,7 +21,7 @@ const window = { localStorage: new MemoryStorage() };
 window.window = window;
 const sandbox = { window, console };
 vm.createContext(sandbox);
-for (const file of ["episodes.js", "episodeProgress.js", "multiEpisode.js"]) {
+for (const file of ["worldBible.js", "episodes.js", "episodeProgress.js", "multiEpisode.js"]) {
   vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
 }
 
@@ -36,7 +36,7 @@ const episode2 = episodes.getEpisode("episode-002");
 
 // Catalog and validation.
 ok(episodes, "episode API is exposed");
-equal(episodes.schemaVersion, 1, "episode schema is versioned");
+equal(episodes.schemaVersion, 2, "episode schema is versioned");
 equal(playable.length, 2, "catalog exposes two playable episodes");
 deepEqual(playable.map(entry => entry.id), ["episode-001", "episode-002"], "playable episodes keep catalog order");
 equal(comingSoon.length, 1, "catalog exposes one Coming Soon entry");
