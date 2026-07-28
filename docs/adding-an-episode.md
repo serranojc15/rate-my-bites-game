@@ -1,38 +1,41 @@
-# Adding Episode 3
+# Adding an Episode
 
 The episode engine is intentionally small. A new episode should require one definition, one catalog registration, approved assets when needed, and validation—not a copy of the game engine.
 
 ## File locations
 
 - Episode definitions and the centralized catalog: `episodes.js`
+- Series, Season, Character, Restaurant, and artwork Bibles: `worldBible.js`
 - Catalog validation: `episodes.js`
+- Build-time artwork validation: `scripts/validate-assets.cjs`
 - Browser progress schema: `episodeProgress.js`
 - Episode selection and runtime loading: `multiEpisode.js`
-- Focused tests: `tests/episodes.test.cjs`
+- Focused tests: `tests/episodes.test.cjs` and `tests/sprint31.test.cjs`
 - Story standards: `docs/story-bible.md`
+- Content hierarchy: `docs/story-architecture.md`
 
 ## Authoring workflow
 
-1. Copy an approved playable episode definition in `episodes.js`.
-2. Assign a new stable ID such as `episode-003`. Never use the title as a persistence key.
-3. Write metadata: title, subtitle, destination, artwork reference, playable status, order, and optional tags.
-4. Write story content: briefing, character voices, ordered scenes, meaningful clues, humor, a memory or emotional moment, finale clues, and an ending.
-5. Define gameplay choices, correct answers, the correct restaurant, scoring inputs, and labels.
-6. Define reveal order, restaurant commentary, encouragement, and the ending celebration.
+1. Add or update canonical characters and restaurants in `worldBible.js`. Reuse existing IDs for returning people and places.
+2. Register every portrait, restaurant, food, scene, and background asset with a stable artwork ID. Production definitions may not use remote URLs or placeholders.
+3. Add the episode to the intended Season timeline.
+4. Copy an approved playable episode definition in `episodes.js`.
+5. Assign a stable ID such as `episode-003`. Never use the title as a persistence key.
+6. Write metadata, story, gameplay truth, reveal copy, completion copy, and optional continuity.
 7. Register the definition once in the `catalog` array.
-8. Run validation and the focused tests.
-9. Play the entire episode at desktop and narrow/mobile sizes.
+8. Run artwork, catalog, and regression validation.
+9. Play the entire episode at desktop, narrow/mobile, and landscape sizes.
 
 ## Required fields
 
 A playable definition requires:
 
-- `metadata.id`, `title`, `subtitle`, `destination`, `artwork`, `status`, and `order`
-- `story.host`, `briefing.opening`, `briefing.people`, `scenes`, `missionText`, `finaleClues`, and `ending`
-- `gameplay.images`, `restaurants`, `actualRestaurantId`, `diners`, `stages`, `points`, and `labels`
+- `metadata.id`, `title`, `subtitle`, `destination`, `seasonId`, `artworkId`, `artwork`, `status`, and `order`
+- `story.host`, `castIds`, `briefing.opening`, `briefing.people`, `scenes`, `missionText`, `finaleClues`, `ending`, and `completion`
+- `gameplay.assetIds`, `images`, `restaurants`, `actualRestaurantId`, `diners`, `stages`, `points`, and `labels`
 - `reveal.order`, `restaurantExplanation`, `correctRestaurant`, `incorrectRestaurant`, and `endingCelebration`
 
-Tags and `metadata.future` are optional and do not affect gameplay.
+Tags, `metadata.future`, and `story.continuity` are optional and do not affect gameplay.
 
 ## Story versus gameplay truth
 
@@ -66,9 +69,48 @@ Keep the established score model unless a future approved sprint explicitly chan
 
 ## Assets
 
-Reference local approved assets or existing approved neutral artwork. Add a food image entry for every actual-restaurant menu choice where practical. The runtime has a neutral fallback, but an intentional asset is better.
+Reference only IDs registered in `worldBible.js`. Every actual-restaurant meal, drink, and dessert requires its own semantically correct food artwork. Every diner portrait must equal that person’s Character Bible `portraitId`; every restaurant image must equal its Restaurant Bible `artworkId`; the episode cover must depict the actual restaurant.
+
+The build rejects:
+
+- missing or unknown artwork IDs
+- remote URLs, placeholders, empty files, and invalid image files
+- portrait swaps or a portrait shared by two people
+- one image assigned to different foods or restaurants
+- episode images that do not resolve from their registered IDs
+- a cover image that does not depict the answer restaurant
 
 Do not import copyrighted characters, logos, entertainment footage, scripts, dialogue, or music. Do not imply official affiliation with a third party.
+
+## Optional continuity
+
+Continuity must have a newcomer-safe branch:
+
+```js
+continuity: [{
+  previousEpisodeId: "episode-002",
+  optional: true,
+  affectsGameplay: false,
+  returning: "A warm callback returning players will recognize.",
+  standalone: "The same current-story idea with no prior knowledge required."
+}]
+```
+
+Previous episodes are never prerequisites and continuity never carries puzzle-critical evidence.
+
+## Episode Complete copy
+
+Every episode provides:
+
+```js
+completion: {
+  mascotMessage: "Pup’s high-score congratulations.",
+  funFact: "An optional character or restaurant payoff.",
+  teaser: { speakerId: "canonical-character-id", text: "A short next-time button." }
+}
+```
+
+The shared ending renderer calculates score, restaurant, meals identified, and accuracy. Do not duplicate those calculations in episode data.
 
 ## Register and validate
 
@@ -81,8 +123,10 @@ Add one playable catalog entry:
 Then run:
 
 ```bash
+node scripts/validate-assets.cjs
 node --check episodes.js
 node tests/episodes.test.cjs
+node tests/sprint31.test.cjs
 ```
 
 Run the repository’s complete static validation commands from `.github/workflows/static-validation.yml` before committing.
@@ -102,6 +146,8 @@ Verify:
 - the continuation instruction appears only on the first briefing screen
 - desktop and narrow/mobile layouts remain usable
 - no console errors occur
+- Episode Complete offers Next, Replay, Library, and Home without horizontal overflow
+- browser Back from an active episode returns to the Episode Library
 
 ## Common mistakes
 

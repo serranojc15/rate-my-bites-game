@@ -23,13 +23,27 @@ Write warm, human, conversational, specific, sincere, and broadly appropriate di
 
 ## Characters
 
+- `worldBible.js` is the canonical Character Bible. A recurring person’s name, portrait, background, preferences, relationships, and running jokes belong there.
+- Portrait IDs are permanent identity, not episode decoration. Never select or randomize a portrait inside an episode.
 - Give every person a recognizable voice and point of view.
 - Let dialogue reveal personality, not merely deliver clues.
 - Connect memories to food naturally: who made it, where it was shared, or why it matters now.
 - Give characters wants that can overlap, conflict, or change.
 - Never reduce a character to an answer key.
+- Update `episodeAppearances` when a canonical person joins an episode or established Fresh Variant.
 
 The current episodes use three diners so they fit the established prediction, scoring, reveal, animation, and responsive systems.
+
+## Continuity
+
+- Every episode must make sense on its own.
+- A continuity reference must provide both `returning` and `standalone` copy.
+- Returning copy may reward memory; it may not contain evidence needed to solve the current puzzle.
+- Running jokes should feel like affectionate recognition, not homework.
+
+## Restaurants
+
+Restaurants are recurring gathering places with identities of their own. Canonical names, artwork, signature dishes, traditions, appearances, and story notes belong in the Restaurant Bible in `worldBible.js`. Reuse the same restaurant ID and artwork when a place returns. Let its history accumulate rather than silently inventing a second version.
 
 ## Pup, the Bite Buddy
 
@@ -83,4 +97,4 @@ Keep Pup observant, concise, encouraging, and slightly theatrical. Do not invent
 4. A human edits and approves the final episode.
 5. Only approved static content ships.
 
-Sprint 3 does not generate any episode content at runtime.
+The game does not generate episode content at runtime.

@@ -3,33 +3,46 @@
   "use strict";
 
   const clone = value => JSON.parse(JSON.stringify(value));
+  const world = root.RateMyBitesWorld;
+  if (!world) throw new Error("RateMyBitesWorld must load before episodes.js");
+
+  const characterName = id => {
+    const character = world.getCharacter(id);
+    if (!character) throw new Error(`Unknown character id: ${id}`);
+    return character.name;
+  };
+
+  const episodeArtwork = assetIds => {
+    const images = {};
+    for (const [group, mappings] of Object.entries(assetIds)) {
+      images[group] = {};
+      for (const [label, assetId] of Object.entries(mappings)) {
+        images[group][label] = world.assetSrc(assetId);
+      }
+    }
+    return { assetIds: clone(assetIds), images };
+  };
+  const slugify = value => String(value)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
   /**
    * @typedef {Object} EpisodeDefinition
-   * @property {{id:string,title:string,subtitle:string,destination:string,artwork:string,status:"playable",order:number,tags?:string[],future?:Object}} metadata
-   * @property {{host:Object,briefing:Object,scenes:Object[],missionText:string,finaleClues:Object[],ending:string}} story
-   * @property {{images:Object,restaurants:Object[],actualRestaurantId:string,diners:Object[],stages:string[],points:Object,labels:Object}} gameplay
+   * @property {{id:string,title:string,subtitle:string,destination:string,seasonId:string,artworkId:string,artwork:string,status:"playable",order:number,tags?:string[],future?:Object}} metadata
+   * @property {{host:Object,castIds:string[],continuity:Object[],completion:Object,briefing:Object,scenes:Object[],missionText:string,finaleClues:Object[],ending:string}} story
+   * @property {{assetIds:Object,images:Object,restaurants:Object[],actualRestaurantId:string,diners:Object[],stages:string[],points:Object,labels:Object}} gameplay
    * @property {{order:string[],restaurantExplanation:string,correctRestaurant:string,incorrectRestaurant:string,endingCelebration:string}} reveal
    */
 
+  const pup = world.getCharacter("pup");
   const sharedHost = {
-    name: "Pup",
-    image: "assets/buddies/buddy-dog.webp"
-  };
-
-  const sharedPeopleArtwork = {
-    first: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=82",
-    second: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=82",
-    third: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=700&q=82"
-  };
-
-  const sharedRestaurantArtwork = {
-    first: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=82",
-    second: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1000&q=82",
-    third: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=82",
-    fourth: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5f?auto=format&fit=crop&w=1000&q=82",
-    fifth: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1000&q=82",
-    sixth: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1000&q=82"
+    id: pup.id,
+    name: pup.name,
+    portraitId: pup.portraitId,
+    image: world.assetSrc(pup.portraitId)
   };
 
   /** @type {EpisodeDefinition} */
@@ -39,7 +52,9 @@
       title: "The Great Sushi Debate",
       subtitle: "Operation Dinner Briefing",
       destination: "Casa Luna · Taco Tuesday",
-      artwork: sharedRestaurantArtwork.first,
+      seasonId: "season-001",
+      artworkId: "restaurant.casa-luna",
+      artwork: world.assetSrc("restaurant.casa-luna"),
       status: "playable",
       order: 1,
       tags: ["celebration", "modern-mexican", "friends"],
@@ -47,20 +62,27 @@
     },
     story: {
       host: sharedHost,
+      castIds: ["emma", "marcus", "olivia"],
+      continuity: [],
+      completion: {
+        mascotMessage: "Outstanding work! Olivia’s celebration never fooled you for a second.",
+        funFact: "Marcus’s six-dinner dessert streak survived the case.",
+        teaser: { speakerId: "olivia", text: "Priya says Willow Lake still has our names on a very embarrassing photograph." }
+      },
       briefing: {
         number: 1,
         title: "The Great Sushi Debate",
         subtitle: "Operation Dinner Briefing",
         opening: [
-          "Good evening, Biter.",
-          "Tonight, you will be dining with three very different people.",
-          "Study their habits. Listen carefully.",
-          "Small clues often reveal big decisions."
+          "Pull up a chair, Detective. Tonight’s table has already started arguing—in the friendly way.",
+          "Emma, Marcus, and Olivia all want a good dinner. They do not agree on what that means.",
+          "Listen for the habits they tease each other about.",
+          "The smallest joke may be tonight’s best clue."
         ],
         people: {
           emma: {
             narration: [
-              "This is Emma.",
+              "Meet Emma.",
               "She usually follows curiosity—and photographs the evidence.",
               "Yesterday, however, she rated fried catfish 4.7 stars.",
               "Do not assume seafood."
@@ -69,7 +91,7 @@
           },
           marcus: {
             narration: [
-              "This is Marcus.",
+              "Meet Marcus.",
               "He values consistency, familiar places, and a full plate.",
               "His dessert streak currently stands at six dinners.",
               "I have documented this historic achievement."
@@ -78,7 +100,7 @@
           },
           olivia: {
             narration: [
-              "This is Olivia.",
+              "Meet Olivia.",
               "She plans for the whole table and remembers everyone’s favorites.",
               "Most of her detailed dining history is private.",
               "You will have to read the room."
@@ -98,7 +120,7 @@
           id: "wide-open",
           kind: "conversation",
           speakerId: "emma",
-          speaker: "Emma",
+          speaker: characterName("emma"),
           text: "Before anybody says sushi, I had fish yesterday. I want something completely different tonight.",
           emotion: "thoughtful",
           cameraTarget: "emma",
@@ -111,8 +133,8 @@
           id: "marcus-reacts",
           kind: "reaction",
           speakerId: "marcus",
-          speaker: "Marcus",
-          text: "That is exactly what someone ordering sushi would say.",
+          speaker: characterName("marcus"),
+          text: "That’s exactly what someone ordering sushi would say.",
           emotion: "dry",
           cameraTarget: "marcus",
           shot: "REACTION SHOT",
@@ -124,8 +146,8 @@
           id: "emma-pushback",
           kind: "conversation",
           speakerId: "emma",
-          speaker: "Emma",
-          text: "You are only suspicious because I used the word 'completely.'",
+          speaker: characterName("emma"),
+          text: "You’re only suspicious because I used the word “completely.”",
           emotion: "playful",
           cameraTarget: "emma",
           shot: "QUICK CUT",
@@ -135,8 +157,8 @@
           id: "marcus-budget",
           kind: "conversation",
           speakerId: "marcus",
-          speaker: "Marcus",
-          text: "I am flexible. Close, filling, and no financing paperwork at the end.",
+          speaker: characterName("marcus"),
+          text: "I’m flexible: close, filling, and no financing paperwork at the end.",
           emotion: "dry",
           cameraTarget: "marcus",
           shot: "CLOSE-UP",
@@ -148,8 +170,8 @@
           id: "olivia-reframes",
           kind: "conversation",
           speakerId: "olivia",
-          speaker: "Olivia",
-          text: "It is a celebration. Can we choose somewhere everybody will enjoy instead of conducting seafood litigation?",
+          speaker: characterName("olivia"),
+          text: "It’s a celebration. Can we pick somewhere everybody likes before this turns into seafood litigation?",
           emotion: "warm",
           cameraTarget: "olivia",
           shot: "TWO SHOT",
@@ -181,8 +203,8 @@
           id: "emma-confessional",
           kind: "confessional",
           speakerId: "emma",
-          speaker: "Emma",
-          text: "They are all overthinking this. Which is useful, because now nobody knows what I am ordering.",
+          speaker: characterName("emma"),
+          text: "They’re all overthinking it. Perfect. Now nobody knows what I’m ordering.",
           emotion: "playful",
           cameraTarget: "emma",
           shot: "CONFESSIONAL",
@@ -206,8 +228,8 @@
           id: "marcus-confessional",
           kind: "confessional",
           speakerId: "marcus",
-          speaker: "Marcus",
-          text: "Happy hour is evidence. I respect evidence.",
+          speaker: characterName("marcus"),
+          text: "Happy hour is evidence, and I respect evidence.",
           emotion: "serious",
           cameraTarget: "marcus",
           shot: "CONFESSIONAL",
@@ -218,7 +240,7 @@
           id: "olivia-reaction",
           kind: "reaction",
           speakerId: "olivia",
-          speaker: "Olivia",
+          speaker: characterName("olivia"),
           text: "And suddenly Marcus is very interested in the celebration.",
           emotion: "amused",
           cameraTarget: "olivia",
@@ -229,7 +251,7 @@
           id: "pup-close",
           kind: "pup",
           speaker: "Pup",
-          text: "The room has shifted. Someone changed direction, someone revealed a priority, and one notification changed the temperature. Do not chase every clue. Decide which one is true.",
+          text: "The room has shifted. Someone changed direction, someone revealed a priority, and one notification changed the temperature. Don’t chase every clue. Decide which one is true.",
           emotion: "decisive",
           cameraTarget: "pup",
           shot: "SLOW PUSH-IN",
@@ -244,44 +266,44 @@
       ending: "Olivia raises her glass. Marcus protects the last churro. Emma takes the picture."
     },
     gameplay: {
-      images: {
+      ...episodeArtwork({
         people: {
-          emma: sharedPeopleArtwork.first,
-          marcus: sharedPeopleArtwork.second,
-          olivia: sharedPeopleArtwork.third
+          emma: "portrait.emma",
+          marcus: "portrait.marcus",
+          olivia: "portrait.olivia"
         },
         restaurants: {
-          luna: sharedRestaurantArtwork.first,
-          cactus: sharedRestaurantArtwork.second,
-          azul: sharedRestaurantArtwork.third,
-          abuela: sharedRestaurantArtwork.fourth,
-          rojo: sharedRestaurantArtwork.fifth,
-          plaza: sharedRestaurantArtwork.sixth
+          luna: "restaurant.casa-luna",
+          cactus: "restaurant.cactus-cantina",
+          azul: "restaurant.azul-mar",
+          abuela: "restaurant.abuelas-table",
+          rojo: "restaurant.rojo-taco-lab",
+          plaza: "restaurant.plaza-fiesta"
         },
         food: {
-          "Fish tacos": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=800&q=82",
-          "Chicken enchiladas": "https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=800&q=82",
-          "Steak fajitas": "https://images.unsplash.com/photo-1611250188496-e966043a0629?auto=format&fit=crop&w=800&q=82",
-          "Lime margarita": "https://images.unsplash.com/photo-1556855810-ac404aa91e85?auto=format&fit=crop&w=800&q=82",
-          "Sweet tea": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=82",
-          "Sparkling water": "https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=800&q=82",
-          "Churros": "https://images.unsplash.com/photo-1624371414361-e670edf4898d?auto=format&fit=crop&w=800&q=82",
-          "Tres leches": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=82",
-          "No dessert": "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=800&q=82"
+          "Fish tacos": "food.fish-tacos",
+          "Chicken enchiladas": "food.chicken-enchiladas",
+          "Steak fajitas": "food.steak-fajitas",
+          "Lime margarita": "food.lime-margarita",
+          "Sweet tea": "food.sweet-tea",
+          "Sparkling water": "food.sparkling-water",
+          "Churros": "food.churros",
+          "Tres leches": "food.tres-leches",
+          "No dessert": "food.no-dessert"
         }
-      },
+      }),
       restaurants: [
-        { id: "luna", name: "Casa Luna", distance: "3.2 mi", price: "$$", style: "Modern Mexican", atmosphere: "Warm lights · social patio", description: "A polished neighborhood favorite with modern plates and a lively bar.", menu: { meal: ["Fish tacos", "Chicken enchiladas", "Steak fajitas"], drink: ["Lime margarita", "Sweet tea", "Sparkling water"], dessert: ["Churros", "Tres leches", "No dessert"] } },
-        { id: "cactus", name: "Cactus Cantina", distance: "1.8 mi", price: "$", style: "Fast & casual", atmosphere: "Bright · energetic · quick", description: "A casual counter-service spot known for bold flavors and easy prices.", menu: { meal: ["Spicy chicken burrito", "Carne asada tacos", "Veggie bowl"], drink: ["Horchata", "Mexican Coke", "Water"], dessert: ["Cinnamon sopapillas", "Flan", "No dessert"] } },
-        { id: "azul", name: "Azul Mar", distance: "7.4 mi", price: "$$$", style: "Coastal Mexican", atmosphere: "Upscale · date-night", description: "Seafood-forward Mexican cooking in a sophisticated coastal dining room.", menu: { meal: ["Grilled mahi tacos", "Shrimp enchiladas", "Chicken mole"], drink: ["Cucumber agua fresca", "Paloma", "Sparkling water"], dessert: ["Coconut flan", "Tres leches", "No dessert"] } },
-        { id: "abuela", name: "Abuela’s Table", distance: "5.1 mi", price: "$$", style: "Traditional family recipes", atmosphere: "Cozy · familiar · relaxed", description: "Comforting recipes, generous portions, and the feeling of a family table.", menu: { meal: ["Beef tamales", "Cheese enchiladas", "Chicken tortilla soup"], drink: ["Sweet tea", "Horchata", "Water"], dessert: ["Flan", "Churros", "No dessert"] } },
-        { id: "rojo", name: "Rojo Taco Lab", distance: "6.6 mi", price: "$$", style: "Creative street tacos", atmosphere: "Trendy · loud · adventurous", description: "Unexpected taco combinations in a colorful, high-energy room.", menu: { meal: ["Korean beef tacos", "Hot honey chicken tacos", "Avocado tostadas"], drink: ["Mango agua fresca", "Spicy margarita", "Mexican Coke"], dessert: ["Churro bites", "Mexican chocolate cookie", "No dessert"] } },
-        { id: "plaza", name: "Plaza Fiesta", distance: "4.0 mi", price: "$$", style: "Lively neighborhood favorite", atmosphere: "Festive · group-friendly", description: "A dependable celebration spot with big tables and familiar favorites.", menu: { meal: ["Steak fajitas", "Combo enchiladas", "Fish tacos"], drink: ["House margarita", "Sweet tea", "Water"], dessert: ["Fried ice cream", "Sopapillas", "No dessert"] } }
+        { id: "luna", worldId: "casa-luna", name: "Casa Luna", distance: "3.2 mi", price: "$$", style: "Modern Mexican", atmosphere: "Warm lights · social patio", description: "A polished neighborhood favorite with modern plates and a lively bar.", menu: { meal: ["Fish tacos", "Chicken enchiladas", "Steak fajitas"], drink: ["Lime margarita", "Sweet tea", "Sparkling water"], dessert: ["Churros", "Tres leches", "No dessert"] } },
+        { id: "cactus", worldId: "cactus-cantina", name: "Cactus Cantina", distance: "1.8 mi", price: "$", style: "Fast & casual", atmosphere: "Bright · energetic · quick", description: "A casual counter-service spot known for bold flavors and easy prices.", menu: { meal: ["Spicy chicken burrito", "Carne asada tacos", "Veggie bowl"], drink: ["Horchata", "Mexican Coke", "Water"], dessert: ["Cinnamon sopapillas", "Flan", "No dessert"] } },
+        { id: "azul", worldId: "azul-mar", name: "Azul Mar", distance: "7.4 mi", price: "$$$", style: "Coastal Mexican", atmosphere: "Upscale · date-night", description: "Seafood-forward Mexican cooking in a sophisticated coastal dining room.", menu: { meal: ["Grilled mahi tacos", "Shrimp enchiladas", "Chicken mole"], drink: ["Cucumber agua fresca", "Paloma", "Sparkling water"], dessert: ["Coconut flan", "Tres leches", "No dessert"] } },
+        { id: "abuela", worldId: "abuelas-table", name: "Abuela’s Table", distance: "5.1 mi", price: "$$", style: "Traditional family recipes", atmosphere: "Cozy · familiar · relaxed", description: "Comforting recipes, generous portions, and the feeling of a family table.", menu: { meal: ["Beef tamales", "Cheese enchiladas", "Chicken tortilla soup"], drink: ["Sweet tea", "Horchata", "Water"], dessert: ["Flan", "Churros", "No dessert"] } },
+        { id: "rojo", worldId: "rojo-taco-lab", name: "Rojo Taco Lab", distance: "6.6 mi", price: "$$", style: "Creative street tacos", atmosphere: "Trendy · loud · adventurous", description: "Unexpected taco combinations in a colorful, high-energy room.", menu: { meal: ["Korean beef tacos", "Hot honey chicken tacos", "Avocado tostadas"], drink: ["Mango agua fresca", "Spicy margarita", "Mexican Coke"], dessert: ["Churro bites", "Mexican chocolate cookie", "No dessert"] } },
+        { id: "plaza", worldId: "plaza-fiesta", name: "Plaza Fiesta", distance: "4.0 mi", price: "$$", style: "Lively neighborhood favorite", atmosphere: "Festive · group-friendly", description: "A dependable celebration spot with big tables and familiar favorites.", menu: { meal: ["Steak fajitas", "Combo enchiladas", "Fish tacos"], drink: ["House margarita", "Sweet tea", "Water"], dessert: ["Fried ice cream", "Sopapillas", "No dessert"] } }
       ],
       actualRestaurantId: "luna",
       diners: [
         {
-          id: "emma", name: "Emma", role: "The Adventurer", intro: "Curious, social, and usually ready to try something new.", favorite: "Seafood & modern Mexican", funFact: "She photographs almost every memorable meal.", facts: ["Orders seafood often", "Usually stays within 10 miles", "Dessert about half the time"], permission: "full", permissionLabel: "Full case file shared",
+          id: "emma", name: characterName("emma"), portraitId: world.getCharacter("emma").portraitId, role: "The Adventurer", intro: "Curious, social, and usually ready to try something new.", favorite: "Seafood & modern Mexican", funFact: "She photographs almost every memorable meal.", facts: ["Orders seafood often", "Usually stays within 10 miles", "Dessert about half the time"], permission: "full", permissionLabel: "Full case file shared",
           preferences: ["Seafood", "Spicy food", "Modern Mexican", "Mocktails", "Outdoor patios"], dislikes: ["Heavy lunches", "Repeating the same cuisine two days in a row"],
           places: ["Casa Luna · 4.8★", "Azul Mar · 4.6★", "Rojo Taco Lab · Must Try"],
           activity: [
@@ -296,7 +318,7 @@
           why: "Emma chose something lighter after yesterday’s fish, ordered sparkling water because she was driving, and skipped dessert."
         },
         {
-          id: "marcus", name: "Marcus", role: "The Traditionalist", intro: "Budget-minded, dependable, and always arrives hungry.", favorite: "Beef, comfort food & sweet tea", funFact: "His current dessert streak is six dinners.", facts: ["Favors familiar places", "Usually orders beef", "Almost always gets dessert"], permission: "limited", permissionLabel: "Some evidence shared",
+          id: "marcus", name: characterName("marcus"), portraitId: world.getCharacter("marcus").portraitId, role: "The Traditionalist", intro: "Budget-minded, dependable, and always arrives hungry.", favorite: "Beef, comfort food & sweet tea", funFact: "His current dessert streak is six dinners.", facts: ["Favors familiar places", "Usually orders beef", "Almost always gets dessert"], permission: "limited", permissionLabel: "Some evidence shared",
           preferences: ["Beef entrées", "Sweet tea", "Familiar restaurants"], dislikes: [],
           places: ["Plaza Fiesta · frequent visit", "Abuela’s Table · 4.5★"],
           activity: [
@@ -310,7 +332,7 @@
           why: "Marcus backed the close, moderately priced choice, went with the filling beef option, stayed loyal to sweet tea, and protected his dessert streak."
         },
         {
-          id: "olivia", name: "Olivia", role: "The Social Planner", intro: "She values atmosphere, celebration, and keeping the whole table happy.", favorite: "Shareable plates & margaritas", funFact: "She remembers everyone’s favorite restaurant.", facts: ["Likes lively rooms", "Often orders margaritas", "Returns to trusted favorites"], permission: "none", permissionLabel: "Detailed history private",
+          id: "olivia", name: characterName("olivia"), portraitId: world.getCharacter("olivia").portraitId, role: "The Social Planner", intro: "She values atmosphere, celebration, and keeping the whole table happy.", favorite: "Shareable plates & margaritas", funFact: "She remembers everyone’s favorite restaurant.", facts: ["Likes lively rooms", "Often orders margaritas", "Returns to trusted favorites"], permission: "none", permissionLabel: "Detailed history private",
           preferences: [], dislikes: [], places: [],
           activity: [
             { icon: "🔒", title: "Dining history", text: "Olivia has not shared this category" },
@@ -342,7 +364,9 @@
       title: "The Lantern Table",
       subtitle: "A Homecoming Mystery",
       destination: "Willow Lake · Maple & Main",
-      artwork: sharedRestaurantArtwork.sixth,
+      seasonId: "season-001",
+      artworkId: "restaurant.maple-main",
+      artwork: world.assetSrc("restaurant.maple-main"),
       status: "playable",
       order: 2,
       tags: ["homecoming", "family-style", "small-town"],
@@ -350,19 +374,34 @@
     },
     story: {
       host: sharedHost,
+      castIds: ["june", "ellis", "priya"],
+      continuity: [
+        {
+          previousEpisodeId: "episode-001",
+          optional: true,
+          affectsGameplay: false,
+          returning: "Priya still has Olivia’s post-dinner message pinned: “Choose the table that keeps them talking.”",
+          standalone: "Priya has one rule for group dinners: choose the table that keeps everyone talking."
+        }
+      ],
+      completion: {
+        mascotMessage: "Outstanding work! Ellis never distracted you with the roll basket.",
+        funFact: "The old fishing photograph mattered to Ellis more than he admitted.",
+        teaser: { speakerId: "priya", text: "Emma just texted: breakfast next Saturday. Apparently that makes it official." }
+      },
       briefing: {
         number: 2,
         title: "The Lantern Table",
         subtitle: "A Homecoming Mystery",
         opening: [
-          "Welcome to Willow Lake, Detective.",
-          "Three old friends are back in the town where they first learned to share a table.",
-          "Tonight’s clues are hiding in traditions, memories, and one suspicious dinner-roll strategy."
+          "Welcome to Willow Lake, Detective. June has barely set down her bag and Ellis is already auditing the roll basket.",
+          "Priya brought three old friends back to the town where they first learned to share a table.",
+          "Tonight’s clues are hiding in traditions, memories, and one extremely suspicious dinner-roll strategy."
         ],
         people: {
           june: {
             narration: [
-              "This is June.",
+              "Meet June.",
               "She has come home after several years away.",
               "Her strongest food memories begin in a flour-dusted kitchen.",
               "Nostalgia matters, but it may not decide everything."
@@ -371,7 +410,7 @@
           },
           ellis: {
             narration: [
-              "This is Ellis.",
+              "Meet Ellis.",
               "He has never met a family-style meal he could not turn into a competition.",
               "He calls the dinner rolls a warm-up course.",
               "Nobody else calls them that."
@@ -380,7 +419,7 @@
           },
           priya: {
             narration: [
-              "This is Priya.",
+              "Meet Priya.",
               "She organized the homecoming and wants conversation to last longer than dinner.",
               "For her, the best dish is the one that gets passed around."
             ],
@@ -408,7 +447,7 @@
           id: "june-memory",
           kind: "conversation",
           speakerId: "june",
-          speaker: "June",
+          speaker: characterName("june"),
           text: "My aunt taught me to crimp pie crust at this lake. She said every uneven edge proved somebody helped.",
           emotion: "warm",
           cameraTarget: "june",
@@ -419,8 +458,8 @@
           id: "ellis-rolls",
           kind: "conversation",
           speakerId: "ellis",
-          speaker: "Ellis",
-          text: "For the record, I am not counting dinner rolls. I am maintaining an accurate inventory.",
+          speaker: characterName("ellis"),
+          text: "For the record, I’m not counting dinner rolls. I’m maintaining an accurate inventory.",
           emotion: "dry",
           cameraTarget: "ellis",
           influence: { "ellis-meal": 1 },
@@ -430,8 +469,8 @@
           id: "priya-tradition",
           kind: "conversation",
           speakerId: "priya",
-          speaker: "Priya",
-          text: "Family-style food changes the rhythm. You pass a dish, ask a question, and suddenly nobody is checking the time.",
+          speaker: characterName("priya"),
+          text: "Pass one platter, ask one question, and suddenly nobody’s checking the time. That’s why I like family-style.",
           emotion: "thoughtful",
           cameraTarget: "priya",
           influence: { "group-restaurant": 1, "priya-meal": 1 },
@@ -441,8 +480,8 @@
           id: "june-pattern",
           kind: "confessional",
           speakerId: "june",
-          speaker: "June",
-          text: "Everyone expects me to order the old favorite. They are right—but not for the reason they think.",
+          speaker: characterName("june"),
+          text: "Everyone expects me to order the old favorite. They’re right—but not for the reason they think.",
           emotion: "playful",
           cameraTarget: "june",
           influence: { "june-meal": 1 }
@@ -461,8 +500,8 @@
           id: "ellis-softens",
           kind: "reaction",
           speakerId: "ellis",
-          speaker: "Ellis",
-          text: "That wall still has our terrible fishing picture? Fine. But I choose the seat farthest from it.",
+          speaker: characterName("ellis"),
+          text: "That wall still has our terrible fishing picture? Fine—but I’m taking the seat farthest from it.",
           emotion: "amused",
           cameraTarget: "ellis",
           memory: { type: "warmth", label: "Ellis pretended the old picture did not matter" }
@@ -471,8 +510,8 @@
           id: "priya-close",
           kind: "conversation",
           speakerId: "priya",
-          speaker: "Priya",
-          text: "That settles it for me. I did not bring everyone back just to eat near each other. I want us at the same table.",
+          speaker: characterName("priya"),
+          text: "That settles it. I didn’t bring everyone back just to eat near each other. I want us at the same table.",
           emotion: "sincere",
           cameraTarget: "priya",
           influence: { "group-restaurant": 1 }
@@ -494,44 +533,44 @@
       ending: "Under the lanterns, the dishes make one more trip around the table before anyone is ready to leave."
     },
     gameplay: {
-      images: {
+      ...episodeArtwork({
         people: {
-          june: sharedPeopleArtwork.first,
-          ellis: sharedPeopleArtwork.second,
-          priya: sharedPeopleArtwork.third
+          june: "portrait.june",
+          ellis: "portrait.ellis",
+          priya: "portrait.priya"
         },
         restaurants: {
-          luna: sharedRestaurantArtwork.sixth,
-          cactus: sharedRestaurantArtwork.second,
-          azul: sharedRestaurantArtwork.third,
-          abuela: sharedRestaurantArtwork.fourth,
-          rojo: sharedRestaurantArtwork.fifth,
-          plaza: sharedRestaurantArtwork.first
+          luna: "restaurant.maple-main",
+          cactus: "restaurant.dockside-basket",
+          azul: "restaurant.juniper-room",
+          abuela: "restaurant.hearthstone-cafe",
+          rojo: "restaurant.trailhead-smokehouse",
+          plaza: "restaurant.lantern-market"
         },
         food: {
-          "Herb roast chicken": "https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=800&q=82",
-          "Sunday pot pie": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=82",
-          "Smoked meatloaf": "https://images.unsplash.com/photo-1611250188496-e966043a0629?auto=format&fit=crop&w=800&q=82",
-          "Sparkling lemonade": "https://images.unsplash.com/photo-1556855810-ac404aa91e85?auto=format&fit=crop&w=800&q=82",
-          "Sweet tea": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=82",
-          "Root beer": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=82",
-          "Peach cobbler": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=82",
-          "Chocolate chess pie": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=82",
-          "No dessert": "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=800&q=82"
+          "Herb roast chicken": "food.herb-roast-chicken",
+          "Sunday pot pie": "food.sunday-pot-pie",
+          "Smoked meatloaf": "food.smoked-meatloaf",
+          "Sparkling lemonade": "food.sparkling-lemonade",
+          "Sweet tea": "food.sweet-tea",
+          "Root beer": "food.root-beer",
+          "Peach cobbler": "food.peach-cobbler",
+          "Chocolate chess pie": "food.chocolate-chess-pie",
+          "No dessert": "food.no-dessert"
         }
-      },
+      }),
       restaurants: [
-        { id: "luna", name: "Maple & Main", distance: "2.1 mi", price: "$$", style: "Family-style supper club", atmosphere: "Lake lanterns · old photo wall", description: "A welcoming supper club where shared platters and local photographs keep people at the table.", menu: { meal: ["Herb roast chicken", "Sunday pot pie", "Smoked meatloaf"], drink: ["Sparkling lemonade", "Sweet tea", "Root beer"], dessert: ["Peach cobbler", "Chocolate chess pie", "No dessert"] } },
-        { id: "cactus", name: "Dockside Basket", distance: "0.8 mi", price: "$", style: "Quick lakeside counter", atmosphere: "Casual · busy · outdoors", description: "Fast baskets beside the marina, built for a quick stop rather than a long reunion.", menu: { meal: ["Fish basket"], drink: ["Lemonade"], dessert: ["Ice cream"] } },
-        { id: "azul", name: "The Juniper Room", distance: "6.4 mi", price: "$$$", style: "Modern dining", atmosphere: "Quiet · polished · formal", description: "Precise seasonal plates in a room made for occasions.", menu: { meal: ["Seasonal plate"], drink: ["Sparkling water"], dessert: ["Tart"] } },
-        { id: "abuela", name: "Hearthstone Café", distance: "4.8 mi", price: "$$", style: "Neighborhood café", atmosphere: "Cozy · familiar", description: "A small café with comforting bowls and counter seating.", menu: { meal: ["Soup"], drink: ["Tea"], dessert: ["Cake"] } },
-        { id: "rojo", name: "Trailhead Smokehouse", distance: "8.7 mi", price: "$$", style: "Barbecue", atmosphere: "Lively · picnic tables", description: "Big smoked plates and a lively room just outside town.", menu: { meal: ["Barbecue plate"], drink: ["Sweet tea"], dessert: ["Pudding"] } },
-        { id: "plaza", name: "Lantern Market", distance: "3.7 mi", price: "$", style: "Food hall", atmosphere: "Bright · flexible · noisy", description: "Independent counters with plenty of choice but no single shared meal.", menu: { meal: ["Market bowl"], drink: ["Soda"], dessert: ["Cookie"] } }
+        { id: "luna", worldId: "maple-main", name: "Maple & Main", distance: "2.1 mi", price: "$$", style: "Family-style supper club", atmosphere: "Lake lanterns · old photo wall", description: "A welcoming supper club where shared platters and local photographs keep people at the table.", menu: { meal: ["Herb roast chicken", "Sunday pot pie", "Smoked meatloaf"], drink: ["Sparkling lemonade", "Sweet tea", "Root beer"], dessert: ["Peach cobbler", "Chocolate chess pie", "No dessert"] } },
+        { id: "cactus", worldId: "dockside-basket", name: "Dockside Basket", distance: "0.8 mi", price: "$", style: "Quick lakeside counter", atmosphere: "Casual · busy · outdoors", description: "Fast baskets beside the marina, built for a quick stop rather than a long reunion.", menu: { meal: ["Fish basket"], drink: ["Lemonade"], dessert: ["Ice cream"] } },
+        { id: "azul", worldId: "juniper-room", name: "The Juniper Room", distance: "6.4 mi", price: "$$$", style: "Modern dining", atmosphere: "Quiet · polished · formal", description: "Precise seasonal plates in a room made for occasions.", menu: { meal: ["Seasonal plate"], drink: ["Sparkling water"], dessert: ["Tart"] } },
+        { id: "abuela", worldId: "hearthstone-cafe", name: "Hearthstone Café", distance: "4.8 mi", price: "$$", style: "Neighborhood café", atmosphere: "Cozy · familiar", description: "A small café with comforting bowls and counter seating.", menu: { meal: ["Soup"], drink: ["Tea"], dessert: ["Cake"] } },
+        { id: "rojo", worldId: "trailhead-smokehouse", name: "Trailhead Smokehouse", distance: "8.7 mi", price: "$$", style: "Barbecue", atmosphere: "Lively · picnic tables", description: "Big smoked plates and a lively room just outside town.", menu: { meal: ["Barbecue plate"], drink: ["Sweet tea"], dessert: ["Pudding"] } },
+        { id: "plaza", worldId: "lantern-market", name: "Lantern Market", distance: "3.7 mi", price: "$", style: "Food hall", atmosphere: "Bright · flexible · noisy", description: "Independent counters with plenty of choice but no single shared meal.", menu: { meal: ["Market bowl"], drink: ["Soda"], dessert: ["Cookie"] } }
       ],
       actualRestaurantId: "luna",
       diners: [
         {
-          id: "june", name: "June", role: "The Homecomer", intro: "Observant, sentimental, and determined not to make a fuss about being back.", favorite: "Hand pies & quiet lake views", funFact: "She can still find the best skipping stones before anyone else.", facts: ["Recently returned to town", "Connects food with place", "Usually chooses lighter drinks"], permission: "full", permissionLabel: "Full case file shared",
+          id: "june", name: characterName("june"), portraitId: world.getCharacter("june").portraitId, role: "The Homecomer", intro: "Observant, sentimental, and determined not to make a fuss about being back.", favorite: "Hand pies & quiet lake views", funFact: "She can still find the best skipping stones before anyone else.", facts: ["Recently returned to town", "Connects food with place", "Usually chooses lighter drinks"], permission: "full", permissionLabel: "Full case file shared",
           preferences: ["Comfort food", "Old neighborhood places", "Sparkling drinks"], dislikes: ["Rushed dinners"],
           places: ["Maple & Main · saved", "Hearthstone Café · 4.6★"],
           activity: [
@@ -544,7 +583,7 @@
           why: "June chose the pot pie because the handmade edge carried a memory, kept the drink bright, and shared the cobbler instead of rushing the evening."
         },
         {
-          id: "ellis", name: "Ellis", role: "The Storyteller", intro: "Good-humored, practical, and always prepared with one more version of an old story.", favorite: "Smoked plates & sweet tea", funFact: "He calls the dinner rolls a warm-up course.", facts: ["Arrives hungry", "Prefers familiar food", "Pretends old photographs embarrass him"], permission: "limited", permissionLabel: "Some evidence shared",
+          id: "ellis", name: characterName("ellis"), portraitId: world.getCharacter("ellis").portraitId, role: "The Storyteller", intro: "Good-humored, practical, and always prepared with one more version of an old story.", favorite: "Smoked plates & sweet tea", funFact: "He calls the dinner rolls a warm-up course.", facts: ["Arrives hungry", "Prefers familiar food", "Pretends old photographs embarrass him"], permission: "limited", permissionLabel: "Some evidence shared",
           preferences: ["Hearty entrées", "Sweet tea", "Generous portions"], dislikes: ["Tiny plates"],
           places: ["Trailhead Smokehouse · frequent visit", "Maple & Main · family dinner"],
           activity: [
@@ -557,7 +596,7 @@
           why: "Ellis followed his appetite to the meatloaf, stayed loyal to sweet tea, and discovered that an ambitious roll strategy has consequences."
         },
         {
-          id: "priya", name: "Priya", role: "The Bridge-Builder", intro: "Warm, deliberate, and skilled at making a group feel like one table.", favorite: "Shared platters & long conversations", funFact: "She remembers the story behind everyone’s favorite dish.", facts: ["Organized the reunion", "Prefers family-style service", "Chooses the room before the trend"], permission: "full", permissionLabel: "Full case file shared",
+          id: "priya", name: characterName("priya"), portraitId: world.getCharacter("priya").portraitId, role: "The Bridge-Builder", intro: "Warm, deliberate, and skilled at making a group feel like one table.", favorite: "Shared platters & long conversations", funFact: "She remembers the story behind everyone’s favorite dish.", facts: ["Organized the reunion", "Prefers family-style service", "Chooses the room before the trend"], permission: "full", permissionLabel: "Full case file shared",
           preferences: ["Shared dishes", "Unhurried rooms", "Local traditions"], dislikes: ["Everyone ordering in isolation"],
           places: ["Maple & Main · reunion shortlist", "Lantern Market · lunch"],
           activity: [
@@ -591,13 +630,106 @@
       title: "The Midnight Breakfast",
       subtitle: "A new table is being set",
       destination: "Coming Soon",
-      artwork: sharedRestaurantArtwork.fourth,
+      seasonId: "season-001",
+      artworkId: "scene.midnight-breakfast",
+      artwork: world.assetSrc("scene.midnight-breakfast"),
       status: "coming-soon",
       order: 3,
       tags: ["coming-soon"],
       episode: null
     }
   ];
+
+  function artworkErrors(episode) {
+    const errors = [];
+    const metadata = episode?.metadata || {};
+    const story = episode?.story || {};
+    const gameplay = episode?.gameplay || {};
+    const ids = gameplay.assetIds || {};
+    const images = gameplay.images || {};
+    const seenByGroup = {};
+
+    const checkAsset = (group, label, assetId, requiredKind) => {
+      const asset = world.getAsset(assetId);
+      if (!asset) {
+        errors.push(`gameplay.assetIds.${group}.${label} references unknown artwork ${assetId}`);
+        return null;
+      }
+      if (asset.kind !== requiredKind) errors.push(`${assetId} must be ${requiredKind} artwork`);
+      if (asset.status !== "approved") errors.push(`${assetId} is not approved for production`);
+      if (images?.[group]?.[label] !== asset.src) errors.push(`${group}.${label} image does not resolve from ${assetId}`);
+      if (group === "people" && asset.subjectId !== label) errors.push(`${label}: portrait artwork belongs to ${asset.subjectId}`);
+      if (group === "food" && asset.subjectId !== slugify(label)) errors.push(`${label}: food artwork depicts ${asset.subjectId}`);
+      seenByGroup[group] ||= new Map();
+      const previous = seenByGroup[group].get(assetId);
+      if (previous && previous !== label) errors.push(`${group}.${previous} and ${group}.${label} incorrectly share ${assetId}`);
+      seenByGroup[group].set(assetId, label);
+      return asset;
+    };
+
+    for (const [group, requiredKind] of [["people", "portrait"], ["restaurants", "restaurant"], ["food", "food"]]) {
+      if (!ids[group] || !Object.keys(ids[group]).length) errors.push(`gameplay.assetIds.${group} is required`);
+      for (const [label, assetId] of Object.entries(ids[group] || {})) checkAsset(group, label, assetId, requiredKind);
+    }
+
+    const cover = world.getAsset(metadata.artworkId);
+    if (!cover) errors.push(`metadata.artworkId references unknown artwork ${metadata.artworkId}`);
+    else {
+      if (cover.kind !== "restaurant") errors.push(`${metadata.artworkId} must be restaurant cover artwork`);
+      if (cover.status !== "approved") errors.push(`${metadata.artworkId} is not approved for production`);
+      if (metadata.artwork !== cover.src) errors.push("metadata.artwork must resolve from metadata.artworkId");
+    }
+
+    for (const diner of gameplay.diners || []) {
+      const character = world.getCharacter(diner.id);
+      if (!character) {
+        errors.push(`${diner.id}: diner must exist in the Character Bible`);
+        continue;
+      }
+      if (diner.name !== character.name) errors.push(`${diner.id}: name must come from the Character Bible`);
+      if (diner.portraitId !== character.portraitId) errors.push(`${diner.id}: portraitId must match the Character Bible`);
+      if (ids.people?.[diner.id] !== character.portraitId) errors.push(`${diner.id}: portrait assignment must match the Character Bible`);
+      if (!character.episodeAppearances.includes(metadata.id)) errors.push(`${diner.id}: Character Bible is missing appearance ${metadata.id}`);
+    }
+
+    for (const restaurant of gameplay.restaurants || []) {
+      const canonical = world.getRestaurant(restaurant.worldId);
+      if (!canonical) {
+        errors.push(`${restaurant.id}: restaurant must reference the Restaurant Bible`);
+        continue;
+      }
+      if (restaurant.name !== canonical.name) errors.push(`${restaurant.id}: name must come from the Restaurant Bible`);
+      if (ids.restaurants?.[restaurant.id] !== canonical.artworkId) errors.push(`${restaurant.id}: artwork must match the Restaurant Bible`);
+      if (!canonical.episodeAppearances.includes(metadata.id)) errors.push(`${restaurant.worldId}: Restaurant Bible is missing appearance ${metadata.id}`);
+    }
+
+    const actualRestaurant = gameplay.restaurants?.find(restaurant => restaurant.id === gameplay.actualRestaurantId);
+    if (actualRestaurant) {
+      if (metadata.artworkId !== ids.restaurants?.[actualRestaurant.id]) errors.push("episode cover must depict the actual restaurant");
+      for (const stage of gameplay.stages || []) {
+        for (const item of actualRestaurant.menu?.[stage] || []) {
+          if (!ids.food?.[item]) errors.push(`actual menu item "${item}" requires approved food artwork`);
+        }
+      }
+    }
+
+    for (const castId of story.castIds || []) {
+      if (!gameplay.diners?.some(diner => diner.id === castId)) errors.push(`story.castIds references missing diner ${castId}`);
+    }
+    const sceneIds = new Set();
+    for (const scene of story.scenes || []) {
+      if (!scene.id) errors.push("every story scene requires an id");
+      else if (sceneIds.has(scene.id)) errors.push(`duplicate story scene id ${scene.id}`);
+      else sceneIds.add(scene.id);
+      if (scene.speakerId && !story.castIds?.includes(scene.speakerId)) errors.push(`${scene.id}: speakerId ${scene.speakerId} is not in story.castIds`);
+      if (scene.speakerId && scene.speaker !== world.getCharacter(scene.speakerId)?.name) errors.push(`${scene.id}: speaker name must come from the Character Bible`);
+      if (scene.artworkId) {
+        const asset = world.getAsset(scene.artworkId);
+        if (!asset || !["scene", "background"].includes(asset.kind)) errors.push(`${scene.id}: invalid scene artwork ${scene.artworkId}`);
+      }
+    }
+    return errors;
+  }
 
   function validationErrors(episode) {
     const errors = [];
@@ -607,6 +739,9 @@
     const reveal = episode?.reveal;
     if (!metadata?.id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(metadata.id)) errors.push("metadata.id must be a stable slug");
     if (!metadata?.title?.trim()) errors.push("metadata.title is required");
+    if (!world.getSeason(metadata?.seasonId)) errors.push("metadata.seasonId must reference the Season Bible");
+    if (!metadata?.artworkId) errors.push("metadata.artworkId is required");
+    if (!story?.castIds?.length) errors.push("story.castIds is required");
     if (!story?.briefing?.opening?.length) errors.push("story.briefing.opening requires at least one scene");
     if (!story?.scenes?.length) errors.push("story.scenes requires at least one meaningful scene");
     if (!story?.scenes?.some(scene => scene.memory || scene.influence)) errors.push("story.scenes requires at least one clue or meaningful moment");
@@ -632,6 +767,21 @@
     if (!reveal?.order?.length) errors.push("reveal.order is required");
     if (!reveal?.restaurantExplanation?.trim()) errors.push("reveal.restaurantExplanation is required");
     if (!reveal?.endingCelebration?.trim()) errors.push("reveal.endingCelebration is required");
+    if (!story?.completion?.mascotMessage?.trim()) errors.push("story.completion.mascotMessage is required");
+    if (!story?.completion?.teaser?.speakerId || !story?.completion?.teaser?.text?.trim()) errors.push("story.completion.teaser is required");
+    else if (!world.getCharacter(story.completion.teaser.speakerId)) errors.push("story.completion.teaser speaker must exist in the Character Bible");
+    if (story?.host?.portraitId !== world.getCharacter("pup")?.portraitId || story?.host?.image !== world.assetSrc("portrait.pup")) {
+      errors.push("story.host must resolve Pup from the Character Bible");
+    }
+    for (const reference of story?.continuity || []) {
+      if (!reference.previousEpisodeId || !reference.returning?.trim() || !reference.standalone?.trim()) {
+        errors.push("continuity references require previousEpisodeId, returning, and standalone copy");
+      }
+      if (reference.optional !== true || reference.affectsGameplay !== false) {
+        errors.push("continuity references must be optional and must not affect gameplay");
+      }
+    }
+    errors.push(...artworkErrors(episode));
     return errors;
   }
 
@@ -660,6 +810,18 @@
         const result = validateEpisode(entry.episode);
         if (!result.valid) errors.push(...result.errors.map(error => `${entry.id}: ${error}`));
         if (entry.episode?.metadata?.id !== entry.id) errors.push(`${entry.id}: catalog id must match episode metadata id`);
+        const season = world.getSeason(entry.episode?.metadata?.seasonId);
+        const timelineEntry = season?.timeline?.find(item => item.episodeId === entry.id);
+        if (!timelineEntry) errors.push(`${entry.id}: episode must appear in its season timeline`);
+        else if (timelineEntry.order !== entry.order) errors.push(`${entry.id}: season timeline order must match catalog order`);
+        for (const reference of entry.episode?.story?.continuity || []) {
+          const previous = entries.find(item => item.id === reference.previousEpisodeId);
+          if (!previous || previous.status !== "playable") errors.push(`${entry.id}: continuity references unknown playable episode ${reference.previousEpisodeId}`);
+          else if (previous.order >= entry.order) errors.push(`${entry.id}: continuity must only reference an earlier episode`);
+        }
+      } else if (entry?.artworkId) {
+        const artwork = world.getAsset(entry.artworkId);
+        if (!artwork || entry.artwork !== artwork.src) errors.push(`${entry.id}: catalog artwork must resolve from artworkId`);
       }
     }
     return { valid: errors.length === 0, errors };
@@ -677,6 +839,24 @@
     return entry?.episode ? clone(entry.episode) : null;
   }
 
+  function resolveContinuity(id, completedEpisodeIds = []) {
+    const episode = getEpisode(id);
+    if (!episode) return null;
+    const completed = new Set(Array.isArray(completedEpisodeIds) ? completedEpisodeIds : []);
+    const lines = (episode.story.continuity || []).map(reference => (
+      completed.has(reference.previousEpisodeId) ? reference.returning : reference.standalone
+    ));
+    if (lines.length) {
+      episode.story.briefing.opening = [
+        episode.story.briefing.opening[0],
+        ...lines,
+        ...episode.story.briefing.opening.slice(1)
+      ];
+    }
+    episode.story.resolvedContinuity = lines;
+    return episode;
+  }
+
   function isPlayable(id) {
     return Boolean(catalog.find(entry => entry.id === id && entry.status === "playable" && entry.episode));
   }
@@ -685,10 +865,11 @@
   if (!catalogValidation.valid) throw new Error(`Invalid episode catalog: ${catalogValidation.errors.join("; ")}`);
 
   root.RateMyBitesEpisodes = Object.freeze({
-    schemaVersion: 1,
+    schemaVersion: 2,
     defaultEpisodeId: "episode-001",
     getCatalog,
     getEpisode,
+    resolveContinuity,
     isPlayable,
     validateEpisode,
     assertValidEpisode,

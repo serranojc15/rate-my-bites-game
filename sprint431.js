@@ -6,6 +6,8 @@
   const CASE_ID = "episode-001";
   const HISTORY_KEY = "bite-buddy-case-history-v1";
   const VOICE_KEY = "bite-buddy-pup-voice-v1";
+  const world = window.RateMyBitesWorld;
+  if (!world) throw new Error("RateMyBitesWorld must load before Fresh Cases.");
 
   const clone = value => JSON.parse(JSON.stringify(value));
   const original = {
@@ -18,9 +20,16 @@
     story: clone(livingDinnerStory)
   };
 
+  const variantBArtwork = world.getCaseArtwork("B");
+  const variantCArtwork = world.getCaseArtwork("C");
+  const variantBMenu = world.getCaseMenu("B");
+  const variantCMenu = world.getCaseMenu("C");
+
   function person(id, name, role, recent, practical, social, actual) {
+    const canonical = world.getCharacter(id);
+    if (!canonical || canonical.name !== name) throw new Error(`Fresh Case character ${id} is missing from the Character Bible.`);
     return {
-      id, name, role,
+      id, name: canonical.name, portraitId: canonical.portraitId, role,
       intro: `${name} brings a distinct set of habits and tonight-specific priorities.`,
       favorite: recent.favorite,
       funFact: recent.funFact,
@@ -42,6 +51,12 @@
     };
   }
 
+  function place(id, worldId, distance, price, style, atmosphere, description, menu) {
+    const canonical = world.getRestaurant(worldId);
+    if (!canonical) throw new Error(`Fresh Case restaurant ${worldId} is missing from the Restaurant Bible.`);
+    return { id, worldId, name: canonical.name, distance, price, style, atmosphere, description, menu };
+  }
+
   const variants = [
     {
       id: "A", title: "The Great Sushi Debate", label: "Original Case",
@@ -61,28 +76,28 @@
           facts: ["Usually orders seafood", "Likes patios", "Avoids repeating cuisines"], preferences: ["Seafood", "Citrus", "Patios"], dislikes: ["Repeating yesterday’s meal"], places: ["Harbor & Hearth · 4.7★"],
           activity: [{ icon: "🍽️", title: "Recent meal", text: "Had shrimp tacos yesterday" }, { icon: "🎟️", title: "Deal", text: "Viewed Harbor & Hearth sunset special" }],
           restaurantClue: "Sophie ate shrimp yesterday, so tonight she is looking beyond the obvious seafood choice."
-        }, { meal: "She wants something fresh but not seafood again.", drink: "She volunteered to drive." }, { dessert: "She wants a light finish.", why: "Sophie changed her usual pattern, drove the group, and kept dessert light." }, { meal: "Herb chicken", drink: "Sparkling lemonade", dessert: "No dessert" }),
+        }, { meal: "She wants something fresh but not seafood again.", drink: "She volunteered to drive." }, { dessert: "She wants a light finish.", why: "Sophie changed her usual pattern, drove the group, and kept dessert light." }, { meal: "Herb roast chicken", drink: "Sparkling lemonade", dessert: "No dessert" }),
         person("daniel", "Daniel", "The Practical One", {
           favorite: "Comfort food & iced tea", funFact: "He judges value by how hungry he is afterward.",
           facts: ["Prefers nearby places", "Looks for specials", "Rarely skips dessert"], preferences: ["Generous portions", "Iced tea", "Value"], places: ["Market House · frequent visit"],
           activity: [{ icon: "🏃", title: "Recent activity", text: "Finished a long workout this afternoon" }, { icon: "🎟️", title: "Deal", text: "Saved a two-for-one entrée offer" }],
           restaurantClue: "Daniel wants a close, moderately priced restaurant with a filling menu."
-        }, { meal: "He wants the most filling entrée.", drink: "He nearly always orders iced tea." }, { dessert: "His dessert streak is still active.", why: "Daniel chose the filling value option, iced tea, and protected his dessert streak." }, { meal: "Braised short rib", drink: "Iced tea", dessert: "Apple crisp" }),
+        }, { meal: "He wants the most filling entrée.", drink: "He nearly always orders unsweet tea." }, { dessert: "His dessert streak is still active.", why: "Daniel chose the filling value option, unsweet tea, and protected his dessert streak." }, { meal: "Braised short rib", drink: "Unsweet tea", dessert: "Apple pie" }),
         person("rachel", "Rachel", "The Celebrator", {
           favorite: "Shareable meals & festive rooms", funFact: "She organizes every birthday dinner.",
           facts: ["Values atmosphere", "Likes shareable food", "Usually orders a celebration drink"], preferences: ["Shareable plates", "Festive atmosphere"], places: ["Harbor & Hearth · saved"],
           activity: [{ icon: "📅", title: "Event clue", text: "Celebrating a promotion tonight" }],
           restaurantClue: "Rachel is celebrating, but wants a place that works for the entire table."
-        }, { meal: "She wants something easy to share.", drink: "She is not driving tonight." }, { dessert: "The table plans to share dessert.", why: "Rachel chose the group-friendly restaurant, a celebration drink, and a shareable dessert." }, { meal: "Braised short rib", drink: "Citrus spritz", dessert: "Apple crisp" })
+        }, { meal: "She wants something easy to share.", drink: "She is not driving tonight." }, { dessert: "The table plans to share dessert.", why: "Rachel chose the group-friendly restaurant, a celebration drink, and a shareable dessert." }, { meal: "Braised short rib", drink: "Citrus spritz", dessert: "Apple pie" })
       ],
       restaurants: [
-        { id: "luna", name: "Harbor & Hearth", distance: "2.6 mi", price: "$$", style: "New American", atmosphere: "Warm · lively · sunset patio", description: "A neighborhood dining room with generous plates and a timely sunset special.", menu: { meal: ["Herb chicken", "Braised short rib", "Mushroom pasta"], drink: ["Sparkling lemonade", "Iced tea", "Citrus spritz"], dessert: ["Apple crisp", "Lemon tart", "No dessert"] } },
-        { id: "cactus", name: "Pier Nine", distance: "5.8 mi", price: "$$$", style: "Seafood", atmosphere: "Polished · waterfront", description: "An upscale seafood room with a beautiful view.", menu: { meal: ["Grilled salmon"], drink: ["Tea"], dessert: ["Cake"] } },
-        { id: "azul", name: "Market House", distance: "1.5 mi", price: "$", style: "Counter service", atmosphere: "Quick · casual", description: "Affordable bowls and sandwiches in a bright market hall.", menu: { meal: ["Chicken bowl"], drink: ["Water"], dessert: ["Cookie"] } }
+        place("luna", "harbor-hearth", "2.6 mi", "$$", "New American", "Warm · lively · sunset patio", "A neighborhood dining room with generous plates and a timely sunset special.", variantBMenu),
+        place("cactus", "pier-nine", "5.8 mi", "$$$", "Seafood", "Polished · waterfront", "An upscale seafood room with a beautiful view.", { meal: ["Grilled salmon"], drink: ["Tea"], dessert: ["Cake"] }),
+        place("azul", "market-house", "1.5 mi", "$", "Counter service", "Quick · casual", "Affordable bowls and sandwiches in a bright market hall.", { meal: ["Chicken bowl"], drink: ["Water"], dessert: ["Cookie"] })
       ],
-      peopleImages: { sophie: original.peopleImages.emma, daniel: original.peopleImages.marcus, rachel: original.peopleImages.olivia },
-      restaurantImages: { luna: original.restaurantImages.luna, cactus: original.restaurantImages.azul, azul: original.restaurantImages.cactus },
-      foodImages: {},
+      peopleImages: variantBArtwork.images.people,
+      restaurantImages: variantBArtwork.images.restaurants,
+      foodImages: variantBArtwork.images.food,
       episode: {
         number: 1, title: "The Harbor Table", subtitle: "Context Under Pressure",
         opening: ["Good evening, Biter.", "Tonight’s names and restaurants have changed.", "The reasoning has not.", "Read current context before permanent preference."],
@@ -102,13 +117,13 @@
         person("liam", "Liam", "The Value Hunter", { favorite: "Steak & hearty portions", funFact: "He reads every special before the menu.", facts: ["Arrives hungry", "Watches price", "Usually gets dessert"], preferences: ["Steak", "Value", "Sweet tea"], places: ["Garden Room · deal saved"], activity: [{ icon: "🎟️", title: "Deal", text: "Garden Room has a family-style special tonight" }], restaurantClue: "Liam wants the nearby family-style special and a filling meal." }, { meal: "He wants the most filling option.", drink: "He nearly always chooses sweet tea." }, { dessert: "He expects dessert after a workout.", why: "Liam followed the special, chose the filling option, and kept dessert." }, { meal: "Steak board", drink: "Sweet tea", dessert: "Chocolate torte" })
       ],
       restaurants: [
-        { id: "luna", name: "The Garden Room", distance: "3.0 mi", price: "$$", style: "Contemporary grill", atmosphere: "Garden patio · celebratory", description: "A group-friendly grill with a family-style special and a polished patio.", menu: { meal: ["Grilled chicken salad", "Steak board", "Vegetable risotto"], drink: ["Unsweet tea", "Sweet tea", "Berry fizz"], dessert: ["Chocolate torte", "Berry shortcake", "No dessert"] } },
-        { id: "cactus", name: "Olive & Oak", distance: "6.2 mi", price: "$$$", style: "Italian", atmosphere: "Quiet · formal", description: "A refined Italian dining room.", menu: { meal: ["Lasagna"], drink: ["Water"], dessert: ["Tiramisu"] } },
-        { id: "azul", name: "Corner Café", distance: "1.2 mi", price: "$", style: "Café", atmosphere: "Casual · quick", description: "A reliable neighborhood café.", menu: { meal: ["Sandwich"], drink: ["Tea"], dessert: ["Cookie"] } }
+        place("luna", "garden-room", "3.0 mi", "$$", "Contemporary grill", "Garden patio · celebratory", "The Garden Room is a group-friendly grill with a family-style special and a polished patio.", variantCMenu),
+        place("cactus", "olive-oak", "6.2 mi", "$$$", "Italian", "Quiet · formal", "A refined Italian dining room.", { meal: ["Lasagna"], drink: ["Water"], dessert: ["Tiramisu"] }),
+        place("azul", "corner-cafe", "1.2 mi", "$", "Café", "Casual · quick", "A reliable neighborhood café.", { meal: ["Sandwich"], drink: ["Tea"], dessert: ["Cookie"] })
       ],
-      peopleImages: { maya: original.peopleImages.emma, noah: original.peopleImages.olivia, liam: original.peopleImages.marcus },
-      restaurantImages: { luna: original.restaurantImages.plaza, cactus: original.restaurantImages.abuela, azul: original.restaurantImages.cactus },
-      foodImages: {},
+      peopleImages: variantCArtwork.images.people,
+      restaurantImages: variantCArtwork.images.restaurants,
+      foodImages: variantCArtwork.images.food,
       episode: { number: 1, title: "The Garden Celebration", subtitle: "Context Under Pressure", opening: ["Good evening, Biter.", "A new table is waiting.", "Permanent habits are only the beginning."], people: {
         maya: { narration: ["This is Maya.", "She usually loves Italian food.", "She already had lasagna today."], confessional: "Tonight, pasta is not the answer." },
         noah: { narration: ["This is Noah.", "He is celebrating and shaping the group decision."], confessional: "I want the whole table to enjoy this." },
@@ -133,6 +148,43 @@
     };
   }
 
+  function validateVariant(variant) {
+    const errors = [];
+    if (!variant || variant.id === "A") return { valid: true, errors };
+    for (const person of variant.diners) {
+      const character = world.getCharacter(person.id);
+      if (!character) errors.push(`${variant.id}: unknown character ${person.id}`);
+      else {
+        if (person.name !== character.name) errors.push(`${variant.id}: ${person.id} has the wrong name`);
+        if (person.portraitId !== character.portraitId) errors.push(`${variant.id}: ${person.id} has the wrong portraitId`);
+        if (variant.peopleImages[person.id] !== world.assetSrc(character.portraitId)) errors.push(`${variant.id}: ${person.id} has the wrong portrait`);
+      }
+    }
+    for (const restaurant of variant.restaurants) {
+      const canonical = world.getRestaurant(restaurant.worldId);
+      if (!canonical) errors.push(`${variant.id}: unknown restaurant ${restaurant.worldId}`);
+      else {
+        if (restaurant.name !== canonical.name) errors.push(`${variant.id}: ${restaurant.id} has the wrong restaurant name`);
+        if (variant.restaurantImages[restaurant.id] !== world.assetSrc(canonical.artworkId)) errors.push(`${variant.id}: ${restaurant.id} has the wrong restaurant artwork`);
+      }
+    }
+    const actual = variant.restaurants.find(restaurant => restaurant.id === "luna");
+    for (const stage of ["meal", "drink", "dessert"]) {
+      for (const item of actual?.menu?.[stage] || []) {
+        if (!variant.foodImages[item]) errors.push(`${variant.id}: ${item} has no approved ${stage} artwork`);
+      }
+      for (const person of variant.diners) {
+        if (!actual?.menu?.[stage]?.includes(person.actual[stage])) errors.push(`${variant.id}: ${person.id}.${stage} is not on the audited menu`);
+      }
+    }
+    const sceneIds = storyFor(variant).events.map(event => event.id);
+    if (new Set(sceneIds).size !== sceneIds.length) errors.push(`${variant.id}: duplicate story scene id`);
+    return { valid: errors.length === 0, errors };
+  }
+
+  const variantValidation = variants.flatMap(variant => validateVariant(variant).errors);
+  if (variantValidation.length) throw new Error(`Invalid Fresh Case content: ${variantValidation.join("; ")}`);
+
   function getVariant(id) { return variants.find(item => item.id === id) || variants[0]; }
   function applyVariant(id) {
     const variant = getVariant(id);
@@ -142,6 +194,7 @@
     Object.assign(images.people, clone(variant.peopleImages));
     Object.keys(images.restaurants).forEach(key => delete images.restaurants[key]);
     Object.assign(images.restaurants, clone(variant.restaurantImages));
+    Object.keys(images.food).forEach(key => delete images.food[key]);
     Object.assign(images.food, clone(variant.foodImages));
     Object.assign(sprint4Episode, clone(variant.episode));
     const story = storyFor(variant);
@@ -295,7 +348,7 @@
     addVoiceButton();
   };
 
-  window.BiteBuddyCases = Object.freeze({ version: VERSION, caseId: CASE_ID, variants: variants.map(v => ({ id: v.id, title: v.title })), getVariant: id => clone(getVariant(id)), freshVariantId, summary, applyVariant });
+  window.BiteBuddyCases = Object.freeze({ version: VERSION, caseId: CASE_ID, variants: variants.map(v => ({ id: v.id, title: v.title })), getVariant: id => clone(getVariant(id)), validateVariant, freshVariantId, summary, applyVariant });
   voiceSettings.enabled = state.voiceEnabled !== false && voiceSettings.enabled;
   saveVoice();
   state = { ...state, currentCaseId: CASE_ID, currentVariantId: state.currentVariantId || "A", attemptType: state.attemptType || "first-attempt", attemptNumber: state.attemptNumber || (loadHistory().attempts.length + 1), sprint431AttemptRecorded: false };

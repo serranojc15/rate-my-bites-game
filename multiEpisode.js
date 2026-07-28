@@ -38,7 +38,8 @@
   }
 
   function applyEpisode(id) {
-    const episode = episodes.getEpisode(id);
+    const completedEpisodeIds = progressStore.load().completedEpisodeIds;
+    const episode = episodes.resolveContinuity(id, completedEpisodeIds);
     if (!episode) return false;
     episodes.assertValidEpisode(episode);
 
@@ -68,6 +69,7 @@
       subtitle: entry.subtitle,
       destination: entry.destination,
       artwork: entry.artwork,
+      artworkAlt: root.RateMyBitesWorld?.getAsset?.(entry.artworkId)?.alt || `${entry.title} artwork`,
       status: entry.status,
       completed: progress.completedEpisodeIds.includes(entry.id),
       bestScore: Number.isFinite(progress.bestScores[entry.id]) ? progress.bestScores[entry.id] : null,
@@ -138,7 +140,7 @@
     const unavailable = item.status !== "playable";
     return `<article class="episode-library-card ${unavailable ? "episode-unavailable" : ""}" data-episode-card="${item.id}">
       <div class="episode-library-art">
-        <img src="${item.artwork}" alt="" loading="lazy">
+        <img src="${item.artwork}" alt="${item.artworkAlt}" loading="lazy">
         <span>${unavailable ? "Coming Soon" : item.completed ? "Completed" : `Episode ${Number(item.id.split("-").at(-1))}`}</span>
       </div>
       <div class="episode-library-copy">
@@ -206,7 +208,6 @@
       button.onclick = returnToLibrary;
     });
 
-    if (id !== "episode-002") return;
     [
       document.querySelector("#replayThisCase"),
       document.querySelector("#missionReplayEpisode")
@@ -214,6 +215,7 @@
       button.textContent = "Replay This Episode";
       button.onclick = () => startEpisode(id);
     });
+    if (id !== "episode-002") return;
     [
       document.querySelector("#playFreshVariant"),
       document.querySelector("#missionFreshVariant")
