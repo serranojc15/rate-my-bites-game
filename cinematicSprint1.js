@@ -31,7 +31,7 @@
     const missionIndex = story.events.findIndex(event => event.id === "pup-read");
     if (missionIndex < 0) return;
     const mission = story.events.splice(missionIndex, 1)[0];
-    mission.text = "Tonight's mission: help this group choose one dinner everyone can enjoy. Listen closely—Emma wants something different, Marcus wants value, and Olivia wants the celebration to work for everyone.";
+    mission.text = story.missionText || mission.text;
     mission.emotion = "decisive";
     story.events.unshift(mission);
     story.cinematicMissionPrepared = true;
@@ -88,14 +88,6 @@
       visual.classList.remove("conversation-portrait-button");
     }
 
-    if (index === 0) {
-      const cue = root.document.createElement("span");
-      cue.className = "cinematic-first-cue";
-      cue.textContent = "Tap Anywhere";
-      cue.setAttribute("aria-hidden", "true");
-      section.append(cue);
-    }
-
     const activate = eventObject => {
       if (eventObject?.target?.closest?.("button, a, input, select, textarea")) return;
       if (transitionLocked) return;
@@ -145,6 +137,7 @@
     const baseRender = root.render;
     if (typeof baseRender !== "function" || baseRender.cinematicSprint1Wrapped) return false;
     const wrappedRender = function () {
+      prepareMissionOpening();
       baseRender();
       polishConversation();
     };

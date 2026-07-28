@@ -1,86 +1,14 @@
-const host = { name: "Pup", image: "assets/buddies/buddy-dog.webp" };
-
-const images = {
-  people: {
-    emma: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=82",
-    marcus: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=82",
-    olivia: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=700&q=82"
-  },
-  restaurants: {
-    luna: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=82",
-    cactus: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1000&q=82",
-    azul: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=82",
-    abuela: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5f?auto=format&fit=crop&w=1000&q=82",
-    rojo: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1000&q=82",
-    plaza: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1000&q=82"
-  },
-  food: {
-    "Fish tacos": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=800&q=82",
-    "Chicken enchiladas": "https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?auto=format&fit=crop&w=800&q=82",
-    "Steak fajitas": "https://images.unsplash.com/photo-1611250188496-e966043a0629?auto=format&fit=crop&w=800&q=82",
-    "Lime margarita": "https://images.unsplash.com/photo-1556855810-ac404aa91e85?auto=format&fit=crop&w=800&q=82",
-    "Sweet tea": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=82",
-    "Sparkling water": "https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=800&q=82",
-    "Churros": "https://images.unsplash.com/photo-1624371414361-e670edf4898d?auto=format&fit=crop&w=800&q=82",
-    "Tres leches": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=82",
-    "No dessert": "https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=800&q=82"
-  }
-};
-
-const restaurants = [
-  { id: "luna", name: "Casa Luna", distance: "3.2 mi", price: "$$", style: "Modern Mexican", atmosphere: "Warm lights · social patio", description: "A polished neighborhood favorite with modern plates and a lively bar.", menu: { meal: ["Fish tacos", "Chicken enchiladas", "Steak fajitas"], drink: ["Lime margarita", "Sweet tea", "Sparkling water"], dessert: ["Churros", "Tres leches", "No dessert"] } },
-  { id: "cactus", name: "Cactus Cantina", distance: "1.8 mi", price: "$", style: "Fast & casual", atmosphere: "Bright · energetic · quick", description: "A casual counter-service spot known for bold flavors and easy prices.", menu: { meal: ["Spicy chicken burrito", "Carne asada tacos", "Veggie bowl"], drink: ["Horchata", "Mexican Coke", "Water"], dessert: ["Cinnamon sopapillas", "Flan", "No dessert"] } },
-  { id: "azul", name: "Azul Mar", distance: "7.4 mi", price: "$$$", style: "Coastal Mexican", atmosphere: "Upscale · date-night", description: "Seafood-forward Mexican cooking in a sophisticated coastal dining room.", menu: { meal: ["Grilled mahi tacos", "Shrimp enchiladas", "Chicken mole"], drink: ["Cucumber agua fresca", "Paloma", "Sparkling water"], dessert: ["Coconut flan", "Tres leches", "No dessert"] } },
-  { id: "abuela", name: "Abuela’s Table", distance: "5.1 mi", price: "$$", style: "Traditional family recipes", atmosphere: "Cozy · familiar · relaxed", description: "Comforting recipes, generous portions, and the feeling of a family table.", menu: { meal: ["Beef tamales", "Cheese enchiladas", "Chicken tortilla soup"], drink: ["Sweet tea", "Horchata", "Water"], dessert: ["Flan", "Churros", "No dessert"] } },
-  { id: "rojo", name: "Rojo Taco Lab", distance: "6.6 mi", price: "$$", style: "Creative street tacos", atmosphere: "Trendy · loud · adventurous", description: "Unexpected taco combinations in a colorful, high-energy room.", menu: { meal: ["Korean beef tacos", "Hot honey chicken tacos", "Avocado tostadas"], drink: ["Mango agua fresca", "Spicy margarita", "Mexican Coke"], dessert: ["Churro bites", "Mexican chocolate cookie", "No dessert"] } },
-  { id: "plaza", name: "Plaza Fiesta", distance: "4.0 mi", price: "$$", style: "Lively neighborhood favorite", atmosphere: "Festive · group-friendly", description: "A dependable celebration spot with big tables and familiar favorites.", menu: { meal: ["Steak fajitas", "Combo enchiladas", "Fish tacos"], drink: ["House margarita", "Sweet tea", "Water"], dessert: ["Fried ice cream", "Sopapillas", "No dessert"] } }
-];
-
-const actualRestaurantId = "luna";
-const diners = [
-  {
-    id: "emma", name: "Emma", role: "The Adventurer", intro: "Curious, social, and usually ready to try something new.", favorite: "Seafood & modern Mexican", funFact: "She photographs almost every memorable meal.", facts: ["Orders seafood often", "Usually stays within 10 miles", "Dessert about half the time"], permission: "full", permissionLabel: "Full case file shared",
-    preferences: ["Seafood", "Spicy food", "Modern Mexican", "Mocktails", "Outdoor patios"], dislikes: ["Heavy lunches", "Repeating the same cuisine two days in a row"],
-    places: ["Casa Luna · 4.8★", "Azul Mar · 4.6★", "Rojo Taco Lab · Must Try"],
-    activity: [
-      { icon: "🍽️", title: "Recent meal", text: "Rated fried catfish 4.7★ yesterday" },
-      { icon: "🔖", title: "Must Try", text: "Saved Rojo Taco Lab’s hot honey tacos" },
-      { icon: "🚻", title: "Restrooms", text: "Cleanliness matters · average rating 4.8★" },
-      { icon: "🎟️", title: "Deal", text: "Viewed Casa Luna happy hour twice" },
-      { icon: "📅", title: "Event", text: "Interested in Patio Music Thursday" }
-    ],
-    clues: { restaurant: "Emma ate fried catfish yesterday, so another seafood-focused restaurant may be less appealing.", meal: "She wants something lighter than fajitas and is willing to move away from fish tonight.", drink: "She is driving tonight.", dessert: "She skipped lunch, but says she does not want a heavy finish." },
-    actual: { meal: "Chicken enchiladas", drink: "Sparkling water", dessert: "No dessert" }, why: "Emma chose something lighter after yesterday’s fish, ordered sparkling water because she was driving, and skipped dessert."
-  },
-  {
-    id: "marcus", name: "Marcus", role: "The Traditionalist", intro: "Budget-minded, dependable, and always arrives hungry.", favorite: "Beef, comfort food & sweet tea", funFact: "His current dessert streak is six dinners.", facts: ["Favors familiar places", "Usually orders beef", "Almost always gets dessert"], permission: "limited", permissionLabel: "Some evidence shared",
-    preferences: ["Beef entrées", "Sweet tea", "Familiar restaurants"], dislikes: [],
-    places: ["Plaza Fiesta · frequent visit", "Abuela’s Table · 4.5★"],
-    activity: [
-      { icon: "🎟️", title: "Deals · summary", text: "Regularly saves weekday specials" },
-      { icon: "🔖", title: "Must Try", text: "Saved Casa Luna’s fajitas for two" },
-      { icon: "🚻", title: "Restrooms", text: "Private" },
-      { icon: "📅", title: "Events · summary", text: "Prefers quieter group events" }
-    ],
-    clues: { restaurant: "Marcus paid for an expensive dinner last night and wants somewhere nearby at a moderate price.", meal: "He ran five miles this afternoon and wants the most filling option.", drink: "He orders sweet tea with most casual dinners.", dessert: "His dessert streak is currently six dinners." },
-    actual: { meal: "Steak fajitas", drink: "Sweet tea", dessert: "Churros" }, why: "Marcus backed the close, moderately priced choice, went with the filling beef option, stayed loyal to sweet tea, and protected his dessert streak."
-  },
-  {
-    id: "olivia", name: "Olivia", role: "The Social Planner", intro: "She values atmosphere, celebration, and keeping the whole table happy.", favorite: "Shareable plates & margaritas", funFact: "She remembers everyone’s favorite restaurant.", facts: ["Likes lively rooms", "Often orders margaritas", "Returns to trusted favorites"], permission: "none", permissionLabel: "Detailed history private",
-    preferences: [], dislikes: [], places: [],
-    activity: [
-      { icon: "🔒", title: "Dining history", text: "Olivia has not shared this category" },
-      { icon: "🔒", title: "Restrooms", text: "Private" },
-      { icon: "📅", title: "Event clue", text: "Shared for this game: celebrating a promotion" }
-    ],
-    clues: { restaurant: "Olivia is celebrating a promotion, but she also wants a place that works for everyone in the group.", meal: "She wants something the table can easily share.", drink: "She is not driving and called this a celebration dinner.", dessert: "The group mentioned sharing one dessert for the table." },
-    actual: { meal: "Steak fajitas", drink: "Lime margarita", dessert: "Tres leches" }, why: "Olivia chose shareable fajitas, celebrated with a margarita, and finished with a dessert that worked for the table."
-  }
-];
-
-const dinerStages = ["meal", "drink", "dessert"];
+const initialEpisodeDefinition = window.RateMyBitesEpisodes.getEpisode(window.RateMyBitesEpisodes.defaultEpisodeId);
+const cloneEpisodeValue = value => JSON.parse(JSON.stringify(value));
+const host = cloneEpisodeValue(initialEpisodeDefinition.story.host);
+const images = cloneEpisodeValue(initialEpisodeDefinition.gameplay.images);
+const restaurants = cloneEpisodeValue(initialEpisodeDefinition.gameplay.restaurants);
+let actualRestaurantId = initialEpisodeDefinition.gameplay.actualRestaurantId;
+const diners = cloneEpisodeValue(initialEpisodeDefinition.gameplay.diners);
+const dinerStages = cloneEpisodeValue(initialEpisodeDefinition.gameplay.stages);
 const points = { restaurant: 120, meal: 30, drink: 20, dessert: 10 };
-const labels = { restaurant: "Restaurant", meal: "Entrée", drink: "Drink", dessert: "Dessert" };
+Object.assign(points, initialEpisodeDefinition.gameplay.points);
+const labels = cloneEpisodeValue(initialEpisodeDefinition.gameplay.labels);
 const app = document.querySelector("#app");
 const restartButton = document.querySelector("#restartButton");
 let timerHandle = null;
@@ -88,6 +16,7 @@ let state = initialState();
 
 function initialState() { return { screen: "welcome", introIndex: 0, stageIndex: 0, dinerIndex: 0, groupRestaurant: null, picks: {}, confidence: {}, score: 0, timerSeconds: 60, timeLeft: 60, timedOut: false }; }
 function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]); }
+function currentEpisodeDefinition() { return window.RateMyBitesEpisodes.getEpisode(state?.selectedEpisodeId || window.RateMyBitesEpisodes.defaultEpisodeId); }
 function restaurantFor(id) { return restaurants.find(item => item.id === id); }
 function actualRestaurant() { return restaurantFor(actualRestaurantId); }
 function photo(url, alt, className = "") { return `<img class="${className}" src="${url}" alt="${escapeHtml(alt)}" loading="lazy">`; }
@@ -180,11 +109,12 @@ function restaurantRound() {
 
 function restaurantReveal() {
   const restaurant = actualRestaurant(); const correct = state.groupRestaurant === actualRestaurantId; const confidence = currentConfidence("group", "restaurant");
-  app.innerHTML = `<p class="eyebrow">The Votes Are In</p><h1 class="screen-title">The group chose ${restaurant.name}.</h1>${hostCard(correct ? `You read the room perfectly with ${confidence}/5 confidence.` : `You were ${confidence}/5 confident, but the group found a different compromise.`)}<article class="reveal-card photo-reveal">${photo(images.restaurants[restaurant.id], restaurant.name)}<div class="reveal-content"><div class="reveal-head"><strong>${restaurant.name}</strong><span class="score-pill">${correct ? "+120" : "0"}</span></div><div class="answer-row ${correct ? "correct" : "wrong"}"><span>Your prediction: ${restaurantFor(state.groupRestaurant).name}</span><span>${correct ? "✓ Correct" : "✕ Incorrect"}</span></div><p class="explanation">Casa Luna balanced Marcus’s price and distance concerns, Olivia’s celebration mood, and Emma’s desire for something modern without another seafood-heavy meal.</p></div></article><div class="people-strip">${diners.map(person => personMini(person, "Review evidence before predicting the order.")).join("")}</div><div class="actions"><button class="primary-button" id="orders">Predict Their Orders</button></div>`;
+  const reveal = currentEpisodeDefinition().reveal;
+  app.innerHTML = `<p class="eyebrow">The Votes Are In</p><h1 class="screen-title">The group chose ${restaurant.name}.</h1>${hostCard(correct ? reveal.correctRestaurant : reveal.incorrectRestaurant)}<article class="reveal-card photo-reveal">${photo(images.restaurants[restaurant.id], restaurant.name)}<div class="reveal-content"><div class="reveal-head"><strong>${restaurant.name}</strong><span class="score-pill">${correct ? "+120" : "0"}</span></div><div class="answer-row ${correct ? "correct" : "wrong"}"><span>Your prediction: ${restaurantFor(state.groupRestaurant).name}</span><span>${correct ? "✓ Correct" : "✕ Incorrect"}</span></div><p class="explanation">${escapeHtml(reveal.restaurantExplanation)}</p></div></article><div class="people-strip">${diners.map(person => personMini(person, "Review evidence before predicting the order.")).join("")}</div><div class="actions"><button class="primary-button" id="orders">Predict Their Orders</button></div>`;
   document.querySelector("#orders").onclick = () => { state.screen = "play"; render(); };
 }
 
-function optionImage(value, stage) { return images.food[value] || images.food[stage === "meal" ? "Fish tacos" : stage === "drink" ? "Lime margarita" : "Churros"]; }
+function optionImage(value, stage) { const fallback = actualRestaurant()?.menu?.[stage]?.[0]; return images.food[value] || images.food[fallback] || images.restaurants[actualRestaurantId]; }
 function availableOptions(stage) { return actualRestaurant().menu[stage].map(value => ({ value, image: optionImage(value, stage) })); }
 function advancePlay() { if (state.dinerIndex < diners.length - 1) state.dinerIndex += 1; else if (state.stageIndex < dinerStages.length - 1) { state.stageIndex += 1; state.dinerIndex = 0; } else { calculateScore(); updateStats(); state.screen = "results"; } render(); }
 function autoPlay() { const stage = dinerStages[state.stageIndex]; const person = diners[state.dinerIndex]; state.picks[person.id] ??= {}; if (!state.picks[person.id][stage]) state.picks[person.id][stage] = availableOptions(stage)[0].value; if (!currentConfidence(person.id, stage)) state.confidence[confidenceKey(person.id, stage)] = 1; advancePlay(); }

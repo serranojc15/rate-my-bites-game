@@ -243,6 +243,10 @@ livingConversation = function () {
 
 conversationFinale = function () {
   const read = state.livingConfidence["group-restaurant"] || 3;
+  const finaleClues = livingDinnerStory.finaleClues || diners.map(person => ({
+    title: person.role,
+    text: person.clues.restaurant
+  }));
   app.innerHTML = `<section class="conversation-finale director-finale">
     ${directorCutVersionMarkup(true)}
     <div class="finale-signal"><span></span><span></span><span></span></div>
@@ -250,9 +254,7 @@ conversationFinale = function () {
     <h1>The room<br>has shifted.</h1>
     <p class="finale-lead">The lights soften. The conversation stops. What sounded casual a moment ago now feels like evidence.</p>
     <div class="finale-clues">
-      <article><span>01</span><strong>A pattern broke</strong><p>Emma rejected the choice everyone expected.</p></article>
-      <article><span>02</span><strong>A priority surfaced</strong><p>Marcus revealed that value and convenience matter.</p></article>
-      <article><span>03</span><strong>The room reacted</strong><p>One timely deal changed everyone's attention.</p></article>
+      ${finaleClues.map((clue, index) => `<article><span>${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtml(clue.title)}</strong><p>${escapeHtml(clue.text)}</p></article>`).join("")}
     </div>
     <div class="finale-read"><span>Your restaurant read</span><strong>${read}/5</strong><div>${Array.from({ length: 5 }, (_, i) => `<i class="${i < read ? "active" : ""}"></i>`).join("")}</div></div>
     <div class="finale-pup director-pup">${photo(host.image, "Pup, Game Master")}<div><span>GAME MASTER</span><p><strong>Pup:</strong> You've already seen every clue. The answer has been hiding in plain sight.</p><em>Did you notice?</em></div></div>

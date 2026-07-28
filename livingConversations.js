@@ -1,95 +1,8 @@
 const livingDinnerStory = {
-  title: "The Great Sushi Debate",
-  events: [
-    {
-      id: "emma-seafood",
-      kind: "conversation",
-      speakerId: "emma",
-      speaker: "Emma",
-      text: "I know everyone expects seafood, but I had fish yesterday. I want something completely different tonight.",
-      emotion: "thoughtful",
-      cameraTarget: "emma",
-      influence: { "group-restaurant": -1, "emma-meal": 1 },
-      memory: { type: "surprise", label: "Emma broke her seafood pattern" }
-    },
-    {
-      id: "marcus-close",
-      kind: "conversation",
-      speakerId: "marcus",
-      speaker: "Marcus",
-      text: "As long as it is close, filling, and does not require a small loan, I am happy.",
-      emotion: "dry",
-      cameraTarget: "marcus",
-      influence: { "group-restaurant": 1, "marcus-meal": 1 },
-      memory: { type: "humor", label: "Marcus requested dinner without financing" }
-    },
-    {
-      id: "pup-read",
-      kind: "pup",
-      speaker: "Pup",
-      text: "Interesting. Emma is abandoning a pattern. Marcus has submitted a budget amendment.",
-      emotion: "observant",
-      cameraTarget: "pup"
-    },
-    {
-      id: "olivia-celebration",
-      kind: "conversation",
-      speakerId: "olivia",
-      speaker: "Olivia",
-      text: "It is a celebration, but I want somewhere everyone will actually enjoy—not just somewhere that looks impressive.",
-      emotion: "warm",
-      cameraTarget: "olivia",
-      influence: { "group-restaurant": 1, "olivia-drink": 1 },
-      memory: { type: "persuasive", label: "Olivia reframed the restaurant decision around the group" }
-    },
-    {
-      id: "producer-emma",
-      kind: "producer",
-      speaker: "Off-Camera Producer",
-      text: "Emma, are you changing your mind—or trying to make everyone think you are changing your mind?",
-      emotion: "documentary",
-      cameraTarget: "producer"
-    },
-    {
-      id: "emma-confessional",
-      kind: "confessional",
-      speakerId: "emma",
-      speaker: "Emma",
-      text: "They are all overthinking this. Which is useful, because now nobody knows what I am ordering.",
-      emotion: "playful",
-      cameraTarget: "emma",
-      influence: { "emma-meal": -1 },
-      memory: { type: "confessional", label: "Emma admitted she enjoys the confusion" }
-    },
-    {
-      id: "deal-interruption",
-      kind: "interruption",
-      speaker: "Phone Alert",
-      text: "Casa Luna: Happy hour patio seating is available for the next 45 minutes.",
-      emotion: "urgent",
-      cameraTarget: "restaurant",
-      influence: { "group-restaurant": 1, "olivia-drink": 1 },
-      memory: { type: "influence", label: "A Casa Luna deal changed the room" }
-    },
-    {
-      id: "marcus-confessional",
-      kind: "confessional",
-      speakerId: "marcus",
-      speaker: "Marcus",
-      text: "Happy hour is evidence. I respect evidence.",
-      emotion: "serious",
-      cameraTarget: "marcus",
-      memory: { type: "humor", label: "Marcus declared happy hour admissible evidence" }
-    },
-    {
-      id: "pup-close",
-      kind: "pup",
-      speaker: "Pup",
-      text: "The room has shifted. Three clues remain: Emma broke her pattern. Marcus wants value. Olivia wants a celebration everyone can enjoy.",
-      emotion: "decisive",
-      cameraTarget: "pup"
-    }
-  ]
+  title: initialEpisodeDefinition.metadata.title,
+  events: cloneEpisodeValue(initialEpisodeDefinition.story.scenes),
+  missionText: initialEpisodeDefinition.story.missionText,
+  finaleClues: cloneEpisodeValue(initialEpisodeDefinition.story.finaleClues)
 };
 
 let conversationSpeech = null;
@@ -145,7 +58,10 @@ function producerControlRoomVisual() {
 function conversationVisual(event) {
   if (event.cameraTarget === "producer") return producerControlRoomVisual();
   if (event.cameraTarget === "pup") return `${photo(host.image, "Pup, game master", "living-person-photo")}<div class="living-name"><span>Game Master</span><strong>Pup</strong></div>`;
-  if (event.cameraTarget === "restaurant") return `${photo(images.restaurants.luna, "Casa Luna", "living-restaurant-photo")}<div class="living-name"><span>New evidence</span><strong>Casa Luna</strong></div>`;
+  if (event.cameraTarget === "restaurant") {
+    const restaurant = actualRestaurant();
+    return `${photo(images.restaurants[restaurant.id], restaurant.name, "living-restaurant-photo")}<div class="living-name"><span>New evidence</span><strong>${escapeHtml(restaurant.name)}</strong></div>`;
+  }
   const person = diners.find(item => item.id === event.speakerId);
   return `${photo(images.people[event.speakerId], event.speaker, "living-person-photo")}<div class="living-name"><span>${escapeHtml(person?.role || "Diner")}</span><strong>${escapeHtml(event.speaker)}</strong></div>`;
 }
@@ -216,15 +132,14 @@ function livingConversation() {
 
 function conversationFinale() {
   const read = state.livingConfidence["group-restaurant"] || 3;
+  const finaleClues = livingDinnerStory.finaleClues || [];
   app.innerHTML = `<section class="conversation-finale">
     <div class="finale-signal"><span></span><span></span><span></span></div>
     <p class="eyebrow">Conversation Complete</p>
     <h1>The room<br>has shifted.</h1>
     <p class="finale-lead">The talking is over. The evidence is locked. Now make the call.</p>
     <div class="finale-clues">
-      <article><span>01</span><strong>Pattern broken</strong><p>Emma does not want seafood again.</p></article>
-      <article><span>02</span><strong>Value matters</strong><p>Marcus wants close, filling, and affordable.</p></article>
-      <article><span>03</span><strong>Celebrate together</strong><p>Olivia wants a place the whole table will enjoy.</p></article>
+      ${finaleClues.map((clue, index) => `<article><span>${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtml(clue.title)}</strong><p>${escapeHtml(clue.text)}</p></article>`).join("")}
     </div>
     <div class="finale-read"><span>Your restaurant read</span><strong>${read}/5</strong><div>${Array.from({ length: 5 }, (_, i) => `<i class="${i < read ? "active" : ""}"></i>`).join("")}</div></div>
     <div class="finale-pup">${photo(host.image, "Pup, Game Master")}<p><strong>Pup:</strong> One restaurant. One decision. Trust your read.</p></div>

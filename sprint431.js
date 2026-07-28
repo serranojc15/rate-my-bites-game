@@ -178,6 +178,7 @@
     state.previousVariantId = state.currentVariantId;
     state.attemptType = attemptType;
     state.attemptNumber = loadHistory().attempts.length + 1;
+    state.selectedEpisodeId = "episode-001";
     state.screen = "planner";
     applyVariant(variantId);
     render();
@@ -258,6 +259,11 @@
 
   const baseRenderMissionReport = renderMissionReport;
   renderMissionReport = function () {
+    if (state.selectedEpisodeId && state.selectedEpisodeId !== "episode-001") {
+      baseRenderMissionReport();
+      addVoiceButton();
+      return;
+    }
     recordAttempt();
     baseRenderMissionReport();
     const info = summary();
@@ -281,7 +287,13 @@
   const baseConversationFinale = conversationFinale;
   conversationFinale = function () { baseConversationFinale(); const cards = document.querySelectorAll(".finale-clues article p"); diners.forEach((p, i) => { if (cards[i]) cards[i].textContent = p.clues.restaurant; }); addVoiceButton(); };
   const baseRender = render;
-  render = function () { applyVariant(state.currentVariantId || "A"); baseRender(); document.title = `Rate My Bites — Bite Buddy League ${VERSION}`; document.querySelectorAll(".final-reveal-version strong").forEach(el => el.textContent = VERSION); addVoiceButton(); };
+  render = function () {
+    if (!state.selectedEpisodeId || state.selectedEpisodeId === "episode-001") applyVariant(state.currentVariantId || "A");
+    baseRender();
+    document.title = `Rate My Bites — Bite Buddy League ${VERSION}`;
+    document.querySelectorAll(".final-reveal-version strong").forEach(el => el.textContent = VERSION);
+    addVoiceButton();
+  };
 
   window.BiteBuddyCases = Object.freeze({ version: VERSION, caseId: CASE_ID, variants: variants.map(v => ({ id: v.id, title: v.title })), getVariant: id => clone(getVariant(id)), freshVariantId, summary, applyVariant });
   voiceSettings.enabled = state.voiceEnabled !== false && voiceSettings.enabled;

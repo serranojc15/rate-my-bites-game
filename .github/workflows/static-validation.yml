@@ -69,6 +69,9 @@ jobs:
       - name: Run Sprint 4.4.7 tests
         run: node tests/sprint447.test.cjs
 
+      - name: Run Multi-Episode Foundation tests
+        run: node tests/episodes.test.cjs
+
       - name: Verify Sprint 4.4.7 integration
         shell: bash
         run: |

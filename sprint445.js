@@ -388,7 +388,18 @@
     const recommendation = nextMissionRecommendation(progression, attempt?.attemptType || state.attemptType, unlockState, development.skills);
     const group = groupUpdate();
     const rank = progressionApi.getRank(progression.totalXp, progression.rankId);
-    const variant = casesApi?.getVariant?.(state.currentVariantId) || { id: state.currentVariantId || "A", title: report.episode?.title || "Current Case" };
+    const activeCatalogEpisode = state.selectedEpisodeId && state.selectedEpisodeId !== "episode-001"
+      ? root.RateMyBitesEpisodes?.getEpisode?.(state.selectedEpisodeId)
+      : null;
+    const variant = activeCatalogEpisode
+      ? {
+          id: `Episode ${Number(activeCatalogEpisode.metadata.id.split("-").at(-1))}`,
+          title: activeCatalogEpisode.metadata.title
+        }
+      : casesApi?.getVariant?.(state.currentVariantId) || {
+          id: state.currentVariantId || "A",
+          title: report.episode?.title || "Current Case"
+        };
     const attemptNumber = state.attemptNumber || history.attempts.length;
     const completionDate = attempt?.timestamp ? new Date(attempt.timestamp).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : report.episode?.date;
 

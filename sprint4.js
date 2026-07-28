@@ -1,29 +1,4 @@
-const sprint4Episode = {
-  number: 1,
-  title: "The Great Sushi Debate",
-  subtitle: "Operation Dinner Briefing",
-  opening: [
-    "Good evening, Biter.",
-    "Tonight, you will be dining with three very different people.",
-    "Study their habits. Listen carefully.",
-    "Small clues often reveal big decisions."
-  ],
-  people: {
-    emma: {
-      narration: ["This is Emma.", "She usually follows curiosity—and photographs the evidence.", "Yesterday, however, she rated fried catfish 4.7 stars.", "Do not assume seafood."],
-      confessional: "Everybody thinks I’m getting sushi. They’re probably wrong."
-    },
-    marcus: {
-      narration: ["This is Marcus.", "He values consistency, familiar places, and a full plate.", "His dessert streak currently stands at six dinners.", "I have documented this historic achievement."],
-      confessional: "Honestly, I’m mostly here for dessert."
-    },
-    olivia: {
-      narration: ["This is Olivia.", "She plans for the whole table and remembers everyone’s favorites.", "Most of her detailed dining history is private.", "You will have to read the room."],
-      confessional: "They’ll never figure me out."
-    }
-  },
-  closing: ["Your briefing is complete.", "Predict the restaurant, entrée, drink, and dessert.", "Dinner begins now."]
-};
+const sprint4Episode = cloneEpisodeValue(initialEpisodeDefinition.story.briefing);
 
 let briefingTimer = null;
 let currentSpeech = null;
@@ -117,7 +92,7 @@ function briefing() {
     <div class="briefing-copy">
       <p class="briefing-speaker">${scene.kind === "confessional" ? "🎥" : "🎙️"} ${escapeHtml(scene.speaker)}</p>
       <h1 id="typedBriefing" aria-live="polite"></h1>
-      <p class="briefing-hint">Tap anywhere or press Space to continue</p>
+      ${state.briefingIndex === 0 ? '<p class="briefing-hint">Tap anywhere or press Space to continue</p>' : ""}
     </div>
     <button class="briefing-next-hit" id="nextBriefing" type="button" aria-label="Continue briefing"></button>
   </section>`;
@@ -147,7 +122,7 @@ welcome = function () {
 };
 
 planner = function () {
-  app.innerHTML = `<p class="eyebrow">Planner Mode · ${sprint4Episode.title}</p><h1 class="screen-title">Prepare tonight’s mission.</h1>${hostCard("Choose the prediction clock, then I’ll brief you on every diner. Narration can be muted or skipped at any time.")}<section class="planner-card"><h2>Time per prediction</h2><p>Opening a case file does not pause the clock.</p><div class="timer-options">${[{v:30,l:"30 sec",s:"Fast"},{v:60,l:"60 sec",s:"Recommended"},{v:120,l:"120 sec",s:"Investigate"},{v:0,l:"Unlimited",s:"Untimed"}].map(option => `<button class="timer-option ${state.timerSeconds === option.v ? "selected" : ""}" data-timer="${option.v}"><strong>${option.l}</strong><span>${option.s}</span></button>`).join("")}</div><div class="planner-summary"><span>Episode</span><strong>${sprint4Episode.title}</strong><span>Players</span><strong>Emma, Marcus & Olivia</strong><span>Opening</span><strong>Voice narration + synchronized text</strong></div></section><div class="actions"><button class="primary-button" id="begin">Begin Mission Briefing</button></div>`;
+  app.innerHTML = `<p class="eyebrow">Planner Mode · ${sprint4Episode.title}</p><h1 class="screen-title">Prepare tonight’s mission.</h1>${hostCard("Choose the prediction clock, then I’ll brief you on every diner. Narration can be muted or skipped at any time.")}<section class="planner-card"><h2>Time per prediction</h2><p>Opening a case file does not pause the clock.</p><div class="timer-options">${[{v:30,l:"30 sec",s:"Fast"},{v:60,l:"60 sec",s:"Recommended"},{v:120,l:"120 sec",s:"Investigate"},{v:0,l:"Unlimited",s:"Untimed"}].map(option => `<button class="timer-option ${state.timerSeconds === option.v ? "selected" : ""}" data-timer="${option.v}"><strong>${option.l}</strong><span>${option.s}</span></button>`).join("")}</div><div class="planner-summary"><span>Episode</span><strong>${sprint4Episode.title}</strong><span>Players</span><strong>${diners.map(person => person.name).join(", ")}</strong><span>Opening</span><strong>Voice narration + synchronized text</strong></div></section><div class="actions"><button class="primary-button" id="begin">Begin Mission Briefing</button></div>`;
   app.querySelectorAll(".timer-option").forEach(button => button.onclick = () => { state.timerSeconds = Number(button.dataset.timer); state.timeLeft = state.timerSeconds; render(); });
   document.querySelector("#begin").onclick = () => { state.screen = "briefing"; state.briefingIndex = 0; render(); };
 };
