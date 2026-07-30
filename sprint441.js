@@ -273,7 +273,15 @@
         <button class="secondary-button" id="reviewRestaurantEvidence" type="button">Review the Evidence</button>
         <button class="primary-button" id="continueOrderPredictions" type="button">Continue to Order Predictions</button>
       </div>
-      <article class="restaurant-reveal-photo-card">${photo(images.restaurants[restaurant.id], restaurant.name)}<div><h2>Why the table landed here</h2><p>${escapeHtml(buildDecisionExplanation(restaurant, diners))}</p></div></article>
+      ${root.RateMyBitesRevealResultCard.markup({
+        imageSrc: images.restaurants[restaurant.id],
+        imageAlt: restaurant.name,
+        score: `${pointsEarned} / ${points.restaurant}`,
+        title: "Why the table landed here",
+        playerAnswer: predicted.name,
+        explanation: buildDecisionExplanation(restaurant, diners),
+        success: correct
+      })}
     </section>`;
   }
 

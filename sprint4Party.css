@@ -57,13 +57,6 @@
 .mystery-option.selected{border-color:#f97316;background:#fff7ed}
 .episode3-mystery-reveal{display:grid;gap:1rem}
 .episode3-mystery-reveal>h1{margin:.2rem 0;font-size:clamp(2rem,7vw,4.5rem);line-height:1}
-.mystery-answer-card{display:grid;grid-template-columns:minmax(220px,42%) minmax(0,1fr);overflow:hidden;border-radius:26px;background:#fff;box-shadow:0 16px 44px rgba(44,36,33,.1)}
-.mystery-answer-card>img{width:100%;height:100%;min-height:280px;object-fit:cover}
-.mystery-answer-card>div{display:grid;align-content:center;gap:.7rem;min-width:0;padding:clamp(1.2rem,4vw,2.25rem)}
-.mystery-answer-card span{justify-self:start;padding:.35rem .65rem;border-radius:999px;background:#dcfce7;color:#166534;font-size:.78rem;font-weight:900}
-.mystery-answer-card.wrong span{background:#fee2e2;color:#991b1b}
-.mystery-answer-card strong{overflow-wrap:break-word;font-size:clamp(1.15rem,3vw,1.7rem);line-height:1.35}
-.mystery-answer-card p,.episode3-solution{color:#695b54;line-height:1.6}
 .pup-completion-caption{margin-top:1rem}
 @media(max-width:760px){
   .party-profile{grid-template-columns:1fr}
@@ -71,8 +64,6 @@
   .party-profile-portrait img{aspect-ratio:4/3}
   .party-seat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .party-profile-facts,.mystery-options{grid-template-columns:1fr}
-  .mystery-answer-card{grid-template-columns:1fr}
-  .mystery-answer-card>img{min-height:0;aspect-ratio:16/10}
 }
 @media(max-width:390px){
   .party-home-header,.party-profile-copy{padding:1rem}
