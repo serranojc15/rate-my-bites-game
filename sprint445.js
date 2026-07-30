@@ -420,7 +420,7 @@
       ${celebrationsMarkup(celebrations)}
 
       <section class="mission-payoff-next" aria-labelledby="missionNextTitle">
-        <div>${photo(host.image, "Pup, Game Master")}<div><span>Pup’s Next Mission</span><h2 id="missionNextTitle">${safe(recommendation.title)}</h2><p>${safe(recommendation.reason)}</p><small>Targets: ${safe(recommendation.target.replaceAll("-", " "))}</small></div></div>
+        <div>${photo(host.image, "Pup, Host")}<div><span>Pup’s Next Mission</span><h2 id="missionNextTitle">${safe(recommendation.title)}</h2><p>${safe(recommendation.reason)}</p><small>Targets: ${safe(recommendation.target.replaceAll("-", " "))}</small></div></div>
         <button class="primary-button" id="missionRecommendedAction" type="button">${safe(recommendation.action)}</button>
       </section>
 

@@ -170,7 +170,7 @@ const releaseSandbox = { window: { document: { title: '', body: { classList: { a
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 equal(releaseSandbox.window.BiteBuddyRelease.version, authoritativeVersion, 'release version is current');
 equal(releaseSandbox.window.BiteBuddyRelease.releaseName, authoritativeReleaseName, 'release name is current');
-ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${authoritativeVersion}</title>`), 'browser fallback title is current');
+ok(html.includes(`<title>Rate My Bites Detective ${authoritativeVersion}</title>`), 'browser fallback title is current');
 ok(html.indexOf('sprint447.css') > html.indexOf('sprint446.css'), 'Sprint 4.4.7 CSS loads after Sprint 4.4.6');
 ok(html.indexOf('sprint447.js') > html.indexOf('sprint446.js'), 'Sprint 4.4.7 JavaScript loads after Sprint 4.4.6');
 ok(workflowSource.includes('node tests/sprint447.test.cjs'), 'Static validation runs Sprint 4.4.7 tests');

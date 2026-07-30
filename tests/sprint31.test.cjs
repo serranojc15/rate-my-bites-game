@@ -16,7 +16,15 @@ const window = {};
 window.window = window;
 const sandbox = { window, console };
 vm.createContext(sandbox);
-for (const file of ["worldBible.js", "episodes.js", "sprint31.js"]) {
+for (const file of [
+  "worldBible.js",
+  "characterBible.js",
+  "voiceBible.js",
+  "season1Bible.js",
+  "livingEpisode.js",
+  "episodes.js",
+  "sprint31.js"
+]) {
   vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
 }
 
@@ -48,7 +56,7 @@ for (const character of Object.values(characters)) {
 equal(new Set(Object.values(characters).map(character => character.portraitId)).size, Object.keys(characters).length, "no two characters share a portrait");
 equal(characters.ellis.portraitId, "portrait.ellis", "Ellis always resolves to Ellis’s portrait");
 equal(characters.emma.portraitId, "portrait.emma", "Emma always resolves to Emma’s portrait");
-equal(characters.grace.episodeAppearances.length, 0, "reserved Grace infrastructure does not create an episode");
+deepEqual(characters.grace.episodeAppearances, ["episode-003"], "Grace’s canonical first appearance is Episode 3");
 equal(characters.ben.episodeAppearances.length, 0, "reserved Ben infrastructure does not create an episode");
 const isolatedCharacter = world.getCharacter("emma");
 isolatedCharacter.name = "Changed";
@@ -60,7 +68,7 @@ const season = world.getSeason("season-001");
 equal(series.seasonIds.length, 1, "only one season is implemented");
 equal(season.title, "Huntsville", "Season 1 has the intended identity");
 ok(Array.isArray(season.mainCast) && Array.isArray(season.recurringCast), "season cast groups load");
-deepEqual(season.timeline.map(item => item.episodeId), ["episode-001", "episode-002"], "season timeline orders both playable episodes");
+deepEqual(season.timeline.map(item => item.episodeId), ["episode-001", "episode-002", "episode-003"], "season timeline orders all playable episodes");
 for (const entry of catalog.filter(item => item.status === "playable")) {
   equal(entry.episode.metadata.seasonId, season.id, `${entry.id} belongs to Season 1`);
   ok(season.timeline.some(item => item.episodeId === entry.id), `${entry.id} appears in the season timeline`);
@@ -85,7 +93,7 @@ ok(!standalone.story.resolvedContinuity[0].includes("Olivia"), "new players do n
 equal(episodes.getEpisode("episode-002").story.briefing.opening.length, episode2Base.story.briefing.opening.length, "continuity resolution does not mutate the catalog");
 
 // Episode and legacy Fresh Variant artwork truth.
-for (const id of ["episode-001", "episode-002"]) equal(episodes.validateEpisode(episodes.getEpisode(id)).valid, true, `${id} image and portrait validation passes`);
+for (const id of ["episode-001", "episode-002", "episode-003"]) equal(episodes.validateEpisode(episodes.getEpisode(id)).valid, true, `${id} image and portrait validation passes`);
 const swappedPortrait = episodes.getEpisode("episode-001");
 swappedPortrait.gameplay.assetIds.people.emma = "portrait.marcus";
 equal(episodes.validateEpisode(swappedPortrait).valid, false, "a swapped character portrait fails episode validation");
@@ -127,7 +135,7 @@ ok(!/Math\.random\([^)]*\).*portrait|portrait.*Math\.random/s.test(`${fs.readFil
 
 const assetValidation = spawnSync(process.execPath, ["scripts/validate-assets.cjs"], { encoding: "utf8" });
 equal(assetValidation.status, 0, "build-time artwork validation succeeds");
-ok(assetValidation.stdout.includes("Artwork validation passed"), "artwork validator reports an actionable result");
+ok(assetValidation.stdout.includes("Production validation passed"), "production validator reports an actionable result");
 const localAssetBytes = Object.values(assets).reduce((sum, asset) => sum + fs.statSync(path.resolve(asset.src)).size, 0);
 ok(localAssetBytes < 6_000_000, "approved local artwork stays within the performance budget");
 ok(Object.values(assets).every(asset => !/^(?:https?:|data:)/i.test(asset.src)), "runtime artwork has no remote dependency");
@@ -149,7 +157,8 @@ equal(metrics.mealsIdentified, "2 / 3", "Episode Complete reports meals identifi
 equal(metrics.accuracy, 80, "Episode Complete accuracy uses ten predictions without double-counting overall");
 equal(metrics.totalPredictions, 10, "Episode Complete accuracy denominator is stable");
 equal(sprint31.nextPlayableEpisodeId("episode-001", catalog), "episode-002", "Next Episode resolves Episode 2");
-equal(sprint31.nextPlayableEpisodeId("episode-002", catalog), null, "latest episode has no false next action");
+equal(sprint31.nextPlayableEpisodeId("episode-002", catalog), "episode-003", "Episode 2 advances to Episode 3");
+equal(sprint31.nextPlayableEpisodeId("episode-003", catalog), null, "latest episode has no false next action");
 const completeModel = sprint31.completionViewModel(episodes.getEpisode("episode-001"), report, catalog, world);
 equal(completeModel.nextEpisodeId, "episode-002", "completion model exposes the next episode");
 equal(completeModel.teaser.speaker, "Olivia", "episode teaser resolves its canonical character");

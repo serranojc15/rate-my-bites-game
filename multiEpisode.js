@@ -162,7 +162,7 @@
     const lastPlayed = items.find(item => item.lastPlayed && item.status === "playable");
     app.innerHTML = `<section class="episode-library" data-screen="episode-library">
       <header class="episode-library-header">
-        <p class="eyebrow">Bite Buddy League · Episode Library</p>
+        <p class="eyebrow">Rate My Bites Detective · Episode Library</p>
         <h1>Every table<br>has a story.</h1>
         <p class="episode-welcome">${progressStore.acknowledgment(progress)}</p>
         ${lastPlayed ? `<p class="episode-last-played">Last played: <strong>${lastPlayed.title}</strong></p>` : ""}

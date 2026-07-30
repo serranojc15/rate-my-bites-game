@@ -35,6 +35,7 @@
    * @property {{host:Object,castIds:string[],continuity:Object[],completion:Object,briefing:Object,scenes:Object[],missionText:string,finaleClues:Object[],ending:string}} story
    * @property {{assetIds:Object,images:Object,restaurants:Object[],actualRestaurantId:string,diners:Object[],stages:string[],points:Object,labels:Object}} gameplay
    * @property {{order:string[],restaurantExplanation:string,correctRestaurant:string,incorrectRestaurant:string,endingCelebration:string}} reveal
+   * @property {{canonical:Object,living:Object,media:Object}} production
    */
 
   const pup = world.getCharacter("pup");
@@ -186,7 +187,7 @@
           text: "One broken pattern. One budget speech. One person quietly steering the whole table. Which clue matters most?",
           emotion: "observant",
           cameraTarget: "pup",
-          shot: "GAME MASTER CUT",
+          shot: "HOST CUT",
           beat: "Pup lets the question hang."
         },
         {
@@ -622,19 +623,438 @@
     }
   };
 
+  function legacyProduction(episode) {
+    const actual = episode.gameplay.restaurants.find(item => item.id === episode.gameplay.actualRestaurantId);
+    return {
+      canonical: {
+        episodeTitle: episode.metadata.title,
+        restaurantId: actual.worldId,
+        partyIds: ["pup", ...episode.story.castIds],
+        centralMystery: `Which restaurant and orders will fit this table?`,
+        requiredClueSceneIds: episode.story.scenes.filter(scene => scene.memory || scene.influence).map(scene => scene.id),
+        solution: episode.reveal.restaurantExplanation,
+        ending: episode.story.ending,
+        continuityChanges: [episode.reveal.endingCelebration]
+      },
+      living: {
+        enabled: false,
+        greetings: [],
+        banter: [],
+        restaurantSpecials: [],
+        environments: [],
+        optionalObservations: [],
+        clueOrders: []
+      },
+      media: {
+        characterPortraitIds: clone(episode.gameplay.assetIds.people),
+        restaurantImageIds: clone(episode.gameplay.assetIds.restaurants),
+        foodImageIds: clone(episode.gameplay.assetIds.food),
+        audioClips: {},
+        captions: {},
+        fallbackText: "All episode information remains available as visible text."
+      }
+    };
+  }
+
+  episode1.production = legacyProduction(episode1);
+  episode2.production = legacyProduction(episode2);
+
+  /** @type {EpisodeDefinition} */
+  const episode3 = {
+    metadata: {
+      id: "episode-003",
+      title: "The Missing Mushroom",
+      subtitle: "The Party Returns",
+      destination: "Huntsville · The Copper Table",
+      seasonId: "season-001",
+      artworkId: "restaurant.copper-table",
+      artwork: world.assetSrc("restaurant.copper-table"),
+      status: "playable",
+      order: 3,
+      tags: ["the-party", "friendship", "thoughtful-surprise"],
+      future: { contentSource: "handcrafted", livingEpisode: true }
+    },
+    story: {
+      host: sharedHost,
+      castIds: ["emma", "ellis", "grace"],
+      continuity: [
+        {
+          previousEpisodeId: "episode-001",
+          optional: true,
+          affectsGameplay: false,
+          returning: "Emma promised after Casa Luna that her next adventurous pick would work for the whole table.",
+          standalone: "Emma has a reputation for adventurous restaurant picks—and tonight she wants one that works for the whole table."
+        },
+        {
+          previousEpisodeId: "episode-002",
+          optional: true,
+          affectsGameplay: false,
+          returning: "Ellis says Maple & Main taught him that the room can matter as much as the roll basket.",
+          standalone: "Ellis likes a hearty meal, a comfortable room, and what he calls an accurate roll inventory."
+        }
+      ],
+      completion: {
+        mascotMessage: "Outstanding work! You noticed that Emma’s surprise began with listening.",
+        funFact: "Ellis ordered dessert before he asked about the bread basket. Character growth comes in many forms.",
+        teaser: {
+          speakerId: "olivia",
+          text: "Next dinner, nobody lets Marcus choose dessert without witnesses."
+        }
+      },
+      briefing: {
+        number: 3,
+        title: "The Missing Mushroom",
+        subtitle: "The Party Returns",
+        opening: [
+          "The Party is back at a new table.",
+          "Emma chose the restaurant, Ellis studied the dessert menu, and Grace agreed to try something new.",
+          "Then one handwritten chef’s card disappeared."
+        ],
+        people: {
+          emma: {
+            narration: ["Emma is back.", "She chose tonight’s restaurant.", "This time her adventurous pick had to work for somebody else."],
+            confessional: "I did a little research. That is not the same as having a plan."
+          },
+          ellis: {
+            narration: ["Ellis is back.", "He has already located the dessert menu.", "He insists dessert inventory is unrelated to roll inventory."],
+            confessional: "Dessert has its own inventory rules. I didn’t make them; I respect them."
+          },
+          grace: {
+            narration: ["Meet Grace.", "She enjoys trying new food when the choice remains hers.", "Her friends have received very clear mushroom instructions."],
+            confessional: "I like surprises. I just prefer knowing whether they contain mushrooms."
+          }
+        },
+        closing: ["The table is set.", "One chef’s card is missing.", "Listen for the person who planned more carefully than they admit."]
+      },
+      missionText: "Something feels a little unusual tonight. Keep your eyes open.",
+      scenes: [
+        {
+          id: "pup-unusual",
+          kind: "pup",
+          speaker: "Pup",
+          text: "Something feels a little unusual tonight. Keep your eyes open.",
+          emotion: "curious",
+          cameraTarget: "pup",
+          influence: { "group-restaurant": 1 }
+        },
+        {
+          id: "emma-plan",
+          kind: "conversation",
+          speakerId: "emma",
+          speaker: characterName("emma"),
+          text: "I wanted adventurous. I just wanted it to work for everybody this time.",
+          emotion: "thoughtful",
+          cameraTarget: "emma",
+          influence: { "emma-meal": 1 },
+          memory: { type: "growth", label: "Emma made adventure serve the whole table" }
+        },
+        {
+          id: "ellis-dessert",
+          kind: "conversation",
+          speakerId: "ellis",
+          speaker: characterName("ellis"),
+          text: "For the record, I looked at the chocolate torte before the bread basket. Nobody overreact.",
+          emotion: "dry",
+          cameraTarget: "ellis",
+          influence: { "ellis-dessert": 1 },
+          memory: { type: "humor", label: "Ellis put dessert ahead of roll inventory" }
+        },
+        {
+          id: "grace-choice",
+          kind: "conversation",
+          speakerId: "grace",
+          speaker: characterName("grace"),
+          text: "I’ll try something new. I just want it to be my something new.",
+          emotion: "steady",
+          cameraTarget: "grace",
+          influence: { "grace-meal": 1 },
+          memory: { type: "learning", label: "Grace separated adventurous food from giving up her choice" }
+        },
+        {
+          id: "host-note",
+          kind: "interruption",
+          speaker: "Host Stand",
+          text: "Table four: hold one vegetable risotto without mushrooms. Requested before service.",
+          emotion: "revealing",
+          cameraTarget: "restaurant",
+          influence: { "group-restaurant": 1, "grace-meal": 1 },
+          memory: { type: "evidence", label: "Someone called ahead about Grace’s risotto" }
+        },
+        {
+          id: "pup-close",
+          kind: "pup",
+          speaker: "Pup",
+          text: "One missing card. One careful phone call. The best clue may be who listened before dinner began.",
+          emotion: "encouraging",
+          cameraTarget: "pup"
+        }
+      ],
+      finaleClues: [
+        { title: "Adventure changed", text: "Emma wanted a new restaurant that worked for someone else, not only herself." },
+        { title: "Grace kept the choice", text: "Trying something new mattered only if Grace could choose it on her own terms." },
+        { title: "The call came early", text: "The mushroom-free risotto was requested before the group arrived." }
+      ],
+      ending: "Under the copper lights, Grace takes the first bite, Emma finally puts down her camera, and Ellis quietly orders one chocolate torte with four forks."
+    },
+    gameplay: {
+      ...episodeArtwork({
+        people: {
+          emma: "portrait.emma",
+          ellis: "portrait.ellis",
+          grace: "portrait.grace"
+        },
+        restaurants: {
+          luna: "restaurant.copper-table",
+          cactus: "restaurant.garden-room",
+          azul: "restaurant.trailhead-smokehouse"
+        },
+        food: {
+          "Grilled chicken salad": "food.grilled-chicken-salad",
+          "Steak board": "food.steak-board",
+          "Vegetable risotto": "food.vegetable-risotto",
+          "Sparkling water": "food.sparkling-water",
+          "Sweet tea": "food.sweet-tea",
+          "Berry fizz": "food.berry-fizz",
+          "Berry tart": "food.berry-tart",
+          "Chocolate torte": "food.chocolate-torte",
+          "No dessert": "food.no-dessert"
+        }
+      }),
+      restaurants: [
+        {
+          id: "luna",
+          worldId: "copper-table",
+          name: "The Copper Table",
+          distance: "3.2 mi",
+          price: "$$",
+          style: "Contemporary neighborhood dining",
+          atmosphere: "Copper light · round tables · unhurried",
+          description: "A warm room known for thoughtful substitutions, seasonal plates, and a table that feels prepared for the people arriving.",
+          menu: {
+            meal: ["Grilled chicken salad", "Steak board", "Vegetable risotto"],
+            drink: ["Sparkling water", "Sweet tea", "Berry fizz"],
+            dessert: ["Berry tart", "Chocolate torte", "No dessert"]
+          }
+        },
+        {
+          id: "cactus",
+          worldId: "garden-room",
+          name: "The Garden Room",
+          distance: "4.6 mi",
+          price: "$$$",
+          style: "Contemporary grill",
+          atmosphere: "Quiet · formal · familiar",
+          description: "A polished favorite of Grace’s, though tonight’s mushroom tasting menu makes it the predictable choice.",
+          menu: { meal: ["Grilled chicken salad"], drink: ["Unsweet tea"], dessert: ["Chocolate torte"] }
+        },
+        {
+          id: "azul",
+          worldId: "trailhead-smokehouse",
+          name: "Trailhead Smokehouse",
+          distance: "8.7 mi",
+          price: "$$",
+          style: "Barbecue",
+          atmosphere: "Lively · hearty · picnic tables",
+          description: "Ellis knows the portions by heart, but Emma and Grace came ready for a different kind of dinner.",
+          menu: { meal: ["Barbecue plate"], drink: ["Sweet tea"], dessert: ["Pudding"] }
+        }
+      ],
+      actualRestaurantId: "luna",
+      mystery: {
+        prompt: "Who quietly changed the chef’s special before The Party arrived?",
+        correctId: "emma-called-ahead",
+        options: [
+          { id: "emma-called-ahead", label: "Emma called ahead", detail: "She asked for a mushroom-free risotto so Grace could choose it herself." },
+          { id: "ellis-dessert-swap", label: "Ellis changed the card", detail: "He wanted the chef to replace the special with dessert." },
+          { id: "grace-removed-card", label: "Grace removed it", detail: "She quietly took the card away after sitting down." }
+        ],
+        solution: "Emma called before service. She did not choose Grace’s meal; she made sure Grace had a real choice."
+      },
+      diners: [
+        {
+          id: "emma",
+          name: characterName("emma"),
+          portraitId: world.getCharacter("emma").portraitId,
+          role: "The Adventurer",
+          intro: "Curious, playful, and learning that the best new choice can begin with somebody else.",
+          favorite: "Seafood, mocktails & something new",
+          funFact: "She photographed the restaurant before she photographed her plate.",
+          facts: ["Trying to eat healthier", "Chose tonight’s new restaurant", "Called the restaurant earlier"],
+          permission: "full",
+          permissionLabel: "Full case file shared",
+          preferences: ["Lighter entrées", "Sparkling drinks", "New restaurants"],
+          dislikes: ["Repeating yesterday’s cuisine"],
+          places: ["The Copper Table · newly saved", "Casa Luna · celebration memory"],
+          activity: [
+            { icon: "☎️", title: "Outgoing call", text: "Called a restaurant before service" },
+            { icon: "🔖", title: "Must Try", text: "Saved The Copper Table" },
+            { icon: "📷", title: "Photo", text: "Captured the copper lights before dinner" }
+          ],
+          clues: {
+            restaurant: "Emma wanted a genuinely new place that could handle one careful substitution.",
+            meal: "She said dinner can be adventurous without being heavy.",
+            drink: "She chose the simplest sparkling option.",
+            dessert: "She called the berry tart ‘research with a fork.’"
+          },
+          actual: { meal: "Grilled chicken salad", drink: "Sparkling water", dessert: "Berry tart" },
+          why: "Emma kept the entrée lighter, chose her familiar sparkling water, and shared a bright dessert after making sure everyone else had a real choice."
+        },
+        {
+          id: "ellis",
+          name: characterName("ellis"),
+          portraitId: world.getCharacter("ellis").portraitId,
+          role: "The Storyteller",
+          intro: "Good-humored, practical, and attempting a historic dessert-first strategy.",
+          favorite: "Hearty plates, sweet tea & dessert",
+          funFact: "He checked the dessert menu before asking about rolls.",
+          facts: ["Arrives hungry", "Loves dessert", "Recognizes a thoughtful plan"],
+          permission: "limited",
+          permissionLabel: "Some evidence shared",
+          preferences: ["Hearty entrées", "Sweet tea", "Chocolate dessert"],
+          dislikes: ["Tiny plates"],
+          places: ["Trailhead Smokehouse · regular", "Maple & Main · homecoming memory"],
+          activity: [
+            { icon: "🍰", title: "Menu view", text: "Opened the dessert section first" },
+            { icon: "🥖", title: "Table habit", text: "No roll inventory recorded yet" },
+            { icon: "📷", title: "Memory", text: "Saved the Willow Lake group photograph" }
+          ],
+          clues: {
+            restaurant: "Ellis needs a hearty option, but he agreed to let the new person’s comfort decide the room.",
+            meal: "He stopped reading after the steak board.",
+            drink: "His sweet-tea order has not changed.",
+            dessert: "For once, dessert came before the roll basket."
+          },
+          actual: { meal: "Steak board", drink: "Sweet tea", dessert: "Chocolate torte" },
+          why: "Ellis found the hearty plate and sweet tea he likes, then proved his dessert enthusiasm was more than talk."
+        },
+        {
+          id: "grace",
+          name: characterName("grace"),
+          portraitId: world.getCharacter("grace").portraitId,
+          role: "The Quiet Challenger",
+          intro: "Thoughtful, wry, and willing to try something new when the choice remains hers.",
+          favorite: "Roasted vegetables & careful substitutions",
+          funFact: "She can identify a mushroom recommendation before the sentence ends.",
+          facts: ["Enjoys trying new foods", "Dislikes mushrooms ordered for her", "Not interested in being managed"],
+          permission: "full",
+          permissionLabel: "Full case file shared",
+          preferences: ["Vegetable-forward meals", "Creative nonalcoholic drinks", "Clear substitutions"],
+          dislikes: ["Mushrooms ordered on her behalf"],
+          places: ["The Garden Room · familiar favorite", "The Copper Table · first visit"],
+          activity: [
+            { icon: "🌿", title: "Preference", text: "Saved vegetable-forward menus" },
+            { icon: "✍️", title: "Note", text: "Wrote: ‘new is good when it is still a choice’" },
+            { icon: "🥤", title: "Drink", text: "Viewed the berry fizz" }
+          ],
+          clues: {
+            restaurant: "Grace agreed to a new place only after Emma said the restaurant listens.",
+            meal: "The custom vegetable risotto removed the one ingredient she did not want.",
+            drink: "She chose the most adventurous alcohol-free drink.",
+            dessert: "She wanted to leave room to taste Ellis’s torte instead of ordering her own."
+          },
+          actual: { meal: "Vegetable risotto", drink: "Berry fizz", dessert: "No dessert" },
+          why: "Grace chose the risotto because the substitution preserved her agency, tried the berry fizz, and sampled dessert without being assigned one."
+        }
+      ],
+      stages: ["meal", "drink", "dessert"],
+      points: { restaurant: 120, meal: 30, drink: 20, dessert: 10 },
+      labels: { restaurant: "Mystery", meal: "Entrée", drink: "Drink", dessert: "Dessert" }
+    },
+    reveal: {
+      order: ["restaurant", "emma", "ellis", "grace", "celebration"],
+      restaurantExplanation: "Emma called The Copper Table before service. The restaurant removed the mushroom card and held a custom risotto—not to choose for Grace, but to give her a choice.",
+      correctRestaurant: "You noticed that the surprise began with Emma listening.",
+      incorrectRestaurant: "The missing card looked spontaneous, but the phone call happened before The Party arrived.",
+      endingCelebration: "Mystery solved: Emma planned with care, Grace tried something new on her own terms, and Ellis ordered the torte before anyone could mention rolls."
+    },
+    production: {
+      canonical: {
+        episodeTitle: "The Missing Mushroom",
+        restaurantId: "copper-table",
+        partyIds: ["pup", "emma", "ellis", "grace"],
+        centralMystery: "Who quietly changed the chef’s special before The Party arrived?",
+        requiredClueSceneIds: ["emma-plan", "ellis-dessert", "grace-choice", "host-note"],
+        solution: "Emma called ahead for a mushroom-free risotto so Grace could make her own adventurous choice.",
+        ending: "Grace takes the first bite, Emma puts down her camera, and Ellis orders one torte with four forks.",
+        continuityChanges: ["Emma becomes a more thoughtful planner.", "Grace joins The Party.", "Ellis openly chooses dessert."],
+        openingSceneId: "pup-unusual",
+        closingSceneId: "pup-close"
+      },
+      living: {
+        greetings: [
+          { id: "emma-camera", scene: { id: "living-greeting-emma-camera", kind: "conversation", speakerId: "emma", speaker: characterName("emma"), text: "Nobody touch the table yet. The copper light is doing something very cooperative.", emotion: "playful", cameraTarget: "emma" } },
+          { id: "ellis-reservation", scene: { id: "living-greeting-ellis-reservation", kind: "conversation", speakerId: "ellis", speaker: characterName("ellis"), text: "A round table, four forks, and no visible bread basket. I’m choosing optimism.", emotion: "dry", cameraTarget: "ellis" } },
+          { id: "grace-first-look", scene: { id: "living-greeting-grace-first-look", kind: "conversation", speakerId: "grace", speaker: characterName("grace"), text: "This is lovely. Emma, that sounded surprised because it was.", emotion: "wry", cameraTarget: "grace" } }
+        ],
+        banter: [
+          { id: "roll-jurisdiction", scene: { id: "living-banter-roll-jurisdiction", kind: "reaction", speakerId: "grace", speaker: characterName("grace"), text: "Do dessert inventory rules fall under the same jurisdiction as dinner rolls?", emotion: "amused", cameraTarget: "grace" } },
+          { id: "photo-evidence", scene: { id: "living-banter-photo-evidence", kind: "reaction", speakerId: "ellis", speaker: characterName("ellis"), text: "If Emma photographs the missing card, does that make it evidence or content?", emotion: "dry", cameraTarget: "ellis" } },
+          { id: "sushi-assumption", scene: { id: "living-banter-sushi-assumption", kind: "reaction", speakerId: "emma", speaker: characterName("emma"), text: "For once, nobody assumed sushi. I’m proud of the table.", emotion: "playful", cameraTarget: "emma" } }
+        ],
+        restaurantSpecials: [
+          { id: "rosemary-flatbread", title: "Chef’s welcome", text: "Rosemary flatbread with whipped herb butter." },
+          { id: "charred-peach-salad", title: "Tonight’s small plate", text: "Charred peach salad with toasted pecans." }
+        ],
+        environments: [
+          { id: "summer-rain", label: "Summer rain", text: "Rain taps softly against the windows while the copper lights warm the room.", className: "environment-rain" },
+          { id: "clear-courtyard", label: "Clear evening", text: "The courtyard doors are open and the last light settles across the round table.", className: "environment-clear" }
+        ],
+        optionalObservations: [
+          { id: "folded-card", scene: { id: "living-observation-folded-card", kind: "producer", speaker: "Producer", text: "Emma folded the handwritten menu card before Grace reached the table.", emotion: "observant", cameraTarget: "producer", memory: { type: "optional", label: "Emma handled the menu card before dinner" } } },
+          { id: "host-recognition", scene: { id: "living-observation-host-recognition", kind: "producer", speaker: "Producer", text: "The host greeted Emma by name even though she said this was her first dinner here.", emotion: "observant", cameraTarget: "producer", memory: { type: "optional", label: "The host recognized Emma from an earlier call" } } }
+        ],
+        clueOrders: [
+          { id: "people-first", sceneIds: ["emma-plan", "grace-choice", "ellis-dessert", "host-note"] },
+          { id: "joke-first", sceneIds: ["ellis-dessert", "emma-plan", "host-note", "grace-choice"] }
+        ]
+      },
+      media: {
+        characterPortraitIds: { pup: "portrait.pup", emma: "portrait.emma", ellis: "portrait.ellis", grace: "portrait.grace" },
+        restaurantImageIds: { primary: "restaurant.copper-table", alternativeA: "restaurant.garden-room", alternativeB: "restaurant.trailhead-smokehouse" },
+        foodImageIds: {
+          salad: "food.grilled-chicken-salad",
+          steak: "food.steak-board",
+          risotto: "food.vegetable-risotto",
+          sparklingWater: "food.sparkling-water",
+          sweetTea: "food.sweet-tea",
+          berryFizz: "food.berry-fizz",
+          berryTart: "food.berry-tart",
+          chocolateTorte: "food.chocolate-torte",
+          noDessert: "food.no-dessert"
+        },
+        audioClips: {
+          opening: "assets/audio/pup-episode3-opening.mp3",
+          mystery: "assets/audio/pup-episode3-mystery.mp3",
+          encouragement: "assets/audio/pup-episode3-encouragement.mp3",
+          memory: "assets/audio/pup-episode3-memory.mp3",
+          ending: "assets/audio/pup-episode3-ending.mp3"
+        },
+        captions: {
+          opening: "Hey! I’m Pup. Ready for another dinner adventure? Let’s see who’s joining The Party tonight!",
+          mystery: "Something feels a little unusual tonight. Keep your eyes open.",
+          encouragement: "Nice choice! I had a feeling you’d notice that.",
+          memory: "Dessert again? I’m starting to notice a pattern.",
+          ending: "Good food. Great friends. See you at the next table."
+        },
+        fallbackText: "Every spoken Pup line appears as visible text, and the full episode remains understandable without audio."
+      }
+    }
+  };
+
   const catalog = [
     { ...episode1.metadata, episode: episode1 },
     { ...episode2.metadata, episode: episode2 },
+    { ...episode3.metadata, episode: episode3 },
     {
-      id: "episode-003",
-      title: "The Midnight Breakfast",
-      subtitle: "A new table is being set",
+      id: "episode-004",
+      title: "The Dessert Alibi",
+      subtitle: "The next reservation is being confirmed",
       destination: "Coming Soon",
       seasonId: "season-001",
       artworkId: "scene.midnight-breakfast",
       artwork: world.assetSrc("scene.midnight-breakfast"),
       status: "coming-soon",
-      order: 3,
+      order: 4,
       tags: ["coming-soon"],
       episode: null
     }
@@ -737,6 +1157,7 @@
     const story = episode?.story;
     const gameplay = episode?.gameplay;
     const reveal = episode?.reveal;
+    const production = episode?.production;
     if (!metadata?.id || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(metadata.id)) errors.push("metadata.id must be a stable slug");
     if (!metadata?.title?.trim()) errors.push("metadata.title is required");
     if (!world.getSeason(metadata?.seasonId)) errors.push("metadata.seasonId must reference the Season Bible");
@@ -780,6 +1201,14 @@
       if (reference.optional !== true || reference.affectsGameplay !== false) {
         errors.push("continuity references must be optional and must not affect gameplay");
       }
+    }
+    if (!production?.canonical || !production?.living || !production?.media) {
+      errors.push("production must separate canonical, living, and media content");
+    }
+    if (metadata?.future?.livingEpisode) {
+      const livingValidation = root.RateMyBitesLivingEpisode?.validateEpisode?.(episode);
+      if (!livingValidation) errors.push("Living Episode validator must load before a living episode");
+      else errors.push(...livingValidation.errors);
     }
     errors.push(...artworkErrors(episode));
     return errors;
@@ -865,7 +1294,7 @@
   if (!catalogValidation.valid) throw new Error(`Invalid episode catalog: ${catalogValidation.errors.join("; ")}`);
 
   root.RateMyBitesEpisodes = Object.freeze({
-    schemaVersion: 2,
+    schemaVersion: 3,
     defaultEpisodeId: "episode-001",
     getCatalog,
     getEpisode,

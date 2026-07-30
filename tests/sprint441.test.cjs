@@ -152,8 +152,7 @@ ok(cssSource.includes('@media (prefers-reduced-motion: reduce)'), 'Sprint 4.4.1 
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
-const releaseMatch = /^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(releaseVersion);
-const releaseParts = releaseMatch ? releaseMatch.slice(1).map(Number) : null;
+const releaseParts = require('./version-helpers.cjs').parseVersion(releaseVersion);
 const minimumRelease = [0, 4, 4, 1];
 const isAtLeastMinimum = Boolean(releaseParts) && releaseParts.some((part, index) => {
   if (part !== minimumRelease[index]) return part > minimumRelease[index];

@@ -20,7 +20,7 @@ function currentEpisodeDefinition() { return window.RateMyBitesEpisodes.getEpiso
 function restaurantFor(id) { return restaurants.find(item => item.id === id); }
 function actualRestaurant() { return restaurantFor(actualRestaurantId); }
 function photo(url, alt, className = "") { return `<img class="${className}" src="${url}" alt="${escapeHtml(alt)}" loading="lazy">`; }
-function hostCard(text) { return `<div class="host-card">${photo(host.image, "Pup, Bite Buddy League host")}<div><strong>${host.name}, League Host</strong><p>${text}</p></div></div>`; }
+function hostCard(text) { return `<div class="host-card">${photo(host.image, "Pup, Host")}<div><strong>${host.name}, Host</strong><p>${text}</p></div></div>`; }
 function getBoard() { try { return JSON.parse(localStorage.getItem("rmb-taco-board-v2") || "[]"); } catch { return []; } }
 function getStats() { try { return JSON.parse(localStorage.getItem("rmb-taco-stats-v2") || "null") || { games: 0, highScore: 0, streak: 0, restaurantCorrect: 0, correct: { meal: 0, drink: 0, dessert: 0 }, attempts: { meal: 0, drink: 0, dessert: 0 } }; } catch { return { games: 0, highScore: 0, streak: 0, restaurantCorrect: 0, correct: { meal: 0, drink: 0, dessert: 0 }, attempts: { meal: 0, drink: 0, dessert: 0 } }; } }
 function percent(correct, total) { return total ? `${Math.round((correct / total) * 100)}%` : "—"; }

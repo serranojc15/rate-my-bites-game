@@ -60,11 +60,11 @@ vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
 const release = sandbox.window.BiteBuddyRelease;
 
 // Authoritative release identity — behavior remains valid for later releases.
-ok(/^v0\.4\.\d+\.\d+$/.test(release.version), 'authoritative release exposes a valid current version');
+ok(/^v\d+\.\d+\.\d+(?:\.\d+)?$/.test(release.version), 'authoritative release exposes a valid current version');
 ok(typeof release.releaseName === 'string' && release.releaseName.length > 0, 'release name is exposed');
-equal(release.displayLabel, `Bite Buddy League · ${release.version}`, 'display label follows current release');
+equal(release.displayLabel, `Rate My Bites Detective · ${release.version}`, 'display label follows current release');
 equal(release.apply(), true, 'release identity applies successfully');
-equal(document.title, `Rate My Bites — Bite Buddy League ${release.version}`, 'browser title uses current release');
+equal(document.title, `Rate My Bites Detective ${release.version}`, 'browser title uses current release');
 ok(badge.innerHTML.includes(release.version), 'floating badge uses current release');
 equal(badge.attributes['aria-hidden'], 'true', 'decorative floating badge is hidden from screen readers');
 equal(finalVersion.textContent, release.version, 'Final Reveal version is current');
@@ -75,10 +75,10 @@ equal(historyVersion.textContent, release.displayLabel, 'League History release 
 equal(livingVersion.textContent, `${release.version} · Living Conversations`, 'Living Conversations release label is current');
 ok(bodyClasses.has('release-ready'), 'release-ready state is installed');
 equal(release.apply(), true, 'repeated release installation is idempotent');
-equal(badge.innerHTML, `<span>Bite Buddy League</span><strong>${release.version}</strong>`, 'idempotent install does not duplicate badge content');
+equal(badge.innerHTML, `<span>Rate My Bites Detective</span><strong>${release.version}</strong>`, 'idempotent install does not duplicate badge content');
 
 // Script order and loading presentation.
-ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${release.version}</title>`), 'document fallback title is current');
+ok(html.includes(`<title>Rate My Bites Detective ${release.version}</title>`), 'document fallback title is current');
 ok(html.indexOf('release.js') < html.indexOf('app.js'), 'release identity loads before feature modules');
 ok(html.indexOf('sprint432.js') > html.indexOf('sprint431Polish.js'), 'Sprint 4.3.2 protection loads after Sprint 4.3.1');
 ok(html.includes('sprint432.css') && html.includes('sprint432.js'), 'Sprint 4.3.2 assets remain integrated');

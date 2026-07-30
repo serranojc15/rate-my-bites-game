@@ -78,6 +78,9 @@ jobs:
       - name: Run Sprint 3.1 tests
         run: node tests/sprint31.test.cjs
 
+      - name: Run Sprint 4 — The Party tests
+        run: node tests/sprint4Party.test.cjs
+
       - name: Run every test entry
         shell: bash
         run: |
@@ -111,9 +114,9 @@ jobs:
           vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
           const release = sandbox.window.BiteBuddyRelease;
           assert.ok(release, 'release.js exposes BiteBuddyRelease');
-          assert.match(release.version, /^v0\.4\.\d+\.\d+$/, 'authoritative release version is valid');
+          assert.match(release.version, /^v\d+\.\d+\.\d+(?:\.\d+)?$/, 'authoritative release version is valid');
           assert.ok(typeof release.releaseName === 'string' && release.releaseName.trim().length > 0, 'authoritative release name is non-empty');
-          assert.ok(indexSource.includes(`<title>Rate My Bites — Bite Buddy League ${release.version}</title>`), 'fallback title matches authoritative release version');
+          assert.ok(indexSource.includes(`<title>Rate My Bites Detective ${release.version}</title>`), 'fallback title matches authoritative release version');
           NODE
           grep -q 'installConversationAndSuspensePolish' sprint447.js
           grep -q 'installConversationScene' sprint447.js

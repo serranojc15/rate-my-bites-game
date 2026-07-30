@@ -142,7 +142,7 @@ function revealOpening() {
       <p>The table has made its choices.</p>
       <strong>There is only one question left.</strong>
     </div>
-    <div class="reveal-pup-spotlight">${photo(host.image, "Pup, Game Master")}<div><span>GAME MASTER</span><p>Were you right?</p></div></div>
+    <div class="reveal-pup-spotlight">${photo(host.image, "Pup, Host")}<div><span>HOST</span><p>Were you right?</p></div></div>
     <button class="primary-button reveal-primary" id="beginReveal">BEGIN THE REVEAL</button>
   </div>`, { className: "opening" });
   speakConversation?.("The investigation is complete. The evidence has been reviewed. There is only one question left. Were you right?");
@@ -220,7 +220,7 @@ function revealFinale(data) {
       <article><span>BIGGEST SURPRISE</span><strong>${escapeHtml(surprise.label)}</strong><p>${escapeHtml(surprise.detail)}</p></article>
       <article><span>EVIDENCE YOU TRUSTED</span><strong>${escapeHtml(trustedEvidenceLabel())}</strong><p>${state.storyMemory?.length || 0} story moments were captured before your prediction.</p></article>
     </div>
-    <div class="final-pup-speech">${photo(host.image, "Pup, Game Master")}<div><span>FINAL WORD</span><p>${state.score >= 270 ? "You did not just predict dinner. You understood the people choosing it." : data.restaurantCorrect ? "You found the restaurant. But the people still kept a few secrets." : "Sometimes the strongest clue is not the truest clue. Watch the people, then watch them again."}</p></div></div>
+    <div class="final-pup-speech">${photo(host.image, "Pup, Host")}<div><span>FINAL WORD</span><p>${state.score >= 270 ? "You did not just predict dinner. You understood the people choosing it." : data.restaurantCorrect ? "You found the restaurant. But the people still kept a few secrets." : "Sometimes the strongest clue is not the truest clue. Watch the people, then watch them again."}</p></div></div>
     <div class="final-actions">
       <button class="primary-button" id="playAnother">PLAY ANOTHER EPISODE</button>
       <button class="secondary-button" id="reviewCases">REVIEW CASE FILES</button>

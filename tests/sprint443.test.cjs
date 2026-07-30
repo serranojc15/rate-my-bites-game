@@ -199,7 +199,7 @@ vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
 ok(require('./version-helpers.cjs').isVersionAtLeast(releaseVersion, 'v0.4.4.3'), 'current release is Sprint 4.4.3 or later');
 ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is present');
-ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${releaseVersion}</title>`), 'browser fallback title is current');
+ok(html.includes(`<title>Rate My Bites Detective ${releaseVersion}</title>`), 'browser fallback title is current');
 ok(html.indexOf('sprint443.css') > html.indexOf('sprint442.css'), 'Sprint 4.4.3 CSS loads after Sprint 4.4.2');
 ok(html.indexOf('sprint443.js') > html.indexOf('sprint442.js'), 'Sprint 4.4.3 JavaScript loads after Sprint 4.4.2');
 ok(workflowSource.includes('node tests/sprint443ReleaseNeutral.test.cjs'), 'Static validation runs Sprint 4.4.3 tests');

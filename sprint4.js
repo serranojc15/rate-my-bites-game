@@ -76,7 +76,7 @@ function briefing() {
   const scenes = briefingScenes();
   const scene = scenes[state.briefingIndex] || scenes[0];
   const progressValue = Math.round(((state.briefingIndex + 1) / scenes.length) * 100);
-  const personVisual = scene.person ? `${photo(images.people[scene.person.id], scene.person.name, "briefing-person-photo")}<div class="briefing-person-meta"><span>${escapeHtml(scene.person.role)}</span><strong>${escapeHtml(scene.person.name)}</strong></div>` : `${photo(host.image, "Pup, mission commander", "briefing-pup")}<div class="briefing-person-meta"><span>Mission Commander</span><strong>Pup</strong></div>`;
+  const personVisual = scene.person ? `${photo(images.people[scene.person.id], scene.person.name, "briefing-person-photo")}<div class="briefing-person-meta"><span>${escapeHtml(scene.person.role)}</span><strong>${escapeHtml(scene.person.name)}</strong></div>` : `${photo(host.image, "Pup, Host", "briefing-pup")}<div class="briefing-person-meta"><span>Host</span><strong>Pup</strong></div>`;
   const confessionalClass = scene.kind === "confessional" ? "confessional-scene" : "";
 
   app.innerHTML = `<section class="mission-briefing ${confessionalClass}">
@@ -117,7 +117,7 @@ initialState = function () {
 };
 
 welcome = function () {
-  app.innerHTML = `<div class="hero sprint4-hero"><p class="eyebrow">Bite Buddy League · Sprint 4.2</p><div class="show-logo"><span>🎬</span><div><strong>The Living Dinner</strong><small>Game Master: Pup</small></div></div><h1>Every dinner<br>is an episode.</h1><p class="lead">Enter a cinematic mission briefing, meet tonight’s diners, and investigate the story before the first prediction.</p><div class="episode-card"><span>Tonight’s episode</span><strong>${sprint4Episode.title}</strong><small>${sprint4Episode.subtitle}</small></div><button class="primary-button wide" id="start">Create Simulation Game</button>${hallOfFame()}</div>`;
+  app.innerHTML = `<div class="hero sprint4-hero"><p class="eyebrow">Rate My Bites Detective</p><div class="show-logo"><span>🎬</span><div><strong>The Living Dinner</strong><small>Host: Pup</small></div></div><h1>Every dinner<br>is an episode.</h1><p class="lead">Enter a cinematic dinner, meet tonight’s diners, and investigate the story before the first prediction.</p><div class="episode-card"><span>Tonight’s episode</span><strong>${sprint4Episode.title}</strong><small>${sprint4Episode.subtitle}</small></div><button class="primary-button wide" id="start">Begin Dinner</button>${hallOfFame()}</div>`;
   document.querySelector("#start").onclick = () => { state.screen = "planner"; render(); };
 };
 

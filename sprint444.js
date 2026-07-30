@@ -264,7 +264,7 @@
         <div><span>Restaurant result</span><strong>${restaurant.correct ? "✓ Correct" : "✕ Incorrect"} · ${restaurant.earned} / ${restaurant.possible}</strong></div>
       </section>
       <p class="final-continuity-copy">Restaurant score already secured. Nine order predictions are locked. No restaurant vote will be replayed.</p>
-      <div class="final-pup-speech">${photo(host.image, "Pup, Game Master")}<div><span>GAME MASTER</span><p>The restaurant is settled. Nine order predictions remain to be judged.</p></div></div>
+      <div class="final-pup-speech">${photo(host.image, "Pup, Host")}<div><span>HOST</span><p>The restaurant is settled. Nine order predictions remain to be judged.</p></div></div>
       <button class="primary-button reveal-primary" id="revealFirstDiner" type="button">Reveal ${escapeHtml(report.personResults[0]?.person?.name || "First Diner")}</button>
     </div>`, report, "continuity-opening");
     bindGlobalRevealControls();
@@ -313,7 +313,7 @@
       <div class="final-answer-grid">${result.answers.map(answerCardMarkup).join("")}</div>
       <section class="final-diner-subtotal" aria-label="${escapeHtml(result.person.name)} subtotal"><span>${escapeHtml(result.person.name)} total</span><strong>${result.pointsEarned} / ${result.pointsPossible}</strong></section>
       <section class="final-diner-explanation"><h2>Why ${escapeHtml(result.person.name)} chose this</h2><p>${escapeHtml(result.caseNote)}</p></section>
-      <div class="final-pup-speech">${photo(host.image, "Pup, Game Master")}<div><span>CALIBRATION READ</span><p>${escapeHtml(meaningfulCalibration(result))}</p></div></div>
+      <div class="final-pup-speech">${photo(host.image, "Pup, Host")}<div><span>CALIBRATION READ</span><p>${escapeHtml(meaningfulCalibration(result))}</p></div></div>
       <button class="primary-button reveal-primary" id="revealNextDiner" type="button">${next ? `Reveal ${escapeHtml(next)}` : "See Final Case Score"}</button>
     </div>`;
   }
@@ -431,7 +431,7 @@
       <p class="verdict-subtitle">${escapeHtml(report.verdict.subtitle)}</p>
       ${categoryBreakdownMarkup(report)}
       <div class="final-takeaway-grid">${takeawayMarkup(best, "best")}${takeawayMarkup(misread, misread.title === "Biggest Misread" ? "misread" : "closest")}</div>
-      <div class="final-pup-speech">${photo(host.image, "Pup, Game Master")}<div><span>FINAL WORD</span><p>${escapeHtml(report.pupDebrief)}</p></div></div>
+      <div class="final-pup-speech">${photo(host.image, "Pup, Host")}<div><span>FINAL WORD</span><p>${escapeHtml(report.pupDebrief)}</p></div></div>
       <div class="final-actions final-actions-444">
         <button class="primary-button" id="viewMissionReport" type="button">View Mission Report</button>
         <button class="secondary-button" id="reviewEveryAnswer" type="button">Review Every Answer</button>

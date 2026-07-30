@@ -197,8 +197,8 @@ function perfectReport() {
   const doc = { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } };
   const sandbox = { window: { document: doc } };
   vm.runInNewContext(releaseSource, sandbox, { filename: 'release.js' });
-  const versionParts = sandbox.window.BiteBuddyRelease.version.match(/^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/)?.slice(1).map(Number);
-  ok(Boolean(versionParts), 'release exposes a valid four-part version');
+  const versionParts = require('./version-helpers.cjs').parseVersion(sandbox.window.BiteBuddyRelease.version);
+  ok(Boolean(versionParts), 'release exposes a valid semantic version');
   ok(versionParts[0] > 0 || versionParts[1] > 4 || (versionParts[1] === 4 && versionParts[2] >= 4), 'current release is Detective Progression or later');
   ok(typeof sandbox.window.BiteBuddyRelease.releaseName === 'string' && sandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is exposed');
   ok(uiSource.includes('detective-profile-panel'), 'home detective profile panel is implemented');

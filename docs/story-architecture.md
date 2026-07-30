@@ -2,6 +2,11 @@
 
 This document is the internal contract for building the game as an ongoing television-style series without coupling story content to gameplay code.
 
+Sprint 4 extends the hierarchy with the permanent Character Bible
+(`characterBible.js`), Voice Bible (`voiceBible.js`), Season 1 Bible
+(`season1Bible.js`), and explicit canonical/living/media production layers
+(`livingEpisode.js`). See `episode-production-framework.md`.
+
 ## Content hierarchy
 
 ```mermaid
@@ -23,7 +28,7 @@ The Series defines the durable premise: recurring friends, gathering places, sha
 A Season groups a location and period of the friends’ lives. Its record owns:
 
 - stable ID, title, location, and description
-- main and recurring cast IDs
+- permanent and guest Party IDs
 - restaurant IDs
 - ordered episode timeline
 - private story notes
@@ -35,7 +40,7 @@ Sprint 3.1 implements only `season-001` (Huntsville and North Alabama). Future l
 An Episode is a complete, optional mystery. It owns:
 
 - series metadata and Season membership
-- cast IDs and canonical Character Bible references
+- attending Party IDs and canonical Character Bible references
 - briefing, ordered scenes, clue moments, and emotional ending
 - restaurant/menu choices and answer truth
 - reveal language, completion payoff, and teaser
@@ -61,13 +66,18 @@ The Reveal judges the existing predictions, explains the people’s choices, pre
 
 ## Canonical Bibles
 
-`worldBible.js` is the single source of truth for:
+`worldBible.js` is the foundational source of truth for:
 
 - Series and Seasons
 - recurring and guest characters
 - recurring restaurants
 - all production artwork
 - preserved Fresh Variant artwork manifests
+
+`characterBible.js` expands those fixed identities into complete Party profiles,
+`voiceBible.js` provides a permanent voice profile for each person, and
+`season1Bible.js` owns Season 1 continuity. The production framework is documented in
+`docs/episode-production-framework.md`.
 
 Character fields include identity, fixed portrait, home city, occupation, personality, food/drink preferences, signature order, relationships, running jokes, appearances, notes, and future ideas. Restaurant fields include identity, fixed artwork, signature dishes, traditions, jokes, appearances, and notes.
 
@@ -84,11 +94,13 @@ Continuity is optional flavor, never a dependency:
 
 ## Data flow
 
-1. `worldBible.js` validates canonical people, places, seasons, and assets.
-2. `episodes.js` resolves canonical names and artwork paths, then validates story/gameplay alignment.
-3. `multiEpisode.js` selects the episode and resolves optional continuity from existing completion IDs.
-4. The historical engine runs unchanged scoring, predictions, reveals, persistence, and progression.
-5. `sprint31.js` renders the shared completion experience and navigation.
+1. `worldBible.js`, `characterBible.js`, `voiceBible.js`, and `season1Bible.js` validate canonical people, places, voices, continuity, and assets.
+2. `episodes.js` resolves canonical names and artwork paths, then validates story/gameplay alignment and canonical/living/media separation.
+3. `livingEpisode.js` deterministically materializes only approved living details.
+4. `multiEpisode.js` selects the episode and resolves optional continuity from existing completion IDs.
+5. `storyMemory.js` preserves the active variation set and gentle player signals locally.
+6. The historical engine runs unchanged scoring, predictions, reveals, and progression.
+7. `sprint31.js` renders the shared completion experience and navigation.
 
 ## Authoring boundaries
 

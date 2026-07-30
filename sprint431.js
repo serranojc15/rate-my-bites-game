@@ -245,10 +245,10 @@
 
   const presets = Object.freeze({
     "system-default": { label: "System Default", rate: 1, pitch: 1 },
-    "warm-narrator": { label: "Warm Narrator", rate: 0.92, pitch: 0.98 },
-    "deep-detective": { label: "Deep Detective", rate: 0.88, pitch: 0.78 },
+    "warm-narrator": { label: "Warm Host", rate: 0.92, pitch: 0.98 },
+    "deep-detective": { label: "Low-Key Host", rate: 0.88, pitch: 0.78 },
     "friendly-host": { label: "Friendly Host", rate: 1, pitch: 1.08 },
-    "dramatic-game-master": { label: "Dramatic Game Master", rate: 0.84, pitch: 0.9 }
+    "dramatic-game-master": { label: "Dinner Host", rate: 0.84, pitch: 0.9 }
   });
   const defaults = { enabled: true, preset: "warm-narrator", voiceURI: "", rate: 0.92, pitch: 0.98, volume: 1 };
   const clamp = (value, min, max, fallback) => Number.isFinite(Number(value)) ? Math.min(max, Math.max(min, Number(value))) : fallback;

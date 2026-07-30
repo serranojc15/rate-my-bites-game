@@ -2,15 +2,21 @@
 
 The episode engine is intentionally small. A new episode should require one definition, one catalog registration, approved assets when needed, and validation—not a copy of the game engine.
 
+Before authoring new content, read `episode-production-framework.md`,
+`character-bible.md`, `voice-bible.md`, and `season-1-bible.md`.
+
 ## File locations
 
 - Episode definitions and the centralized catalog: `episodes.js`
-- Series, Season, Character, Restaurant, and artwork Bibles: `worldBible.js`
+- Series, Restaurant, foundational identity, and artwork Bible: `worldBible.js`
+- Permanent Character, Voice, and Season 1 Bibles: `characterBible.js`, `voiceBible.js`, and `season1Bible.js`
+- Deterministic living-content selection: `livingEpisode.js`
+- Story/player memory: `storyMemory.js`
 - Catalog validation: `episodes.js`
-- Build-time artwork validation: `scripts/validate-assets.cjs`
+- Build-time production media and canon validation: `scripts/validate-assets.cjs`
 - Browser progress schema: `episodeProgress.js`
 - Episode selection and runtime loading: `multiEpisode.js`
-- Focused tests: `tests/episodes.test.cjs` and `tests/sprint31.test.cjs`
+- Focused tests: `tests/episodes.test.cjs`, `tests/sprint31.test.cjs`, and `tests/sprint4Party.test.cjs`
 - Story standards: `docs/story-bible.md`
 - Content hierarchy: `docs/story-architecture.md`
 
@@ -22,9 +28,10 @@ The episode engine is intentionally small. A new episode should require one defi
 4. Copy an approved playable episode definition in `episodes.js`.
 5. Assign a stable ID such as `episode-003`. Never use the title as a persistence key.
 6. Write metadata, story, gameplay truth, reveal copy, completion copy, and optional continuity.
-7. Register the definition once in the `catalog` array.
-8. Run artwork, catalog, and regression validation.
-9. Play the entire episode at desktop, narrow/mobile, and landscape sizes.
+7. Separate canonical, living, and media content. A non-living legacy episode may use an empty, disabled living layer.
+8. Register the definition once in the `catalog` array.
+9. Run production, catalog, variation, persistence, audio, and regression validation.
+10. Play the entire episode at desktop, narrow/mobile, and landscape sizes.
 
 ## Required fields
 
@@ -34,6 +41,7 @@ A playable definition requires:
 - `story.host`, `castIds`, `briefing.opening`, `briefing.people`, `scenes`, `missionText`, `finaleClues`, `ending`, and `completion`
 - `gameplay.assetIds`, `images`, `restaurants`, `actualRestaurantId`, `diners`, `stages`, `points`, and `labels`
 - `reveal.order`, `restaurantExplanation`, `correctRestaurant`, `incorrectRestaurant`, and `endingCelebration`
+- `production.canonical`, `production.living`, and `production.media`
 
 Tags, `metadata.future`, and `story.continuity` are optional and do not affect gameplay.
 
@@ -127,6 +135,7 @@ node scripts/validate-assets.cjs
 node --check episodes.js
 node tests/episodes.test.cjs
 node tests/sprint31.test.cjs
+node tests/sprint4Party.test.cjs
 ```
 
 Run the repository’s complete static validation commands from `.github/workflows/static-validation.yml` before committing.

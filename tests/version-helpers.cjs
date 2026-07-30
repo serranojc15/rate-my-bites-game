@@ -1,12 +1,12 @@
 'use strict';
 
-const VERSION_PATTERN = /^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/;
+const VERSION_PATTERN = /^v(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?$/;
 
 function parseVersion(value) {
   if (typeof value !== 'string') return null;
   const match = VERSION_PATTERN.exec(value);
   if (!match) return null;
-  return match.slice(1).map(Number);
+  return [Number(match[1]), Number(match[2]), Number(match[3]), Number(match[4] || 0)];
 }
 
 function compareVersions(left, right) {
