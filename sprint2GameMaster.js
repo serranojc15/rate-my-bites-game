@@ -89,7 +89,7 @@
     if (current.screen === "restaurant") {
       setHostCopy(
         "You’ve heard everyone’s perspective. Now trust your instincts. Where do you think this group will choose for dinner?",
-        "Pup, Game Master"
+        "Pup, Host"
       );
       root.document.querySelector(".section-heading")?.classList.add("game-master-question");
     }

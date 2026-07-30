@@ -136,11 +136,11 @@ ok(appSource.includes('confidenceControl(person.id, stage)'), 'diner confidence 
 const releaseSandbox = { window: { document: { title: '', body: { classList: { add() {} } }, querySelector() { return null; }, querySelectorAll() { return []; } } } };
 vm.runInNewContext(releaseSource, releaseSandbox, { filename: 'release.js' });
 const releaseVersion = releaseSandbox.window.BiteBuddyRelease.version;
-const versionParts = releaseVersion.match(/^v(\d+)\.(\d+)\.(\d+)\.(\d+)$/)?.slice(1).map(Number);
-ok(Boolean(versionParts), 'current release exposes a valid four-part version');
+const versionParts = require('./version-helpers.cjs').parseVersion(releaseVersion);
+ok(Boolean(versionParts), 'current release exposes a valid semantic version');
 ok(versionParts[0] > 0 || versionParts[1] > 4 || (versionParts[1] === 4 && (versionParts[2] > 4 || (versionParts[2] === 4 && versionParts[3] >= 2))), 'current release is Restaurant Decision Polish or later');
 ok(typeof releaseSandbox.window.BiteBuddyRelease.releaseName === 'string' && releaseSandbox.window.BiteBuddyRelease.releaseName.length > 0, 'current release name is exposed');
-ok(html.includes(`<title>Rate My Bites — Bite Buddy League ${releaseVersion}</title>`), 'browser fallback title matches current release');
+ok(html.includes(`<title>Rate My Bites Detective ${releaseVersion}</title>`), 'browser fallback title matches current release');
 ok(html.indexOf('sprint442.css') > html.indexOf('sprint441Polish.css'), 'Sprint 4.4.2 CSS loads after Sprint 4.4.1 polish');
 ok(html.indexOf('sprint442.js') > html.indexOf('sprint441Polish.js'), 'Sprint 4.4.2 JavaScript loads after Sprint 4.4.1 polish');
 ok(workflowSource.includes('node tests/sprint442.test.cjs'), 'Static validation runs Sprint 4.4.2 tests');

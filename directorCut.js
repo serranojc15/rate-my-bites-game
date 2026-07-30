@@ -12,7 +12,7 @@ livingDinnerStory.events = cloneEpisodeValue(initialEpisodeDefinition.story.scen
 const directorCutLabels = {
   conversation: "DINNER CONVERSATION",
   reaction: "REACTION SHOT",
-  pup: "GAME MASTER",
+  pup: "HOST MOMENT",
   producer: "OFF-CAMERA QUESTION",
   confessional: "CONFESSIONAL",
   interruption: "NEW EVIDENCE"
@@ -116,7 +116,7 @@ conversationFinale = function () {
       ${finaleClues.map((clue, index) => `<article><span>${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtml(clue.title)}</strong><p>${escapeHtml(clue.text)}</p></article>`).join("")}
     </div>
     <div class="finale-read"><span>Your restaurant read</span><strong>${read}/5</strong><div>${Array.from({ length: 5 }, (_, i) => `<i class="${i < read ? "active" : ""}"></i>`).join("")}</div></div>
-    <div class="finale-pup director-pup">${photo(host.image, "Pup, Game Master")}<div><span>GAME MASTER</span><p><strong>Pup:</strong> You've already seen every clue. The answer has been hiding in plain sight.</p><em>Did you notice?</em></div></div>
+    <div class="finale-pup director-pup">${photo(host.image, "Pup, Host")}<div><span>HOST</span><p><strong>Pup:</strong> You've already seen every clue. The answer has been hiding in plain sight.</p><em>Did you notice?</em></div></div>
     <button class="primary-button finale-button" id="makeTheCall">MAKE THE CALL</button>
   </section>`;
   speakConversation("The room has shifted. You've already seen every clue. The answer has been hiding in plain sight. Did you notice? Make the call.");

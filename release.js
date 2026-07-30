@@ -1,12 +1,12 @@
-// Bite Buddy League — authoritative current application release identity.
+// Rate My Bites Detective — authoritative current application release identity.
 // Historical feature modules may keep their introduction versions, but active UI
 // must obtain the running release from this single public interface.
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.4.6.1";
-  const RELEASE_NAME = "Series Polish & World Bible";
-  const DISPLAY_LABEL = `Bite Buddy League · ${VERSION}`;
+  const VERSION = "v0.5.0";
+  const RELEASE_NAME = "The Party";
+  const DISPLAY_LABEL = `Rate My Bites Detective · ${VERSION}`;
 
   function each(selector, callback) {
     if (!root.document?.querySelectorAll) return;
@@ -21,11 +21,11 @@
     const document = root.document;
     if (!document) return false;
 
-    document.title = `Rate My Bites — Bite Buddy League ${VERSION}`;
+    document.title = `Rate My Bites Detective ${VERSION}`;
 
     const badge = document.querySelector?.("#directorCutBuild");
     if (badge) {
-      badge.innerHTML = `<span>Bite Buddy League</span><strong>${VERSION}</strong>`;
+      badge.innerHTML = `<span>Rate My Bites Detective</span><strong>${VERSION}</strong>`;
       badge.setAttribute?.("aria-hidden", "true");
     }
 
@@ -37,11 +37,11 @@
     setText(".living-toolbar > div:first-child > span", `${VERSION} · Living Conversations`);
 
     each(".final-reveal-version", element => {
-      element.setAttribute?.("aria-label", `Bite Buddy League ${VERSION}, The Final Reveal`);
+      element.setAttribute?.("aria-label", `Rate My Bites Detective ${VERSION}, The Final Reveal`);
     });
     each(".director-version", element => {
       const featureName = element.querySelector?.("span")?.textContent || "Director's Cut";
-      element.setAttribute?.("aria-label", `Bite Buddy League ${VERSION}, ${featureName}`);
+      element.setAttribute?.("aria-label", `Rate My Bites Detective ${VERSION}, ${featureName}`);
     });
 
     document.body?.classList?.add("release-ready");

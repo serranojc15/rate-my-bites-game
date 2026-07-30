@@ -122,7 +122,7 @@
       </header>
 
       <section class="episode-complete-pup" aria-label="Pup congratulates the player">
-        ${photo(host.image, "Pup, Game Master")}
+        ${photo(host.image, "Pup, Host")}
         <div><span>Pup</span><p>${safe(model.mascotMessage)}</p></div>
       </section>
 

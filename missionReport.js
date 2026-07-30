@@ -581,7 +581,7 @@ function renderMissionReport() {
         <div><span>Episode</span><strong>${escapeHtml(String(report.episode.number).padStart(3, "0"))} · ${escapeHtml(report.episode.title)}</strong></div>
         <div><span>Investigation date</span><strong>${escapeHtml(report.episode.date)}</strong></div>
         <div><span>Lead Investigator</span><strong>${escapeHtml(report.investigator.firstName)}</strong></div>
-        <div><span>Game Master</span><strong>Pup</strong></div>
+        <div><span>Host</span><strong>Pup</strong></div>
       </div>
       <div class="mission-verdict ${escapeHtml(report.verdict.className)}">
         <div>
@@ -606,9 +606,9 @@ function renderMissionReport() {
     </section>
 
     <section class="mission-section mission-pup-debrief" aria-labelledby="missionDebriefTitle">
-      ${photo(host.image, "Pup, Game Master")}
+      ${photo(host.image, "Pup, Host")}
       <div>
-        <span>Game Master Debrief</span>
+        <span>Host Debrief</span>
         <h2 id="missionDebriefTitle">Pup's assessment</h2>
         <p>${escapeHtml(report.pupDebrief)}</p>
       </div>

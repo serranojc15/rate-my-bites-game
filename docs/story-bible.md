@@ -49,7 +49,7 @@ Restaurants are recurring gathering places with identities of their own. Canonic
 
 Confirmed current behavior:
 
-- Pup is the Game Master and warm detective guide.
+- Pup is the Host: warm, welcoming, and helpful without becoming the detective or narrator.
 - Pup frames the mission, notices shifts in the room, and encourages the player.
 - Pup does not give away the correct answer.
 - Pup can be lightly playful, but the diners remain the emotional center.

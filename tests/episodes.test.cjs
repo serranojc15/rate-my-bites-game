@@ -21,7 +21,16 @@ const window = { localStorage: new MemoryStorage() };
 window.window = window;
 const sandbox = { window, console };
 vm.createContext(sandbox);
-for (const file of ["worldBible.js", "episodes.js", "episodeProgress.js", "multiEpisode.js"]) {
+for (const file of [
+  "worldBible.js",
+  "characterBible.js",
+  "voiceBible.js",
+  "season1Bible.js",
+  "livingEpisode.js",
+  "episodes.js",
+  "episodeProgress.js",
+  "multiEpisode.js"
+]) {
   vm.runInContext(fs.readFileSync(file, "utf8"), sandbox, { filename: file });
 }
 
@@ -33,20 +42,23 @@ const playable = catalog.filter(entry => entry.status === "playable");
 const comingSoon = catalog.filter(entry => entry.status === "coming-soon");
 const episode1 = episodes.getEpisode("episode-001");
 const episode2 = episodes.getEpisode("episode-002");
+const episode3 = episodes.getEpisode("episode-003");
 
 // Catalog and validation.
 ok(episodes, "episode API is exposed");
-equal(episodes.schemaVersion, 2, "episode schema is versioned");
-equal(playable.length, 2, "catalog exposes two playable episodes");
-deepEqual(playable.map(entry => entry.id), ["episode-001", "episode-002"], "playable episodes keep catalog order");
+equal(episodes.schemaVersion, 3, "episode schema is versioned");
+equal(playable.length, 3, "catalog exposes three playable episodes");
+deepEqual(playable.map(entry => entry.id), ["episode-001", "episode-002", "episode-003"], "playable episodes keep catalog order");
 equal(comingSoon.length, 1, "catalog exposes one Coming Soon entry");
 equal(comingSoon[0].episode, null, "Coming Soon has no playable definition");
 equal(new Set(catalog.map(entry => entry.id)).size, catalog.length, "catalog IDs are unique");
 equal(episodes.validateCatalog().valid, true, "catalog validation passes");
 equal(episodes.validateEpisode(episode1).valid, true, "Episode 1 passes validation");
 equal(episodes.validateEpisode(episode2).valid, true, "Episode 2 passes validation");
+equal(episodes.validateEpisode(episode3).valid, true, "Episode 3 passes validation");
 equal(episodes.assertValidEpisode(episode1), true, "Episode 1 assertion passes");
 equal(episodes.assertValidEpisode(episode2), true, "Episode 2 assertion passes");
+equal(episodes.assertValidEpisode(episode3), true, "Episode 3 assertion passes");
 equal(episodes.validateEpisode({}).valid, false, "an incomplete episode fails validation");
 ok(episodes.validateEpisode({}).errors.length >= 8, "invalid definitions fail with useful field errors");
 
@@ -95,7 +107,8 @@ ok(!payload2.answers.emma, "Episode 1 answers do not leak into Episode 2");
 ok(!payload1.answers.june, "Episode 2 answers do not leak into Episode 1");
 equal(runtime.canLaunch("episode-001"), true, "Episode 1 can launch");
 equal(runtime.canLaunch("episode-002"), true, "Episode 2 can launch");
-equal(runtime.canLaunch("episode-003"), false, "Coming Soon cannot launch");
+equal(runtime.canLaunch("episode-003"), true, "Episode 3 can launch");
+equal(runtime.canLaunch("episode-004"), false, "Coming Soon cannot launch");
 equal(runtime.canLaunch("unknown"), false, "unknown episodes cannot launch");
 const isolated = episodes.getEpisode("episode-002");
 isolated.gameplay.diners[0].name = "Changed";

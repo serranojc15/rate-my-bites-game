@@ -13,7 +13,7 @@
   });
 
   const assets = {
-    "portrait.pup": approved("portrait.pup", "portrait", "pup", "assets/buddies/buddy-dog.webp", "Pup, the Rate My Bites mystery host"),
+    "portrait.pup": approved("portrait.pup", "portrait", "pup", "assets/buddies/buddy-dog.webp", "Pup, the Rate My Bites Host"),
     "portrait.emma": approved("portrait.emma", "portrait", "emma", "assets/characters/emma.webp", "Emma smiling in a red top"),
     "portrait.marcus": approved("portrait.marcus", "portrait", "marcus", "assets/characters/marcus.webp", "Marcus in a gray sweater"),
     "portrait.olivia": approved("portrait.olivia", "portrait", "olivia", "assets/characters/olivia.webp", "Olivia looking toward the camera"),
@@ -45,6 +45,7 @@
     "restaurant.pier-nine": approved("restaurant.pier-nine", "restaurant", "pier-nine", "assets/restaurants/pier-nine.webp", "The marina deck at Pier Nine"),
     "restaurant.market-house": approved("restaurant.market-house", "restaurant", "market-house", "assets/restaurants/market-house.webp", "The casual counter at Market House"),
     "restaurant.garden-room": approved("restaurant.garden-room", "restaurant", "garden-room", "assets/restaurants/garden-room.webp", "The softly lit dining room at The Garden Room"),
+    "restaurant.copper-table": approved("restaurant.copper-table", "restaurant", "copper-table", "assets/restaurants/copper-table.webp", "The warm copper-lit dining room at The Copper Table"),
     "restaurant.olive-oak": approved("restaurant.olive-oak", "restaurant", "olive-oak", "assets/restaurants/olive-oak.webp", "The warm dining room at Olive & Oak"),
     "restaurant.corner-cafe": approved("restaurant.corner-cafe", "restaurant", "corner-cafe", "assets/restaurants/corner-cafe.webp", "The neighborhood counter at Corner Café"),
 
@@ -149,7 +150,7 @@
       name: "Pup",
       portraitId: "portrait.pup",
       homeCity: "Huntsville",
-      occupation: "Mystery host and table-side detective",
+      occupation: "Host",
       personality: ["observant", "encouraging", "quietly theatrical"],
       favoriteFoods: ["anything shared after a solved case"],
       leastFavoriteFoods: ["cold clues"],
@@ -158,8 +159,8 @@
       signatureOrder: "The truth, followed by dessert",
       relationships: { group: "The trusted host who makes every player feel invited." },
       runningJokes: ["Treats dinner decisions like high-stakes detective work."],
-      episodeAppearances: ["episode-001", "episode-002"],
-      notes: "Pup guides the player without solving the mystery for them.",
+      episodeAppearances: ["episode-001", "episode-002", "episode-003"],
+      notes: "Pup is the Host. He welcomes the player and supports the dinner without narrating every screen or solving the mystery.",
       futureStoryIdeas: ["Introduce Baby Bite only in a future scoped sprint."]
     },
     emma: {
@@ -176,7 +177,7 @@
       signatureOrder: "Something new, photographed before the first bite",
       relationships: { marcus: "Longtime friend and favorite debate partner", olivia: "Trusts her to keep the group together" },
       runningJokes: ["Everyone assumes she will order sushi.", "She photographs the evidence before eating it."],
-      episodeAppearances: ["episode-001"],
+      episodeAppearances: ["episode-001", "episode-003"],
       notes: "Her curiosity is real; her unpredictability is partly for fun.",
       futureStoryIdeas: ["Let her confidently recommend a restaurant that surprises the group."]
     },
@@ -248,7 +249,7 @@
       signatureOrder: "The heartiest entrée and an accurate roll inventory",
       relationships: { june: "Childhood friend whose stories he edits for dramatic accuracy", priya: "Respects how she gets everyone to the same table" },
       runningJokes: ["Calls dinner rolls the warm-up course.", "Denies caring about the old fishing photograph."],
-      episodeAppearances: ["episode-002"],
+      episodeAppearances: ["episode-002", "episode-003"],
       notes: "His jokes hide affection, never contempt.",
       futureStoryIdeas: ["Let the terrible fishing picture unexpectedly solve a clue."]
     },
@@ -284,9 +285,9 @@
       signatureOrder: "A familiar favorite with one carefully negotiated substitution",
       relationships: { ben: "Old friend and enthusiastic source of unsolicited menu advice" },
       runningJokes: ["Says she is never ordering mushrooms again."],
-      episodeAppearances: [],
-      notes: "Reserved recurring character. Her portrait is fixed before her first playable appearance.",
-      futureStoryIdeas: ["Let the mushroom joke begin as optional continuity, never required context."]
+      episodeAppearances: ["episode-003"],
+      notes: "Grace enjoys trying new foods when the choice remains hers. Her mushroom boundary is humorous continuity, never an allergy or a puzzle penalty.",
+      futureStoryIdeas: ["Let Grace become the confident person who encourages someone else to try a new dish."]
     },
     ben: {
       id: "ben",
@@ -439,12 +440,13 @@
     "dockside-basket": restaurant("dockside-basket", "Dockside Basket", "restaurant.dockside-basket", "A quick, casual marina counter.", ["Fish basket"], ["episode-002"], "Great for a stop; less suited to a long reunion."),
     "juniper-room": restaurant("juniper-room", "The Juniper Room", "restaurant.juniper-room", "A quiet, polished room with precise seasonal plates.", ["Seasonal plate"], ["episode-002"], "An occasion restaurant with a formal rhythm."),
     "hearthstone-cafe": restaurant("hearthstone-cafe", "Hearthstone Café", "restaurant.hearthstone-cafe", "A small neighborhood café with comforting bowls.", ["Soup", "Cake"], ["episode-002"], "Cozy, familiar, and intimate."),
-    "trailhead-smokehouse": restaurant("trailhead-smokehouse", "Trailhead Smokehouse", "restaurant.trailhead-smokehouse", "Big smoked plates in a lively room outside town.", ["Barbecue plate"], ["episode-002"], "An Ellis favorite."),
+    "trailhead-smokehouse": restaurant("trailhead-smokehouse", "Trailhead Smokehouse", "restaurant.trailhead-smokehouse", "Big smoked plates in a lively room outside town.", ["Barbecue plate"], ["episode-002", "episode-003"], "An Ellis favorite."),
     "lantern-market": restaurant("lantern-market", "Lantern Market", "restaurant.lantern-market", "A bright food hall with many independent counters.", ["Market bowl"], ["episode-002"], "Plenty of choice, but no single shared meal."),
     "harbor-hearth": restaurant("harbor-hearth", "Harbor & Hearth", "restaurant.harbor-hearth", "A water-view gathering place with generous plates and a sunset patio.", ["Herb roast chicken", "Braised short rib"], ["episode-001"], "Established Fresh Variant B gathering place."),
     "pier-nine": restaurant("pier-nine", "Pier Nine", "restaurant.pier-nine", "A polished seafood room overlooking the marina.", ["Grilled salmon"], ["episode-001"], "Established Fresh Variant B alternative."),
     "market-house": restaurant("market-house", "Market House", "restaurant.market-house", "A bright, casual counter-service room.", ["Chicken bowl"], ["episode-001"], "Established Fresh Variant B alternative."),
-    "garden-room": restaurant("garden-room", "The Garden Room", "restaurant.garden-room", "A contemporary grill with a celebratory dining room.", ["Grilled chicken salad", "Steak board"], ["episode-001"], "Established Fresh Variant C gathering place."),
+    "garden-room": restaurant("garden-room", "The Garden Room", "restaurant.garden-room", "A contemporary grill with a celebratory dining room.", ["Grilled chicken salad", "Steak board"], ["episode-001", "episode-003"], "Established Fresh Variant C gathering place and an Episode 3 alternative."),
+    "copper-table": restaurant("copper-table", "The Copper Table", "restaurant.copper-table", "An intimate neighborhood dining room where copper light, thoughtful substitutions, and a round table make every guest feel considered.", ["Grilled chicken salad", "Steak board", "Vegetable risotto", "Chocolate torte"], ["episode-003"], "Episode 3 introduces the restaurant as Emma’s carefully researched surprise for Grace and Ellis."),
     "olive-oak": restaurant("olive-oak", "Olive & Oak", "restaurant.olive-oak", "A warm, refined Italian dining room.", ["Lasagna"], ["episode-001"], "Established Fresh Variant C alternative."),
     "corner-cafe": restaurant("corner-cafe", "Corner Café", "restaurant.corner-cafe", "A reliable neighborhood café.", ["Sandwich"], ["episode-001"], "Established Fresh Variant C alternative.")
   };
@@ -462,12 +464,13 @@
       title: "Huntsville",
       location: "Huntsville and North Alabama",
       description: "Friends read the room, revisit nearby gathering places, and discover that dinner choices reveal the stories they share.",
-      mainCast: ["emma", "marcus", "olivia"],
-      recurringCast: ["june", "ellis", "priya"],
+      mainCast: ["emma", "marcus", "olivia", "ellis", "grace"],
+      recurringCast: ["june", "priya"],
       restaurants: Object.keys(restaurants),
       timeline: [
         { episodeId: "episode-001", order: 1, note: "Olivia’s promotion dinner at Casa Luna." },
-        { episodeId: "episode-002", order: 2, note: "Priya brings June and Ellis together for a Willow Lake homecoming." }
+        { episodeId: "episode-002", order: 2, note: "Priya brings June and Ellis together for a Willow Lake homecoming." },
+        { episodeId: "episode-003", order: 3, note: "Emma, Ellis, and Grace discover who quietly changed the special at The Copper Table." }
       ],
       storyNotes: [
         "Every episode must stand alone.",

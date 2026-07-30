@@ -336,7 +336,7 @@
         <strong>${escapeHtml(confirmation.item)}</strong>
         <small>Confidence: ${confirmation.confidence} of 5</small>
       </div>
-      <div class="order-confirmation-pup">${photo(host.image, "Pup, Game Master")}<p>The deduction is sealed. The answer stays hidden until the Final Reveal.</p></div>
+      <div class="order-confirmation-pup">${photo(host.image, "Pup, Host")}<p>The deduction is sealed. The answer stays hidden until the Final Reveal.</p></div>
       ${categoryTransitionMarkup(confirmation, transition)}
       <button class="primary-button order-next-button" id="nextOrderPrediction" type="button">${escapeHtml(transition.label)}</button>
     </section>`;

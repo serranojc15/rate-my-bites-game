@@ -11,17 +11,36 @@ const sandbox = { window: {} };
 sandbox.window.window = sandbox.window;
 vm.createContext(sandbox);
 
-for (const file of ["worldBible.js", "episodes.js"]) {
+for (const file of [
+  "worldBible.js",
+  "characterBible.js",
+  "voiceBible.js",
+  "season1Bible.js",
+  "livingEpisode.js",
+  "episodes.js"
+]) {
   vm.runInContext(fs.readFileSync(path.join(projectRoot, file), "utf8"), sandbox, { filename: file });
 }
 
 const world = sandbox.window.RateMyBitesWorld;
 const episodes = sandbox.window.RateMyBitesEpisodes;
+const characterBible = sandbox.window.RateMyBitesCharacterBible;
+const voiceBible = sandbox.window.RateMyBitesVoiceBible;
+const seasonBible = sandbox.window.RateMyBitesSeason1Bible;
+const livingEpisode = sandbox.window.RateMyBitesLivingEpisode;
 const failures = [];
 const bibleValidation = world.validateBible();
 const catalogValidation = episodes.validateCatalog();
 if (!bibleValidation.valid) failures.push(...bibleValidation.errors.map(error => `World Bible: ${error}`));
 if (!catalogValidation.valid) failures.push(...catalogValidation.errors.map(error => `Episode catalog: ${error}`));
+for (const [label, result] of [
+  ["Character Bible", characterBible.validate()],
+  ["Voice Bible", voiceBible.validate()],
+  ["Season 1 Bible", seasonBible.validate()],
+  ["Living Episode", livingEpisode.validateEpisode(episodes.getEpisode("episode-003"))]
+]) {
+  if (!result.valid) failures.push(...result.errors.map(error => `${label}: ${error}`));
+}
 
 const assets = world.getAssets();
 const counts = {};
@@ -88,6 +107,29 @@ for (const entry of episodes.getCatalog()) {
   }
 }
 
+const episode3Media = episodes.getEpisode("episode-003").production.media;
+const audioEntries = Object.entries(episode3Media.audioClips);
+if (audioEntries.length < 3 || audioEntries.length > 5) {
+  failures.push(`Episode 3 requires 3–5 Pup audio clips; found ${audioEntries.length}`);
+}
+for (const [clipId, relativePath] of audioEntries) {
+  if (!episode3Media.captions[clipId]?.trim()) failures.push(`${clipId}: visible caption is required`);
+  if (/^(?:https?:|data:)/i.test(relativePath)) {
+    failures.push(`${clipId}: Pup audio must be packaged locally`);
+    continue;
+  }
+  const absolutePath = path.resolve(projectRoot, relativePath);
+  if (!absolutePath.startsWith(`${projectRoot}${path.sep}`) || !fs.existsSync(absolutePath)) {
+    failures.push(`${clipId}: missing packaged audio ${relativePath}`);
+    continue;
+  }
+  const contents = fs.readFileSync(absolutePath);
+  const mp3Header = contents.subarray(0, 3).toString("ascii") === "ID3"
+    || (contents[0] === 0xff && (contents[1] & 0xe0) === 0xe0);
+  if (!mp3Header) failures.push(`${clipId}: invalid MP3 file ${relativePath}`);
+  if (!contents.length || contents.length > 250_000) failures.push(`${clipId}: audio file exceeds its 250 KB budget`);
+}
+
 const productionSourceFiles = fs.readdirSync(projectRoot)
   .filter(file => /\.(?:css|html|js)$/i.test(file));
 const registeredAssetPaths = new Set(Object.values(assets).map(asset => asset.src));
@@ -117,4 +159,4 @@ const summary = Object.entries(counts)
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([kind, count]) => `${count} ${kind}`)
   .join(", ");
-console.log(`Artwork validation passed: ${Object.keys(assets).length} approved assets (${summary}); ${(totalBytes / 1_000_000).toFixed(2)} MB; ${episodes.getCatalog().filter(entry => entry.status === "playable").length} playable episodes and 2 Fresh Variants.`);
+console.log(`Production validation passed: ${Object.keys(assets).length} approved assets (${summary}); ${(totalBytes / 1_000_000).toFixed(2)} MB; ${episodes.getCatalog().filter(entry => entry.status === "playable").length} playable episodes; ${audioEntries.length} packaged Pup clips; 2 Fresh Variants.`);

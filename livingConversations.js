@@ -57,7 +57,7 @@ function producerControlRoomVisual() {
 
 function conversationVisual(event) {
   if (event.cameraTarget === "producer") return producerControlRoomVisual();
-  if (event.cameraTarget === "pup") return `${photo(host.image, "Pup, game master", "living-person-photo")}<div class="living-name"><span>Game Master</span><strong>Pup</strong></div>`;
+  if (event.cameraTarget === "pup") return `${photo(host.image, "Pup, Host", "living-person-photo")}<div class="living-name"><span>Host</span><strong>Pup</strong></div>`;
   if (event.cameraTarget === "restaurant") {
     const restaurant = actualRestaurant();
     return `${photo(images.restaurants[restaurant.id], restaurant.name, "living-restaurant-photo")}<div class="living-name"><span>New evidence</span><strong>${escapeHtml(restaurant.name)}</strong></div>`;
@@ -67,7 +67,7 @@ function conversationVisual(event) {
 }
 
 function conversationLabel(kind) {
-  return { conversation: "DINNER CONVERSATION", pup: "PUP COMMENTARY", producer: "OFF-CAMERA QUESTION", confessional: "CONFESSIONAL", interruption: "NEW EVIDENCE" }[kind] || "LIVE MOMENT";
+  return { conversation: "DINNER CONVERSATION", pup: "HOST MOMENT", producer: "OFF-CAMERA QUESTION", confessional: "CONFESSIONAL", interruption: "NEW EVIDENCE" }[kind] || "LIVE MOMENT";
 }
 
 function showConversationFinale() {
@@ -142,7 +142,7 @@ function conversationFinale() {
       ${finaleClues.map((clue, index) => `<article><span>${String(index + 1).padStart(2, "0")}</span><strong>${escapeHtml(clue.title)}</strong><p>${escapeHtml(clue.text)}</p></article>`).join("")}
     </div>
     <div class="finale-read"><span>Your restaurant read</span><strong>${read}/5</strong><div>${Array.from({ length: 5 }, (_, i) => `<i class="${i < read ? "active" : ""}"></i>`).join("")}</div></div>
-    <div class="finale-pup">${photo(host.image, "Pup, Game Master")}<p><strong>Pup:</strong> One restaurant. One decision. Trust your read.</p></div>
+    <div class="finale-pup">${photo(host.image, "Pup, Host")}<p><strong>Pup:</strong> One restaurant. One decision. Trust your read.</p></div>
     <button class="primary-button finale-button" id="makeTheCall">MAKE THE CALL</button>
   </section>`;
   speakConversation("The room has shifted. The evidence is locked. One restaurant. One decision. Make the call.");
