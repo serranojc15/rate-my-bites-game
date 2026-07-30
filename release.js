@@ -4,7 +4,7 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "v0.5.1";
+  const VERSION = "v0.5.2";
   const RELEASE_NAME = "The Party";
   const DISPLAY_LABEL = `Rate My Bites Detective · ${VERSION}`;
 

@@ -359,11 +359,15 @@
     app.innerHTML = `<section class="episode3-mystery-reveal" data-screen="mystery-reveal">
       <p class="eyebrow">The Missing Card</p>
       <h1>${correct ? "You noticed the careful plan." : "The phone call came first."}</h1>
-      <article class="mystery-answer-card ${correct ? "correct" : "wrong"}">
-        ${photo(world.assetSrc("restaurant.copper-table"), "The Copper Table")}
-        <div><span>${correct ? "+120" : "0"} points</span><strong>${safe(mystery.solution)}</strong><p>Your answer: ${safe(choice?.label || "No answer")}</p></div>
-      </article>
-      <p class="episode3-solution">${safe(episode.reveal.restaurantExplanation)}</p>
+      ${root.RateMyBitesRevealResultCard.markup({
+        imageSrc: world.assetSrc("restaurant.copper-table"),
+        imageAlt: "The Copper Table",
+        score: `${correct ? "+120" : "0"} points`,
+        title: mystery.solution,
+        playerAnswer: choice?.label || "No answer",
+        explanation: episode.reveal.restaurantExplanation,
+        success: correct
+      })}
       ${caption ? `<blockquote class="pup-visible-caption" role="status"><strong>Pup:</strong> “${safe(caption)}”</blockquote>${audioControls("encouragement", true)}` : ""}
       <div class="actions"><button class="primary-button" id="orders" type="button">Predict Their Orders</button></div>
     </section>`;

@@ -362,34 +362,6 @@
   gap: 0.75rem;
 }
 
-.restaurant-reveal-photo-card {
-  overflow: hidden;
-  border: 1px solid #eadfd7;
-  border-radius: 1.35rem;
-  background: white;
-}
-
-.restaurant-reveal-photo-card img {
-  width: 100%;
-  max-height: 24rem;
-  object-fit: cover;
-}
-
-.restaurant-reveal-photo-card > div {
-  padding: 1rem 1.1rem 1.2rem;
-}
-
-.restaurant-reveal-photo-card h2,
-.restaurant-reveal-photo-card p {
-  margin: 0;
-}
-
-.restaurant-reveal-photo-card p {
-  margin-top: 0.45rem;
-  color: var(--muted, #756861);
-  line-height: 1.55;
-}
-
 .restaurant-evidence-modal,
 .group-leaderboard-modal {
   position: fixed;

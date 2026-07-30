@@ -81,9 +81,9 @@ async function main() {
   const episode3 = episodes.getEpisode("episode-003");
 
   // Release identity and integration.
-  equal(release.version, "v0.5.1", "Sprint 4 exposes the approved hotfix version");
+  equal(release.version, "v0.5.2", "Sprint 4 exposes the approved reveal-card hotfix version");
   equal(release.releaseName, "The Party", "Sprint 4 exposes the approved release name");
-  equal(release.displayLabel, "Rate My Bites Detective · v0.5.1", "series label uses the Sprint 4 hotfix identity");
+  equal(release.displayLabel, "Rate My Bites Detective · v0.5.2", "series label uses the reveal-card hotfix identity");
   const html = fs.readFileSync("index.html", "utf8");
   const partySource = fs.readFileSync("sprint4Party.js", "utf8");
   const partyCss = fs.readFileSync("sprint4Party.css", "utf8");

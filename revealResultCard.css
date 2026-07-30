@@ -1,0 +1,88 @@
+.reveal-result-card {
+  overflow: hidden;
+  border: 1px solid #4a3d37;
+  border-radius: 1.5rem;
+  background: #2c2421;
+  box-shadow: 0 16px 44px rgba(44, 36, 33, 0.14);
+}
+
+.reveal-result-image {
+  position: relative;
+  overflow: hidden;
+  background: #1f1917;
+}
+
+.reveal-result-image img {
+  display: block;
+  width: 100%;
+  max-height: 24rem;
+  object-fit: cover;
+}
+
+.reveal-result-score {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: #fff;
+  color: #2c2421;
+  box-shadow: 0 8px 24px rgba(31, 25, 23, 0.28);
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.reveal-result-card.is-failure .reveal-result-score {
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+.reveal-result-panel {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  background: #2c2421;
+  color: #fff;
+}
+
+.reveal-result-panel h2,
+.reveal-result-panel p {
+  margin: 0;
+}
+
+.reveal-result-panel h2 {
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  line-height: 1.2;
+}
+
+.reveal-result-field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.reveal-result-field > span {
+  color: #fed7aa;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reveal-result-field p {
+  color: #fff;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+.reveal-result-answer p {
+  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .reveal-result-image img {
+    max-height: none;
+    aspect-ratio: 16 / 10;
+  }
+}
