@@ -227,12 +227,18 @@
     });
   }
 
-  function partySeat(id) {
+  function episodePartyTitle(episode, id) {
+    if (id === "pup") return "Host";
+    return episode.gameplay.diners.find(diner => diner.id === id)?.role || "";
+  }
+
+  function partySeat(episode, id) {
     const profile = characters.getProfile(id);
     const isPup = id === "pup";
+    const title = episodePartyTitle(episode, id);
     return `<article class="party-seat ${isPup ? "party-seat-host" : ""}">
       ${photo(profile.portrait.src, profile.fullName)}
-      <div><span>${isPup ? "Host" : "The Party"}</span><strong>${safe(profile.fullName)}</strong>${isPup ? "<p>Helping everyone find the perfect meal.</p>" : ""}</div>
+      <div><span>${safe(title)}</span><strong>${safe(profile.fullName)}</strong>${isPup ? "<p>Helping everyone find the perfect meal.</p>" : ""}</div>
     </article>`;
   }
 
@@ -248,7 +254,7 @@
     if (step === 0) {
       app.innerHTML = `<section class="party-opening party-opening-roster" data-screen="party-opening">
         <header><p class="eyebrow">Episode 3</p><h1>${safe(episode.metadata.title)}</h1><p>The Party</p></header>
-        <div class="party-seat-grid">${["emma", "ellis", "grace", "pup"].map(partySeat).join("")}</div>
+        <div class="party-seat-grid">${["emma", "ellis", "grace", "pup"].map(id => partySeat(episode, id)).join("")}</div>
         <button class="primary-button" id="partyOpeningNext" type="button">Tonight’s Restaurant</button>
       </section>`;
     } else if (step === 1) {
@@ -568,7 +574,7 @@
   root.render = renderSprint4;
 
   root.RateMyBitesSprint4Party = Object.freeze({
-    version: "v0.5.0",
+    version: "v0.5.1",
     isEpisode3,
     materializeVariation,
     newVariationSet,
