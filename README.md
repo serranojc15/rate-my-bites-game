@@ -1,7 +1,7 @@
 # rate-my-bites-game
 A standalone Rate My Bites group dining mystery series featuring cinematic stories, recurring people and places, restaurant and order predictions, scoring, and local episode progress.
 
-Release `v0.5.0` introduces The Party, Episode 3, packaged Pup audio, deterministic living variation, and gentle local story memory. Stable identities and artwork live in `worldBible.js`; the detailed Character, Voice, and Season Bibles have dedicated executable sources; episode content and the centralized catalog remain in `episodes.js`.
+Release `v0.5.1` reuses Episode 3’s canonical character titles on individual Party cards. The Party, Episode 3, packaged Pup audio, deterministic living variation, and gentle local story memory were introduced in `v0.5.0`. Stable identities and artwork live in `worldBible.js`; the detailed Character, Voice, and Season Bibles have dedicated executable sources; episode content and the centralized catalog remain in `episodes.js`.
 
 Developer references:
 

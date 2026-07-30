@@ -81,9 +81,9 @@ async function main() {
   const episode3 = episodes.getEpisode("episode-003");
 
   // Release identity and integration.
-  equal(release.version, "v0.5.0", "Sprint 4 exposes the approved version");
+  equal(release.version, "v0.5.1", "Sprint 4 exposes the approved hotfix version");
   equal(release.releaseName, "The Party", "Sprint 4 exposes the approved release name");
-  equal(release.displayLabel, "Rate My Bites Detective · v0.5.0", "series label uses the Sprint 4 identity");
+  equal(release.displayLabel, "Rate My Bites Detective · v0.5.1", "series label uses the Sprint 4 hotfix identity");
   const html = fs.readFileSync("index.html", "utf8");
   const partySource = fs.readFileSync("sprint4Party.js", "utf8");
   const partyCss = fs.readFileSync("sprint4Party.css", "utf8");
@@ -135,6 +135,12 @@ async function main() {
   deepEqual(profiles.ellis.episodeAppearances, ["episode-002", "episode-003"], "Ellis’s return is canonical");
   deepEqual(profiles.grace.episodeAppearances, ["episode-003"], "Grace’s first playable appearance is canonical");
   deepEqual(profiles.june.episodeAppearances, ["episode-002"], "June is not incorrectly assigned to Episode 3");
+  const episode3Titles = Object.fromEntries(episode3.gameplay.diners.map(diner => [diner.id, diner.role]));
+  equal(episode3Titles.emma, "The Adventurer", "Emma’s Party card title comes from Episode 3");
+  equal(episode3Titles.ellis, "The Storyteller", "Ellis’s Party card title comes from Episode 3");
+  equal(episode3Titles.grace, "The Quiet Challenger", "Grace’s Party card title comes from Episode 3");
+  ok(partySource.includes("episode.gameplay.diners.find(diner => diner.id === id)?.role"), "Party cards consume canonical episode titles");
+  ok(!partySource.includes('isPup ? "Host" : "The Party"'), "Party cards do not use the collective name as an individual title");
 
   // Voice Bible and packaged Pup voice.
   equal(voices.validate().valid, true, "Voice Bible validates");
